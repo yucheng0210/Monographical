@@ -96,7 +96,7 @@ namespace DiasGames.ThirdPersonSystem
             healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
             if (Grid.abilityCount == 1)
             {
-                HealthValue += recover;
+                characterState.CurrentHealth += recover;
                 Grid.abilityCount = 0;
             }
         }
