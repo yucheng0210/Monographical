@@ -96,7 +96,7 @@ public class Enemy : MonoBehaviour
         controller = GetComponent<CharacterController>();
         startPos = transform.position;
         collision.SetActive(false);
-        player = GameObject.FindWithTag("Player");
+        player = GameManager.Instance.PlayerState.gameObject;
         myCamera = GetComponentInChildren<Canvas>();
         myCamera.worldCamera = Camera.main;
         myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();

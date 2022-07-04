@@ -7,7 +7,7 @@ public class TalkButton : MonoBehaviour
     public GameObject Button;
     public GameObject talkUI;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
             Button.SetActive(true);
