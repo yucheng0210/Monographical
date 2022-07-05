@@ -238,7 +238,8 @@ namespace DiasGames.ThirdPersonSystem
             foreach (ThirdPersonAbility ability in m_Abilities)
                 ability.Initialize(this, m_AnimatorManager, m_InputManager);
             InitialState();
-            
+            if (GameObject.FindGameObjectsWithTag("Player").Length > 1)
+                Destroy(this.gameObject);
         }
 
         private void FixedUpdate()

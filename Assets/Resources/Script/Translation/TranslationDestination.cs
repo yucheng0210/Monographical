@@ -8,7 +8,8 @@ public class TranslationDestination : MonoBehaviour
     {
         Enter,
         A,
-        B
+        B,
+        C
     }
 
     [SerializeField]

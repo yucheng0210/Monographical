@@ -28,6 +28,10 @@ public class TranslationPoint : MonoBehaviour
     {
         get { return destinationTag; }
     }
+    public string SceneName
+    {
+        get { return sceneName; }
+    }
 
     private void Update()
     {

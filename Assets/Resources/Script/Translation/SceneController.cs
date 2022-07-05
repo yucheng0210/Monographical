@@ -7,6 +7,15 @@ public class SceneController : Singleton<SceneController>
 {
     private GameObject player;
 
+    [SerializeField]
+    private GameObject playerPrefab;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(this);
+    }
+
     public void TranslationToDestination(TranslationPoint translationPoint)
     {
         switch (translationPoint.Type)
@@ -17,6 +26,7 @@ public class SceneController : Singleton<SceneController>
                 );
                 break;
             case TranslationPoint.TranslationType.DifferentScene:
+                StartCoroutine(Translation(translationPoint.SceneName, translationPoint.Tag));
                 break;
         }
     }
@@ -24,11 +34,24 @@ public class SceneController : Singleton<SceneController>
     IEnumerator Translation(string sceneName, TranslationDestination.DestinationTag destinationTag)
     {
         player = GameManager.Instance.PlayerState.gameObject;
-        player.transform.SetPositionAndRotation(
-            GetDestination(destinationTag).transform.position,
-            GetDestination(destinationTag).transform.rotation
-        );
-        yield return null;
+        if (SceneManager.GetActiveScene().name != sceneName)
+        {
+            DontDestroyOnLoad(player);
+            yield return SceneManager.LoadSceneAsync(sceneName);
+            player.transform.SetPositionAndRotation(
+                GetDestination(destinationTag).transform.position,
+                GetDestination(destinationTag).transform.rotation
+            );
+            yield break;
+        }
+        else
+        {
+            player.transform.SetPositionAndRotation(
+                GetDestination(destinationTag).transform.position,
+                GetDestination(destinationTag).transform.rotation
+            );
+            yield return null;
+        }
     }
 
     private TranslationDestination GetDestination(
