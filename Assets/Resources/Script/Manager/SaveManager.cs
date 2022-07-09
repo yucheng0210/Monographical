@@ -14,12 +14,13 @@ public class SaveManager : Singleton<SaveManager>
     {
         if (Input.GetKeyDown(KeyCode.F6))
             SavePlayerData();
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.F7))
             LoadPlayerData();
     }
 
     public void SavePlayerData()
     {
+        // TODO: 儲存Player位置
         Save(
             GameManager.Instance.PlayerState.CharacterData,
             GameManager.Instance.PlayerState.CharacterData.name
@@ -44,8 +45,6 @@ public class SaveManager : Singleton<SaveManager>
     public void Load(Object data, string key)
     {
         if (PlayerPrefs.HasKey(key))
-        {
             JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), data);
-        }
     }
 }
