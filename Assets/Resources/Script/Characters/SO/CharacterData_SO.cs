@@ -10,4 +10,9 @@ public class CharacterData_SO : ScriptableObject
     public int currentHealth;
     public int baseDefence;
     public int currentDefence;
+
+    [Header("位置")]
+    public float x;
+    public float y;
+    public float z;
 }

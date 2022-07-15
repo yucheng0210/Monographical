@@ -163,6 +163,41 @@ public class CharacterState : MonoBehaviour
         }
     }
     #endregion
+    #region Read from Translation_SO
+    public float X
+    {
+        get
+        {
+            if (characterData != null)
+                return characterData.x;
+            else
+                return 0;
+        }
+        set { characterData.x = value; }
+    }
+    public float Y
+    {
+        get
+        {
+            if (characterData != null)
+                return characterData.y;
+            else
+                return 0;
+        }
+        set { characterData.y = value; }
+    }
+    public float Z
+    {
+        get
+        {
+            if (characterData != null)
+                return characterData.z;
+            else
+                return 0;
+        }
+        set { characterData.z = value; }
+    }
+    #endregion
     public CharacterData_SO CharacterData
     {
         get { return characterData; }

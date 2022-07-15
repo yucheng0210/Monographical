@@ -20,7 +20,12 @@ public class SaveManager : Singleton<SaveManager>
 
     public void SavePlayerData()
     {
-        // TODO: 儲存Player位置
+        GameManager.Instance.PlayerState.X =
+            GameManager.Instance.PlayerState.gameObject.transform.position.x;
+        GameManager.Instance.PlayerState.Y =
+            GameManager.Instance.PlayerState.gameObject.transform.position.y;
+        GameManager.Instance.PlayerState.Z =
+            GameManager.Instance.PlayerState.gameObject.transform.position.z;
         Save(
             GameManager.Instance.PlayerState.CharacterData,
             GameManager.Instance.PlayerState.CharacterData.name
@@ -32,6 +37,11 @@ public class SaveManager : Singleton<SaveManager>
         Load(
             GameManager.Instance.PlayerState.CharacterData,
             GameManager.Instance.PlayerState.CharacterData.name
+        );
+        GameManager.Instance.PlayerState.gameObject.transform.position = new Vector3(
+            GameManager.Instance.PlayerState.X,
+            GameManager.Instance.PlayerState.Y,
+            GameManager.Instance.PlayerState.Z
         );
     }
 
