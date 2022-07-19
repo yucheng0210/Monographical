@@ -26,22 +26,22 @@ public class SceneController : Singleton<SceneController>
         DontDestroyOnLoad(this);
     }
 
-    public void TranslationToDestination(TranslationPoint translationPoint)
+    public void TransitionToDestination(TransitionPoint transitionPoint)
     {
-        switch (translationPoint.Type)
+        switch (transitionPoint.Type)
         {
-            case TranslationPoint.TranslationType.SameScene:
+            case TransitionPoint.TransitionType.SameScene:
                 StartCoroutine(
-                    Translation(SceneManager.GetActiveScene().name, translationPoint.Tag)
+                    Transition(SceneManager.GetActiveScene().name, transitionPoint.Tag)
                 );
                 break;
-            case TranslationPoint.TranslationType.DifferentScene:
-                StartCoroutine(Translation(translationPoint.SceneName, translationPoint.Tag));
+            case TransitionPoint.TransitionType.DifferentScene:
+                StartCoroutine(Transition(transitionPoint.SceneName, transitionPoint.Tag));
                 break;
         }
     }
 
-    IEnumerator Translation(string sceneName, TranslationDestination.DestinationTag destinationTag)
+    IEnumerator Transition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
         player = GameManager.Instance.PlayerState.gameObject;
         if (SceneManager.GetActiveScene().name != sceneName)
@@ -78,11 +78,11 @@ public class SceneController : Singleton<SceneController>
         }
     }
 
-    private TranslationDestination GetDestination(
-        TranslationDestination.DestinationTag destinationTag
+    private TransitionDestination GetDestination(
+        TransitionDestination.DestinationTag destinationTag
     )
     {
-        var entrances = FindObjectsOfType<TranslationDestination>();
+        var entrances = FindObjectsOfType<TransitionDestination>();
         foreach (var i in entrances)
         {
             if (i.Tag == destinationTag)

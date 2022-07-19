@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TranslationDestination : MonoBehaviour
+public class TransitionDestination : MonoBehaviour
 {
     public enum DestinationTag
     {

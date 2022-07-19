@@ -20,12 +20,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public void SavePlayerData()
     {
-        GameManager.Instance.PlayerState.X =
-            GameManager.Instance.PlayerState.gameObject.transform.position.x;
-        GameManager.Instance.PlayerState.Y =
-            GameManager.Instance.PlayerState.gameObject.transform.position.y;
-        GameManager.Instance.PlayerState.Z =
-            GameManager.Instance.PlayerState.gameObject.transform.position.z;
+        SaveTransform();
         Save(
             GameManager.Instance.PlayerState.CharacterData,
             GameManager.Instance.PlayerState.CharacterData.name
@@ -38,11 +33,7 @@ public class SaveManager : Singleton<SaveManager>
             GameManager.Instance.PlayerState.CharacterData,
             GameManager.Instance.PlayerState.CharacterData.name
         );
-        GameManager.Instance.PlayerState.gameObject.transform.position = new Vector3(
-            GameManager.Instance.PlayerState.X,
-            GameManager.Instance.PlayerState.Y,
-            GameManager.Instance.PlayerState.Z
-        );
+        LoadTransform();
     }
 
     public void Save(Object data, string key)
@@ -56,5 +47,21 @@ public class SaveManager : Singleton<SaveManager>
     {
         if (PlayerPrefs.HasKey(key))
             JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), data);
+    }
+
+    private void SaveTransform()
+    {
+        GameManager.Instance.PlayerState.Pos =
+            GameManager.Instance.PlayerState.gameObject.transform.position;
+        GameManager.Instance.PlayerState.Rotation =
+            GameManager.Instance.PlayerState.gameObject.transform.rotation;
+    }
+
+    private void LoadTransform()
+    {
+        GameManager.Instance.PlayerState.gameObject.transform.position =
+            GameManager.Instance.PlayerState.Pos;
+        GameManager.Instance.PlayerState.gameObject.transform.rotation =
+            GameManager.Instance.PlayerState.Rotation;
     }
 }

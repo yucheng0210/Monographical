@@ -12,7 +12,6 @@ public class CharacterData_SO : ScriptableObject
     public int currentDefence;
 
     [Header("位置")]
-    public float x;
-    public float y;
-    public float z;
+    public Vector3 currentPos;
+    public Quaternion currentRotation;
 }

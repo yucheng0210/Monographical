@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TranslationPoint : MonoBehaviour
+public class TransitionPoint : MonoBehaviour
 {
-    public enum TranslationType
+    public enum TransitionType
     {
         SameScene,
         DifferentScene
@@ -16,15 +16,15 @@ public class TranslationPoint : MonoBehaviour
     private string sceneName;
 
     [SerializeField]
-    private TranslationType translationType;
+    private TransitionType transitionType;
 
     [SerializeField]
-    private TranslationDestination.DestinationTag destinationTag;
-    public TranslationType Type
+    private TransitionDestination.DestinationTag destinationTag;
+    public TransitionType Type
     {
-        get { return translationType; }
+        get { return transitionType; }
     }
-    public TranslationDestination.DestinationTag Tag
+    public TransitionDestination.DestinationTag Tag
     {
         get { return destinationTag; }
     }
@@ -37,7 +37,7 @@ public class TranslationPoint : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && canTrans)
         {
-            SceneController.Instance.TranslationToDestination(this);
+            SceneController.Instance.TransitionToDestination(this);
         }
     }
 

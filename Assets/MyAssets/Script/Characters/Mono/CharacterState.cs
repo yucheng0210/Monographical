@@ -163,39 +163,16 @@ public class CharacterState : MonoBehaviour
         }
     }
     #endregion
-    #region Read from Translation_SO
-    public float X
+    #region Read from Transform_SO
+    public Vector3 Pos
     {
-        get
-        {
-            if (characterData != null)
-                return characterData.x;
-            else
-                return 0;
-        }
-        set { characterData.x = value; }
+        get { return characterData.currentPos; }
+        set { characterData.currentPos = value; }
     }
-    public float Y
+    public Quaternion Rotation
     {
-        get
-        {
-            if (characterData != null)
-                return characterData.y;
-            else
-                return 0;
-        }
-        set { characterData.y = value; }
-    }
-    public float Z
-    {
-        get
-        {
-            if (characterData != null)
-                return characterData.z;
-            else
-                return 0;
-        }
-        set { characterData.z = value; }
+        get { return characterData.currentRotation; }
+        set { characterData.currentRotation = value; }
     }
     #endregion
     public CharacterData_SO CharacterData
