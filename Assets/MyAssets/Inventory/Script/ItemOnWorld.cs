@@ -26,6 +26,6 @@ public class ItemOnWorld : MonoBehaviour
         }
         else
             thisItem.itemHeld++;
-        InventoryManager.RefreshItem();
+        InventoryManager.Instance.RefreshItem();
     }
 }

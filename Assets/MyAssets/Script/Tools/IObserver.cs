@@ -1,4 +1,4 @@
-public interface IObserver
+interface IObserver
 {
  
 }

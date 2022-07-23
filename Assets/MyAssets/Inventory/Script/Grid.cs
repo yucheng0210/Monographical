@@ -13,7 +13,7 @@ public class Grid : MonoBehaviour
 
     public void OnClicked()
     {
-        InventoryManager.UpdateItemInfo(gridItem.itemInfo);
+        InventoryManager.Instance.UpdateItemInfo(gridItem.itemInfo);
         useButton = GameObject.Find("Use").GetComponent<Button>();
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(OnUsed);
@@ -32,9 +32,9 @@ public class Grid : MonoBehaviour
         }
         if (abilityCount == gridItem.itemAbilityNum)
         {
-            InventoryManager.UpdateItemInfo("");
+            InventoryManager.Instance.UpdateItemInfo("");
             gridItem.itemHeld--;
-            InventoryManager.RefreshItem();
+            InventoryManager.Instance.RefreshItem();
         }
     }
 }
