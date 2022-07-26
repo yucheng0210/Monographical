@@ -16,12 +16,12 @@ public class SaveOnClicked : MonoBehaviour
 
     private void Start()
     {
-        button.onClick.AddListener(SaveManager.Instance.SavePlayerData);
-        button.onClick.AddListener(Refresh);
+        button.onClick.AddListener(SaveSuccessfully);
     }
 
-    private void Refresh()
+    private void SaveSuccessfully()
     {
         buttonText.text = "已保存";
+        SaveManager.Instance.SavePlayerData();
     }
 }

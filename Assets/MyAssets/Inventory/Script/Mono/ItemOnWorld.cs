@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ItemOnWorld : MonoBehaviour
 {
-    public Item thisItem;
-    public Inventory playerInventory;
+    /*
+    public Item_SO thisItem;
+    public Inventory_SO playerInventory;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -26,6 +27,6 @@ public class ItemOnWorld : MonoBehaviour
         }
         else
             thisItem.itemHeld++;
-        InventoryManager.Instance.RefreshItem();
-    }
+        InventoryUIManager.Instance.RefreshItem();
+    }*/
 }

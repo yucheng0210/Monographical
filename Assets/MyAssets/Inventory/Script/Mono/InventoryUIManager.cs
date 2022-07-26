@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryManager :Singleton<InventoryManager>
+public class InventoryUIManager : Singleton<InventoryUIManager>
 {
-    public Inventory myBag;
-    public GameObject gridManager;
-    public Grid gridPrefab;
-    public Text itemInfo;
+    [SerializeField]
+    private GameObject gridManager;
+
+    [SerializeField]
+    private Grid gridPrefab;
+
+    [SerializeField]
+    private Text itemInfo;
+
+    [SerializeField]
+    private Inventory_SO myBag;
+    private InventoryManager inventoryManager;
+
     private void OnEnable()
     {
         RefreshItem();
@@ -20,17 +29,17 @@ public class InventoryManager :Singleton<InventoryManager>
         Instance.itemInfo.text = itemDes;
     }
 
-    public void CreateNewItem(Item item)
+    private void CreateNewItem(Item_SO item)
     {
         Grid newItem = Instantiate(
             Instance.gridPrefab,
             Instance.gridManager.transform.position,
             Quaternion.identity
         );
-        newItem.gameObject.transform.SetParent(Instance.gridManager.transform);
-        newItem.gridItem = item;
-        newItem.gridImage.sprite = item.itemImage;
-        newItem.gridAmount.text = item.itemHeld.ToString();
+        newItem.gameObject.transform.SetParent(Instance.gridManager.transform, false);
+        newItem.GridItem = item;
+        newItem.GridImage.sprite = item.ItemImage;
+        newItem.GridAmount.text = item.ItemHeld.ToString();
     }
 
     public void RefreshItem()
@@ -41,15 +50,15 @@ public class InventoryManager :Singleton<InventoryManager>
                 break;
             Destroy(Instance.gridManager.transform.GetChild(i).gameObject);
         }
-        for (int i = 0; i < Instance.myBag.itemList.Count; i++)
+        for (int i = 0; i < myBag.ItemList.Count; i++)
         {
-            if (Instance.myBag.itemList[i].itemHeld == 0)
+            if (myBag.ItemList[i].ItemHeld == 0)
             {
-                Instance.myBag.itemList.Remove(Instance.myBag.itemList[i]);
+                myBag.ItemList.Remove(myBag.ItemList[i]);
                 RefreshItem();
             }
             else
-                CreateNewItem(Instance.myBag.itemList[i]);
+                CreateNewItem(myBag.ItemList[i]);
         }
     }
 }

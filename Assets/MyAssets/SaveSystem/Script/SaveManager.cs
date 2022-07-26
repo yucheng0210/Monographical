@@ -13,9 +13,9 @@ public class SaveManager : Singleton<SaveManager>
     private void Update()
     {
         /*if (Input.GetKeyDown(KeyCode.F6))
-            SavePlayerData();*/
+            SavePlayerData();
         if (Input.GetKeyDown(KeyCode.F7))
-            LoadPlayerData();
+            LoadPlayerData();*/
     }
 
     public void SavePlayerData()

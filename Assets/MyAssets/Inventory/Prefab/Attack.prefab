@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 6295269506243118433}
   - component: {fileID: 1395664701718769072}
   - component: {fileID: 7948267088672483627}
-  - component: {fileID: 6124180034968338547}
-  - component: {fileID: 5721455375957637723}
+  - component: {fileID: 3947604335102561109}
   m_Layer: 0
   m_Name: Attack
   m_TagString: Untagged
@@ -97,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6124180034968338547
+--- !u!114 &3947604335102561109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,20 +105,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 5960294055588129714}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a9fe44c4c1d50640bef5023cab5404d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c084b565221aa94fb9fa40b8653e709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisItem: {fileID: 11400000, guid: 7143c0bf1fa2cb241926d3f611dcfb6e, type: 2}
-  playerInventory: {fileID: 11400000, guid: 2702c195e7c4eac4f9f5b8b712493713, type: 2}
---- !u!114 &5721455375957637723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5960294055588129714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12d591c185475194e8544099191469cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  item_SO: {fileID: 11400000, guid: 7143c0bf1fa2cb241926d3f611dcfb6e, type: 2}
+  myBag: {fileID: 11400000, guid: 2702c195e7c4eac4f9f5b8b712493713, type: 2}
