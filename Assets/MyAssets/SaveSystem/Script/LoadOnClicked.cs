@@ -7,6 +7,7 @@ public class LoadOnClicked : MonoBehaviour
 {
     private Button button;
     private Text buttonText;
+    private int loadID;
 
     private void Awake()
     {
@@ -17,10 +18,18 @@ public class LoadOnClicked : MonoBehaviour
     private void Start()
     {
         button.onClick.AddListener(LoadSuccessfully);
+        loadID = gameObject.transform.GetSiblingIndex();
+        buttonText.text = SaveManager.Instance.HasData(loadID);
+    }
+
+    private void OnEnable()
+    {
+        buttonText.text = SaveManager.Instance.HasData(loadID);
     }
 
     private void LoadSuccessfully()
     {
-        SaveManager.Instance.LoadPlayerData();
+        SaveManager.Instance.LoadPlayerData(loadID);
+        buttonText.text = SaveManager.Instance.HasData(loadID);
     }
 }

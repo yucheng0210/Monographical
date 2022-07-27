@@ -16,7 +16,6 @@ public class Grid : MonoBehaviour
 
     [SerializeField]
     private Button useButton;
-    public static int abilityCount;
     public Image GridImage
     {
         get { return gridImage; }
@@ -38,25 +37,11 @@ public class Grid : MonoBehaviour
         InventoryUIManager.Instance.UpdateItemInfo(gridItem.ItemInfo);
         useButton = GameObject.Find("Use").GetComponent<Button>();
         useButton.onClick.RemoveAllListeners();
-        useButton.onClick.AddListener(OnUsed);
-    }
-
-    public void OnUsed()
-    {
-        switch (gridItem.itemAbility)
-        {
-            case Item_SO.ItemAbility.Tonic:
-                abilityCount = 1;
-                break;
-            case Item_SO.ItemAbility.AttackUp:
-                abilityCount = 2;
-                break;
-        }
-        if (abilityCount == gridItem.ItemAbilityNum)
-        {
-            InventoryUIManager.Instance.UpdateItemInfo("");
-            gridItem.ItemHeld--;
-            InventoryUIManager.Instance.RefreshItem();
-        }
+        useButton.onClick.AddListener(
+            () =>
+            {
+                InventoryUIManager.Instance.OnUsed(gridItem);
+            }
+        );
     }
 }

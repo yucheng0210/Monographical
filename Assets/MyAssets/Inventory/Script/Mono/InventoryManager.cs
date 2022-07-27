@@ -2,33 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : Singleton<InventoryManager>
 {
     [SerializeField]
-    private Item_SO item_SO;
-
-    [SerializeField]
     private Inventory_SO myBag;
+    public static int abilityCount;
 
-    private void OnTriggerEnter(Collider other)
+    public void AddItem(Item_SO item)
     {
-        if (other.CompareTag("Player"))
+        if (!myBag.ItemList.Contains(item))
         {
-            AddItem();
-            Destroy(gameObject);
-        }
-    }
-
-    private void AddItem()
-    {
-        if (!myBag.ItemList.Contains(item_SO))
-        {
-            myBag.ItemList.Add(item_SO);
-            item_SO.ItemHeld++;
+            myBag.ItemList.Add(item);
+            item.ItemHeld++;
             //InventoryManager.CreateNewItem(thisItem);
         }
         else
-            item_SO.ItemHeld++;
+            item.ItemHeld++;
+        InventoryUIManager.Instance.RefreshItem();
+    }
+
+    public void RemoveItem(Item_SO item)
+    {
+        InventoryUIManager.Instance.UpdateItemInfo("");
+        if (item.ItemHeld <= 0)
+            myBag.ItemList.Remove(item);
+        else
+            item.ItemHeld--;
         InventoryUIManager.Instance.RefreshItem();
     }
 }

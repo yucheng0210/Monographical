@@ -16,7 +16,6 @@ public class InventoryUIManager : Singleton<InventoryUIManager>
 
     [SerializeField]
     private Inventory_SO myBag;
-    private InventoryManager inventoryManager;
 
     private void OnEnable()
     {
@@ -60,5 +59,20 @@ public class InventoryUIManager : Singleton<InventoryUIManager>
             else
                 CreateNewItem(myBag.ItemList[i]);
         }
+    }
+
+    public void OnUsed(Item_SO item)
+    {
+        switch (item.itemAbility)
+        {
+            case Item_SO.ItemAbility.Tonic:
+                InventoryManager.abilityCount = 1;
+                break;
+            case Item_SO.ItemAbility.AttackUp:
+                InventoryManager.abilityCount = 2;
+                break;
+        }
+        if (InventoryManager.abilityCount == item.ItemAbilityNum)
+            InventoryManager.Instance.RemoveItem(item);
     }
 }

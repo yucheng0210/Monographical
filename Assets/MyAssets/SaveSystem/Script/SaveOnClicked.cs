@@ -7,6 +7,7 @@ public class SaveOnClicked : MonoBehaviour
 {
     private Button button;
     private Text buttonText;
+    private int saveID;
 
     private void Awake()
     {
@@ -17,11 +18,18 @@ public class SaveOnClicked : MonoBehaviour
     private void Start()
     {
         button.onClick.AddListener(SaveSuccessfully);
+        saveID = gameObject.transform.GetSiblingIndex();
+        buttonText.text = SaveManager.Instance.HasData(saveID);
+    }
+
+    private void OnEnable()
+    {
+        buttonText.text = SaveManager.Instance.HasData(saveID);
     }
 
     private void SaveSuccessfully()
     {
-        buttonText.text = "已保存";
-        SaveManager.Instance.SavePlayerData();
+        SaveManager.Instance.SavePlayerData(saveID);
+        buttonText.text = SaveManager.Instance.HasData(saveID);
     }
 }

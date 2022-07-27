@@ -84,9 +84,10 @@ namespace DiasGames.ThirdPersonSystem
             DisableRagdoll();
             enemyAttackLayer = LayerMask.NameToLayer("EnemyAttack");
             characterState = GetComponent<CharacterState>();
-            InitialState();   
+            InitialState();
         }
-        private void Start() 
+
+        private void Start()
         {
             GameManager.Instance.RegisterPlayer(characterState);
         }
@@ -94,10 +95,10 @@ namespace DiasGames.ThirdPersonSystem
         private void Update()
         {
             healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
-            if (Grid.abilityCount == 1)
+            if (InventoryManager.abilityCount == 1)
             {
                 characterState.CurrentHealth += recover;
-                Grid.abilityCount = 0;
+                InventoryManager.abilityCount = 0;
             }
         }
 
