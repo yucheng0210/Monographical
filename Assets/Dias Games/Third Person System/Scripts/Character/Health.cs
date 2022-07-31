@@ -41,7 +41,7 @@ namespace DiasGames.ThirdPersonSystem
         private Cinemachine.CinemachineImpulseSource myImpulse;
         private int enemyAttackLayer;
 
-        public float HealthValue
+        /*public float HealthValue
         {
             get { return m_CurrentHealth; }
             set
@@ -56,7 +56,7 @@ namespace DiasGames.ThirdPersonSystem
         public float MaximumHealth
         {
             get { return m_MaxHealth; }
-        }
+        }*/
 
         private float m_LastDamagedTime = 0;
         public Slider healthSlider;
@@ -116,6 +116,9 @@ namespace DiasGames.ThirdPersonSystem
                 characterState.TakeDamage(attackerCharacterState, characterState);
                 gameObject.GetComponent<HitStop>().Stop(stopTime);
                 myImpulse.GenerateImpulse();
+                AudioManager.Instance.PlayerHurted();
+                if (characterState.CurrentHealth <= 0)
+                    Die();
             }
         }
 
@@ -138,6 +141,7 @@ namespace DiasGames.ThirdPersonSystem
             EnableRagdoll();
             OnDie.Invoke();
             OnCharacterDie?.Invoke();
+            GameManager.Instance.EndNotifyObservers();
 
             // Play sound
             if (AudioManager.Instance != null)
@@ -151,7 +155,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             yield return new WaitForSeconds(m_WaitToRestart);
 
-            GlobalEvents.ExecuteEvent("Restart", null, null);
+            //GlobalEvents.ExecuteEvent("Restart", null, null);
         }
 
         private void RespawnCharacter(GameObject obj, object value)

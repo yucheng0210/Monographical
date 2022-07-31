@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace DiasGames.ThirdPersonSystem.UI
 {
     public class HealthBarUIManager : MonoBehaviour
-    {
+    {/*
         [SerializeField] private Health m_Character = null;
         [SerializeField] private Image m_HealhtBarImage = null;
 
@@ -28,6 +28,6 @@ namespace DiasGames.ThirdPersonSystem.UI
         private void UpdateHealthBar()
         {
             m_HealhtBarImage.fillAmount = m_Character.HealthValue / m_Character.MaximumHealth;
-        }
+        }*/
     }
 }

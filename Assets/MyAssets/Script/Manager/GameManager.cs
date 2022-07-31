@@ -4,16 +4,38 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    private DiasGames.ThirdPersonSystem.Health health;
     private bool gameIsOver;
     private List<Enemy> enemies;
     private CharacterState playerState;
+    List<IObserver> observers = new List<IObserver>();
 
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(this);
         enemies = new List<Enemy>();
+    }
+
+    public void AddObservers(IObserver observer)
+    {
+        observers.Add(observer);
+    }
+
+    public void RemoveObservers(IObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void EndNotifyObservers()
+    {
+        foreach (var observer in observers)
+            observer.EndNotify();
+    }
+
+    public void LoadingNotify()
+    {
+        foreach (var observer in observers)
+            observer.SceneLoadingNotify();
     }
 
     public void RegisterPlayer(CharacterState player)
@@ -24,21 +46,6 @@ public class GameManager : Singleton<GameManager>
     public CharacterState PlayerState
     {
         get { return playerState; }
-    }
-
-    public void PlayerDied()
-    {
-        if (Instance.gameIsOver)
-            return;
-        if (health.HealthValue <= 0)
-        {
-            Instance.gameIsOver = true;
-        }
-    }
-
-    public bool GameOver()
-    {
-        return Instance.gameIsOver;
     }
 
     public void AddEnemyToList(Enemy script)

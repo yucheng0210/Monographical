@@ -1,4 +1,5 @@
-interface IObserver
+public interface IObserver
 {
- 
+    void EndNotify();
+    void SceneLoadingNotify();
 }

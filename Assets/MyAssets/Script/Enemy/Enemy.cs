@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IObserver
 {
     private Animator ani;
     private CharacterController controller;
@@ -78,6 +78,8 @@ public class Enemy : MonoBehaviour
         attackerCharacterState;
     private int playerAttackLayer;
 
+    private bool gameIsOver;
+
     enum EnemyState
     {
         Wander,
@@ -106,10 +108,20 @@ public class Enemy : MonoBehaviour
         InitialState();
     }
 
+    private void OnEnable()
+    {
+        GameManager.Instance.AddObservers(this);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.RemoveObservers(this);
+    }
+
     private void Update()
     {
         ani.SetBool("isDead", isDead);
-        if (Time.timeScale == 0 || isDead)
+        if (Time.timeScale == 0 || isDead || gameIsOver)
             return;
         UpdateState();
         if (characterState.CurrentHealth <= 0)
@@ -246,5 +258,22 @@ public class Enemy : MonoBehaviour
         controller.Move(
             (transform.position - player.transform.position) * beakBackDis * Time.deltaTime
         );
+    }
+
+    public void EndNotify()
+    {
+        Debug.Log("Game Over");
+        gameIsOver = true;
+        ani.SetBool("gameIsOver", true);
+        ani.SetFloat(forward, 0);
+        ani.SetInteger(attack, 0);
+    }
+
+    public void SceneLoadingNotify()
+    {
+       // gameIsOver = true;
+        //ani.SetBool("gameIsOver", true);
+        ani.SetFloat(forward, 0);
+        ani.SetInteger(attack, 0);
     }
 }

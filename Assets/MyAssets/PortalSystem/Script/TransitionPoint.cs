@@ -36,9 +36,7 @@ public class TransitionPoint : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && canTrans)
-        {
             SceneController.Instance.TransitionToDestination(this);
-        }
     }
 
     private void OnTriggerStay(Collider other)
