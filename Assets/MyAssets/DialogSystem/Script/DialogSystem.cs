@@ -5,17 +5,35 @@ using UnityEngine.UI;
 
 public class DialogSystem : MonoBehaviour
 {
-    public Text textLabel;
-    public Image faceImage;
-    public Sprite playerFace,
-        nPCFace;
-    public TextAsset textFile;
-    public int index;
-    public float maxTextWaitTime;
-    public float currentTextWaitTime;
+    [SerializeField]
+    private Text textLabel;
+
+    [SerializeField]
+    private Image faceImage;
+
+    [SerializeField]
+    private Sprite playerFace,
+        NPCFace;
+
+    [SerializeField]
+    private TextAsset textFile;
+
+    private int index;
+
+    [SerializeField]
+    private float maxTextWaitTime;
+
+    [SerializeField]
+    private float currentTextWaitTime;
     private bool textFinished;
     List<string> textList = new List<string>();
+    private bool openShop;
     public static bool isTalking;
+    public bool OpenShop
+    {
+        get { return openShop; }
+        set { openShop = value; }
+    }
 
     private void Awake()
     {
@@ -25,9 +43,15 @@ public class DialogSystem : MonoBehaviour
 
     private void OnEnable()
     {
+        index = 0;
         isTalking = true;
         textFinished = true;
         StartCoroutine(SetText());
+    }
+
+    private void OnDisable()
+    {
+        isTalking = false;
     }
 
     private void Update()
@@ -38,11 +62,7 @@ public class DialogSystem : MonoBehaviour
             {
                 currentTextWaitTime = maxTextWaitTime;
                 if (index == textList.Count)
-                {
                     gameObject.SetActive(false);
-                    index = 0;
-                    isTalking = false;
-                }
                 else
                     StartCoroutine(SetText());
             }
@@ -57,9 +77,7 @@ public class DialogSystem : MonoBehaviour
         index = 0;
         var lineData = file.text.Split('\n');
         foreach (var line in lineData)
-        {
             textList.Add(line);
-        }
     }
 
     IEnumerator SetText()
@@ -73,8 +91,12 @@ public class DialogSystem : MonoBehaviour
                 index++;
                 break;
             case "B":
-                faceImage.sprite = nPCFace;
+                faceImage.sprite = NPCFace;
                 index++;
+                break;
+            case "SHOP":
+                openShop = true;
+                gameObject.SetActive(false);
                 break;
         }
         for (int i = 0; i < textList[index].Length; i++)
@@ -85,8 +107,6 @@ public class DialogSystem : MonoBehaviour
         textFinished = true;
         index++;
     }
-    private void ChoicesMenu()
-    {
-        
-    }
+
+    private void ChoicesMenu() { }
 }

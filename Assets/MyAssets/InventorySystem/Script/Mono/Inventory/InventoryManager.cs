@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : Singleton<InventoryManager>
+public abstract class InventoryManager : Singleton<InventoryManager>
 {
     [SerializeField]
     private Inventory_SO myBag;
-    public static int abilityCount;
 
     public void AddItem(Item_SO item)
     {
@@ -28,6 +27,12 @@ public class InventoryManager : Singleton<InventoryManager>
             myBag.ItemList.Remove(item);
         else
             item.ItemHeld--;
+        InventoryUIManager.Instance.RefreshItem();
+    }
+
+    public void AddMoney(int moneyCount)
+    {
+        myBag.MoneyCount += moneyCount;
         InventoryUIManager.Instance.RefreshItem();
     }
 }

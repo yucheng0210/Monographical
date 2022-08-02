@@ -30,6 +30,9 @@ public class Item_SO : ScriptableObject
     [SerializeField]
     private bool equip;
 
+    [SerializeField]
+    private int itemCost;
+
     #region Read from Item_SO
     public ItemAbility itemAbility;
     public int ItemAbilityNum
@@ -62,6 +65,16 @@ public class Item_SO : ScriptableObject
     {
         get { return equip; }
         set { equip = value; }
+    }
+    public int ItemCost
+    {
+        get { return itemCost; }
+        set
+        {
+            itemCost = value;
+            if (itemCost < 0)
+                itemCost = 0;
+        }
     }
     #endregion
 }

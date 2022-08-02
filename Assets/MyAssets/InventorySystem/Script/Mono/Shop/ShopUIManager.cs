@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryUIManager : Singleton<InventoryUIManager>
+public class ShopUIManager : Singleton<ShopUIManager>
 {
     [SerializeField]
     private GameObject gridManager;
 
     [SerializeField]
-    private Grid gridPrefab;
+    private BackpackGrid gridPrefab;
 
     [SerializeField]
     private Text itemInfo;
 
     [SerializeField]
     private Inventory_SO myBag;
+
+    [SerializeField]
+    private Text moneyText;
 
     private void OnEnable()
     {
@@ -30,7 +33,7 @@ public class InventoryUIManager : Singleton<InventoryUIManager>
 
     private void CreateNewItem(Item_SO item)
     {
-        Grid newItem = Instantiate(
+        BackpackGrid newItem = Instantiate(
             Instance.gridPrefab,
             Instance.gridManager.transform.position,
             Quaternion.identity
@@ -59,20 +62,14 @@ public class InventoryUIManager : Singleton<InventoryUIManager>
             else
                 CreateNewItem(myBag.ItemList[i]);
         }
+        myBag.MoneyCount = BackpackManager.Instance.GetMoney();
+        moneyText.text = myBag.MoneyCount.ToString();
     }
 
     public void OnUsed(Item_SO item)
     {
-        switch (item.itemAbility)
-        {
-            case Item_SO.ItemAbility.Tonic:
-                InventoryManager.abilityCount = 1;
-                break;
-            case Item_SO.ItemAbility.AttackUp:
-                InventoryManager.abilityCount = 2;
-                break;
-        }
-        if (InventoryManager.abilityCount == item.ItemAbilityNum)
-            InventoryManager.Instance.RemoveItem(item);
+        if (myBag.MoneyCount >= item.ItemCost)
+            myBag.MoneyCount -= item.ItemCost;
+        BackpackManager.Instance.AddItem(item);
     }
 }

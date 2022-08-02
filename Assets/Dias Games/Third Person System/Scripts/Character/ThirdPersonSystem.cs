@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace DiasGames.ThirdPersonSystem
 {
@@ -20,7 +21,7 @@ namespace DiasGames.ThirdPersonSystem
         XY
     }
 
-    public class ThirdPersonSystem : MonoBehaviour
+    public class ThirdPersonSystem : MonoBehaviour, IObserver
     {
         #region Components
 
@@ -202,9 +203,22 @@ namespace DiasGames.ThirdPersonSystem
         private int attack = Animator.StringToHash("AttackMode");
         private CharacterState characterState;
 
+        [SerializeField]
+        private bool shutDown;
+
         public void SetControllerAsAI()
         {
             m_IsAICharacter = true;
+        }
+
+        private void Start()
+        {
+            GameManager.Instance.AddObservers(this);
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance.RemoveObservers(this);
         }
 
         private void Awake()
@@ -268,31 +282,30 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            if (Time.timeScale != 0)
+            if (Time.timeScale == 0 || shutDown)
+                return;
+            if (!m_IsAICharacter)
             {
-                if (!m_IsAICharacter)
-                {
-                    // Check Camera Zoom
-                    if (m_InputManager.zoomButton.IsPressed || m_AlwaysZoomCamera)
-                        TryZoom();
-                    else
-                        isZomming = false;
-                    if (!DialogSystem.isTalking)
-                        AttackState();
-                    enduranceSlider.value = currentEndurance / maxEndurance;
-                }
-
-                // ----------------------- ABILITY UPDATE --------------------------- //
-
-                if (m_ActiveAbility != null)
-                    m_ActiveAbility.UpdateAbility();
-
-                // ----------------------------------------------------------------- //
-                if (currentEndurance >= rollConsume)
-                    canRoll = true;
+                // Check Camera Zoom
+                if (m_InputManager.zoomButton.IsPressed || m_AlwaysZoomCamera)
+                    TryZoom();
                 else
-                    canRoll = false;
+                    isZomming = false;
+                if (!DialogSystem.isTalking)
+                    AttackState();
+                enduranceSlider.value = currentEndurance / maxEndurance;
             }
+
+            // ----------------------- ABILITY UPDATE --------------------------- //
+
+            if (m_ActiveAbility != null)
+                m_ActiveAbility.UpdateAbility();
+
+            // ----------------------------------------------------------------- //
+            if (currentEndurance >= rollConsume)
+                canRoll = true;
+            else
+                canRoll = false;
         }
 
         private void InitialState()
@@ -397,8 +410,8 @@ namespace DiasGames.ThirdPersonSystem
             else
                 m_ForwardAmount = 0;
 
-            if (InputManager.walkButton.IsPressed)
-                m_ForwardAmount = Mathf.Clamp(m_ForwardAmount, 0, 0.5f);
+            if (InputManager.walkButton.IsPressed) //Run(修改程式)
+                m_ForwardAmount = Mathf.Clamp(m_ForwardAmount, 2f, 3f);
         }
 
         /// <summary>
@@ -407,7 +420,7 @@ namespace DiasGames.ThirdPersonSystem
         public void UpdateMovementAnimator(float dampTime = 0.1f)
         {
             // Set animator parameters of movement
-            m_AnimatorManager.SetForwardParameter(m_ForwardAmount, dampTime);
+            m_AnimatorManager.SetForwardParameter(m_ForwardAmount / 2, dampTime);
             m_AnimatorManager.SetTurnParameter(m_TurnAmount, dampTime);
             m_AnimatorManager.SetVerticallParameter(m_VerticalAmount, dampTime);
             m_AnimatorManager.SetHorizontalParameter(m_HorizontalAmount, dampTime);
@@ -886,6 +899,17 @@ namespace DiasGames.ThirdPersonSystem
         public void FreeFalse()
         {
             free = false;
+        }
+
+        public void EndNotify()
+        {
+            Debug.Log("我死了");
+        }
+
+        // TODO: 傳送中不能移動攻擊
+        public void SceneLoadingNotify()
+        {
+            Debug.Log("不能動");
         }
     }
 }

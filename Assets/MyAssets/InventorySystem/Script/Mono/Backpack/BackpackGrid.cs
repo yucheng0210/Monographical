@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Grid : MonoBehaviour
+public class BackpackGrid : MonoBehaviour
 {
     [SerializeField]
     private Item_SO gridItem;
@@ -34,13 +34,13 @@ public class Grid : MonoBehaviour
 
     public void OnClicked()
     {
-        InventoryUIManager.Instance.UpdateItemInfo(gridItem.ItemInfo);
+        BackpackUIManager.Instance.UpdateItemInfo(gridItem.ItemInfo);
         useButton = GameObject.Find("Use").GetComponent<Button>();
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(
             () =>
             {
-                InventoryUIManager.Instance.OnUsed(gridItem);
+                BackpackUIManager.Instance.OnUsed(gridItem);
             }
         );
     }

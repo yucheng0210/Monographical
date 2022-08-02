@@ -7,7 +7,7 @@ public class GameManager : Singleton<GameManager>
     private bool gameIsOver;
     private List<Enemy> enemies;
     private CharacterState playerState;
-    List<IObserver> observers = new List<IObserver>();
+    List<IObserver> observerList = new List<IObserver>();
 
     protected override void Awake()
     {
@@ -18,23 +18,23 @@ public class GameManager : Singleton<GameManager>
 
     public void AddObservers(IObserver observer)
     {
-        observers.Add(observer);
+        observerList.Add(observer);
     }
 
     public void RemoveObservers(IObserver observer)
     {
-        observers.Remove(observer);
+        observerList.Remove(observer);
     }
 
     public void EndNotifyObservers()
     {
-        foreach (var observer in observers)
+        foreach (var observer in observerList)
             observer.EndNotify();
     }
 
     public void LoadingNotify()
     {
-        foreach (var observer in observers)
+        foreach (var observer in observerList)
             observer.SceneLoadingNotify();
     }
 

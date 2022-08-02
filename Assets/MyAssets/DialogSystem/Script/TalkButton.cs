@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class TalkButton : MonoBehaviour
 {
-    public GameObject Button;
+    public GameObject button;
     public GameObject talkUI;
 
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
-            Button.SetActive(true);
+            button.SetActive(true);
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-            Button.SetActive(false);
+            button.SetActive(false);
     }
 
     private void Update()
     {
-        if (Button.activeSelf && Input.GetKeyDown(KeyCode.R))
+        if (button.activeSelf && Input.GetKeyDown(KeyCode.R))
             talkUI.SetActive(true);
     }
 }

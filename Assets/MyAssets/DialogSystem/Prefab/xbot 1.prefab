@@ -806,12 +806,12 @@ GameObject:
   - component: {fileID: 7038428237177437411}
   - component: {fileID: 7203444779840126329}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8397464446056192476
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1832,7 +1832,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7487802766953075777
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1983,7 +1983,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3974283768664030334
 Transform:
   m_ObjectHideFlags: 0
@@ -2575,6 +2575,7 @@ GameObject:
   - component: {fileID: 2600067521697845888}
   - component: {fileID: 6866021661410387512}
   - component: {fileID: 7636424042264157560}
+  - component: {fileID: 919132148879418957}
   m_Layer: 0
   m_Name: xbot 1
   m_TagString: Untagged
@@ -2632,7 +2633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c226e6f1d98de264ba3502b8ec2313b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 6115654180145193748}
+  button: {fileID: 3046140694488668763}
   talkUI: {fileID: 0}
 --- !u!143 &7636424042264157560
 CharacterController:
@@ -2645,13 +2646,27 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 20
+  m_Radius: 2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 10, z: 0}
+--- !u!136 &919132148879418957
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8772651273260962368}
+  m_Material: {fileID: 13400000, guid: 87e10f15b64ccf44cb0683d8fed75875, type: 2}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 10
+  m_Height: 20
+  m_Direction: 1
+  m_Center: {x: 0, y: 10, z: 0}
 --- !u!1 &8825611163623026971
 GameObject:
   m_ObjectHideFlags: 0

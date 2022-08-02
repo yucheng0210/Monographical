@@ -11,7 +11,10 @@ public class ItemOnWorld : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            InventoryManager.Instance.AddItem(thisItem);
+            if (gameObject.CompareTag("Item"))
+                BackpackManager.Instance.AddItem(thisItem);
+            else if (gameObject.CompareTag("Money"))
+                BackpackManager.Instance.AddMoney(100);
             Destroy(gameObject);
         }
     }

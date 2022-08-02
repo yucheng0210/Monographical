@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour, IObserver
         attackerCharacterState;
     private int playerAttackLayer;
 
-    private bool gameIsOver;
+    private bool shutDown;
 
     enum EnemyState
     {
@@ -108,7 +108,7 @@ public class Enemy : MonoBehaviour, IObserver
         InitialState();
     }
 
-    private void OnEnable()
+    private void Start()
     {
         GameManager.Instance.AddObservers(this);
     }
@@ -121,7 +121,7 @@ public class Enemy : MonoBehaviour, IObserver
     private void Update()
     {
         ani.SetBool("isDead", isDead);
-        if (Time.timeScale == 0 || isDead || gameIsOver)
+        if (Time.timeScale == 0 || isDead || shutDown)
             return;
         UpdateState();
         if (characterState.CurrentHealth <= 0)
@@ -263,7 +263,7 @@ public class Enemy : MonoBehaviour, IObserver
     public void EndNotify()
     {
         Debug.Log("Game Over");
-        gameIsOver = true;
+        shutDown = true;
         ani.SetBool("gameIsOver", true);
         ani.SetFloat(forward, 0);
         ani.SetInteger(attack, 0);
@@ -271,8 +271,8 @@ public class Enemy : MonoBehaviour, IObserver
 
     public void SceneLoadingNotify()
     {
-       // gameIsOver = true;
-        //ani.SetBool("gameIsOver", true);
+        shutDown = true;
+        ani.SetBool("gameIsOver", true);
         ani.SetFloat(forward, 0);
         ani.SetInteger(attack, 0);
     }

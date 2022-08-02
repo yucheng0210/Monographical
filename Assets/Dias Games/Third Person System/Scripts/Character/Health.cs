@@ -95,10 +95,10 @@ namespace DiasGames.ThirdPersonSystem
         private void Update()
         {
             healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
-            if (InventoryManager.abilityCount == 1)
+            if (BackpackManager.abilityCount == 1)
             {
                 characterState.CurrentHealth += recover;
-                InventoryManager.abilityCount = 0;
+                BackpackManager.abilityCount = 0;
             }
         }
 

@@ -14,7 +14,7 @@ public abstract class Menu : MonoBehaviour
         openMenu.SetActive(false);
     }
 
-    protected virtual void Open()
+    public virtual void Open()
     {
         AudioManager.Instance.MenuEnterAudio();
         Time.timeScale = 0;
@@ -22,7 +22,7 @@ public abstract class Menu : MonoBehaviour
         OpenBool = true;
     }
 
-    protected virtual void Close()
+    public virtual void Close()
     {
         AudioManager.Instance.MenuExitAudio();
         Time.timeScale = 1;
@@ -30,7 +30,7 @@ public abstract class Menu : MonoBehaviour
         OpenBool = false;
     }
 
-    protected virtual void TouchAudio()
+    public virtual void TouchAudio()
     {
         AudioManager.Instance.ButtonTouchAudio();
     }
