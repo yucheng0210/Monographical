@@ -3,69 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BackpackUIManager : Singleton<BackpackUIManager>
+public class BackpackUIManager : InventoryUIManager
 {
-    [SerializeField]
-    private GameObject gridManager;
+    private BackpackManager manager;
 
-    [SerializeField]
-    private BackpackGrid gridPrefab;
-
-    [SerializeField]
-    private Text itemInfo;
-
-    [SerializeField]
-    private Inventory_SO myBag;
-
-    [SerializeField]
-    private Text moneyText;
-
-    private void OnEnable()
+    public override void GetManager()
     {
-        RefreshItem();
-        itemInfo.text = "";
+        manager = GetComponent<BackpackManager>();
     }
 
-    public void UpdateItemInfo(string itemDes)
-    {
-        Instance.itemInfo.text = itemDes;
-    }
-
-    private void CreateNewItem(Item_SO item)
-    {
-        BackpackGrid newItem = Instantiate(
-            Instance.gridPrefab,
-            Instance.gridManager.transform.position,
-            Quaternion.identity
-        );
-        newItem.gameObject.transform.SetParent(Instance.gridManager.transform, false);
-        newItem.GridItem = item;
-        newItem.GridImage.sprite = item.ItemImage;
-        newItem.GridAmount.text = item.ItemHeld.ToString();
-    }
-
-    public void RefreshItem()
-    {
-        for (int i = 0; i < Instance.gridManager.transform.childCount; i++)
-        {
-            if (Instance.gridManager.transform.childCount == 0)
-                break;
-            Destroy(Instance.gridManager.transform.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < myBag.ItemList.Count; i++)
-        {
-            if (myBag.ItemList[i].ItemHeld == 0)
-            {
-                myBag.ItemList.Remove(myBag.ItemList[i]);
-                RefreshItem();
-            }
-            else
-                CreateNewItem(myBag.ItemList[i]);
-        }
-        moneyText.text = myBag.MoneyCount.ToString();
-    }
-
-    public void OnUsed(Item_SO item)
+    public override void OnUsed(Item_SO item)
     {
         switch (item.itemAbility)
         {
@@ -77,6 +24,6 @@ public class BackpackUIManager : Singleton<BackpackUIManager>
                 break;
         }
         if (BackpackManager.abilityCount == item.ItemAbilityNum)
-            BackpackManager.Instance.RemoveItem(item);
+            manager.RemoveItem(item);
     }
 }

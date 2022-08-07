@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public abstract class Grid : MonoBehaviour
 {
-    [SerializeField]
     private Item_SO gridItem;
 
     [SerializeField]
@@ -14,7 +13,6 @@ public abstract class Grid : MonoBehaviour
     [SerializeField]
     private Text gridAmount;
 
-    [SerializeField]
     private Button useButton;
     public Image GridImage
     {
@@ -31,17 +29,26 @@ public abstract class Grid : MonoBehaviour
         get { return gridItem; }
         set { gridItem = value; }
     }
+    public abstract void GetUIManager();
+
+    public void Awake()
+    {
+        GetUIManager();
+    }
 
     public void OnClicked()
     {
-        InventoryUIManager.Instance.UpdateItemInfo(gridItem.ItemInfo);
+        UpdateItemInfo(gridItem.ItemInfo);
         useButton = GameObject.Find("Use").GetComponent<Button>();
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(
             () =>
             {
-                InventoryUIManager.Instance.OnUsed(gridItem);
+                OnUsed(gridItem);
             }
         );
     }
+
+    public abstract void OnUsed(Item_SO item);
+    public abstract void UpdateItemInfo(string itemDes);
 }

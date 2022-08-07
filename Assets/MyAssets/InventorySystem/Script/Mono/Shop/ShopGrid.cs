@@ -2,20 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackpackManager : InventoryManager
+public class ShopGrid : Grid
 {
-    public static int abilityCount;
-
-    private BackpackUIManager UIManager;
+    private ShopUIManager UIManager;
 
     public override void GetUIManager()
     {
-        UIManager = GetComponent<BackpackUIManager>();
+        UIManager = FindObjectOfType<ShopUIManager>();
     }
 
-    public override void RefreshItem()
+    public override void OnUsed(Item_SO item)
     {
-        UIManager.RefreshItem();
+        UIManager.OnUsed(item);
     }
 
     public override void UpdateItemInfo(string itemDes)

@@ -33,6 +33,12 @@ public class Item_SO : ScriptableObject
     [SerializeField]
     private int itemCost;
 
+    [SerializeField]
+    private bool itemInShop;
+
+    [SerializeField]
+    private Item_SO itemInBackpack;
+
     #region Read from Item_SO
     public ItemAbility itemAbility;
     public int ItemAbilityNum
@@ -75,6 +81,14 @@ public class Item_SO : ScriptableObject
             if (itemCost < 0)
                 itemCost = 0;
         }
+    }
+    public bool ItemInShop
+    {
+        get { return itemInShop; }
+    }
+    public Item_SO ItemInBackpack
+    {
+        get { return itemInBackpack; }
     }
     #endregion
 }

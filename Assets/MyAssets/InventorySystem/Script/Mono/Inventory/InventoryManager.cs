@@ -2,10 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InventoryManager : Singleton<InventoryManager>
+public abstract class InventoryManager : MonoBehaviour
 {
     [SerializeField]
     private Inventory_SO myBag;
+    public Inventory_SO MyBag
+    {
+        get { return myBag; }
+        set { myBag = value; }
+    }
+
+    public void Awake()
+    {
+        GetUIManager();
+    }
+
+    public abstract void GetUIManager();
 
     public void AddItem(Item_SO item)
     {
@@ -17,22 +29,43 @@ public abstract class InventoryManager : Singleton<InventoryManager>
         }
         else
             item.ItemHeld++;
-        InventoryUIManager.Instance.RefreshItem();
+        RefreshItem();
     }
 
     public void RemoveItem(Item_SO item)
     {
-        InventoryUIManager.Instance.UpdateItemInfo("");
+        UpdateItemInfo("");
         if (item.ItemHeld <= 0)
             myBag.ItemList.Remove(item);
         else
             item.ItemHeld--;
-        InventoryUIManager.Instance.RefreshItem();
+        RefreshItem();
     }
+
+    /*public void RemoveAllItem()
+    {
+        UpdateItemInfo("");
+        myBag.ItemList.RemoveAll();
+        RefreshItem();
+    }*/
 
     public void AddMoney(int moneyCount)
     {
         myBag.MoneyCount += moneyCount;
-        InventoryUIManager.Instance.RefreshItem();
+        RefreshItem();
     }
+
+    public void ReduceMoney(int moneyCount)
+    {
+        myBag.MoneyCount -= moneyCount;
+        RefreshItem();
+    }
+
+    public int GetMoney()
+    {
+        return myBag.MoneyCount;
+    }
+
+    public abstract void UpdateItemInfo(string itemDes);
+    public abstract void RefreshItem();
 }

@@ -3,45 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BackpackGrid : MonoBehaviour
+public class BackpackGrid : Grid
 {
-    [SerializeField]
-    private Item_SO gridItem;
+    private BackpackUIManager UIManager;
 
-    [SerializeField]
-    private Image gridImage;
-
-    [SerializeField]
-    private Text gridAmount;
-
-    [SerializeField]
-    private Button useButton;
-    public Image GridImage
+    public override void GetUIManager()
     {
-        get { return gridImage; }
-        set { gridImage = value; }
-    }
-    public Text GridAmount
-    {
-        get { return gridAmount; }
-        set { gridAmount = value; }
-    }
-    public Item_SO GridItem
-    {
-        get { return gridItem; }
-        set { gridItem = value; }
+        UIManager = FindObjectOfType<BackpackUIManager>();
     }
 
-    public void OnClicked()
+    public override void OnUsed(Item_SO item)
     {
-        BackpackUIManager.Instance.UpdateItemInfo(gridItem.ItemInfo);
-        useButton = GameObject.Find("Use").GetComponent<Button>();
-        useButton.onClick.RemoveAllListeners();
-        useButton.onClick.AddListener(
-            () =>
-            {
-                BackpackUIManager.Instance.OnUsed(gridItem);
-            }
-        );
+        UIManager.OnUsed(item);
+    }
+
+    public override void UpdateItemInfo(string itemDes)
+    {
+        UIManager.UpdateItemInfo(itemDes);
     }
 }

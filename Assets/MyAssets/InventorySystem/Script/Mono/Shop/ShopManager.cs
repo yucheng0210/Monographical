@@ -2,37 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopManager : Singleton<ShopManager>
+public class ShopManager : InventoryManager
 {
-    [SerializeField]
-    private Inventory_SO myBag;
+    private ShopUIManager UIManager;
 
-    public void AddItem(Item_SO item)
+    public override void GetUIManager()
     {
-        if (!myBag.ItemList.Contains(item))
-        {
-            myBag.ItemList.Add(item);
-            item.ItemHeld++;
-            //InventoryManager.CreateNewItem(thisItem);
-        }
-        else
-            item.ItemHeld++;
-        ShopUIManager.Instance.RefreshItem();
+        UIManager = GetComponent<ShopUIManager>();
     }
 
-    public void RemoveItem(Item_SO item)
+    public override void RefreshItem()
     {
-        ShopUIManager.Instance.UpdateItemInfo("");
-        if (item.ItemHeld <= 0)
-            myBag.ItemList.Remove(item);
-        else
-            item.ItemHeld--;
-        ShopUIManager.Instance.RefreshItem();
+        UIManager.RefreshItem();
     }
 
-    public void AddMoney(int moneyCount)
+    public override void UpdateItemInfo(string itemDes)
     {
-        myBag.MoneyCount += moneyCount;
-        ShopUIManager.Instance.RefreshItem();
+        UIManager.UpdateItemInfo(itemDes);
     }
 }
