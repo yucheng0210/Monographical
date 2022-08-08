@@ -27,12 +27,12 @@ public class DialogSystem : MonoBehaviour
     private float currentTextWaitTime;
     private bool textFinished;
     List<string> textList = new List<string>();
-    private bool openShop;
+    private bool openMenu;
     public static bool isTalking;
-    public bool OpenShop
+    public bool OpenMenu
     {
-        get { return openShop; }
-        set { openShop = value; }
+        get { return openMenu; }
+        set { openMenu = value; }
     }
 
     private void Awake()
@@ -94,8 +94,8 @@ public class DialogSystem : MonoBehaviour
                 faceImage.sprite = NPCFace;
                 index++;
                 break;
-            case "SHOP":
-                openShop = true;
+            case "MENU":
+                openMenu = true;
                 gameObject.SetActive(false);
                 break;
         }

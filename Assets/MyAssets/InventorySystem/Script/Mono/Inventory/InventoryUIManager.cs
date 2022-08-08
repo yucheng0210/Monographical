@@ -22,11 +22,19 @@ public abstract class InventoryUIManager : MonoBehaviour
 
     [SerializeField]
     private Text moneyText;
+    public Inventory_SO MyBag
+    {
+        get { return myBag; }
+    }
+    public Inventory_SO Backpack
+    {
+        get { return backpack; }
+    }
 
     public void Awake()
     {
         GetManager();
-        RefreshItem();
+        RefreshItem(myBag);
         itemInfo.text = "";
     }
 
@@ -46,20 +54,16 @@ public abstract class InventoryUIManager : MonoBehaviour
         newItem.GridAmount.text = item.ItemHeld.ToString();
     }
 
-    public void RefreshItem()
+    public void RefreshItem(Inventory_SO myBag)
     {
         for (int i = 0; i < gridManager.transform.childCount; i++)
-        {
-            if (gridManager.transform.childCount == 0)
-                break;
             Destroy(gridManager.transform.GetChild(i).gameObject);
-        }
         for (int i = 0; i < myBag.ItemList.Count; i++)
         {
             if (myBag.ItemList[i].ItemHeld == 0)
             {
                 myBag.ItemList.Remove(myBag.ItemList[i]);
-                RefreshItem();
+                RefreshItem(myBag);
             }
             else
                 CreateNewItem(myBag.ItemList[i]);

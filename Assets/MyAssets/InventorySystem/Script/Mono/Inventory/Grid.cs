@@ -39,7 +39,7 @@ public abstract class Grid : MonoBehaviour
     public void OnClicked()
     {
         UpdateItemInfo(gridItem.ItemInfo);
-        useButton = GameObject.Find("Use").GetComponent<Button>();
+        useButton = GameObject.FindGameObjectWithTag("Use").GetComponent<Button>();
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(
             () =>

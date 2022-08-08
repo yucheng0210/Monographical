@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopManager : InventoryManager
+public class QuestManager : InventoryManager
 {
-    private ShopUIManager UIManager;
+    private QuestUIManager questUIManager;
 
     public override void GetUIManager()
     {
-        UIManager = GetComponent<ShopUIManager>();
+        questUIManager = GetComponent<QuestUIManager>();
     }
 
     public override void RefreshItem()
     {
-        UIManager.RefreshItem(MyBag);
+        questUIManager.RefreshItem(MyBag);
     }
 
     public override void UpdateItemInfo(string itemDes)
     {
-        UIManager.UpdateItemInfo(itemDes);
+        questUIManager.UpdateItemInfo(itemDes);
     }
 }

@@ -37,7 +37,7 @@ public class Item_SO : ScriptableObject
     private bool itemInShop;
 
     [SerializeField]
-    private Item_SO itemInBackpack;
+    private Item_SO itemInOther;
 
     #region Read from Item_SO
     public ItemAbility itemAbility;
@@ -86,9 +86,9 @@ public class Item_SO : ScriptableObject
     {
         get { return itemInShop; }
     }
-    public Item_SO ItemInBackpack
+    public Item_SO ItemInOther
     {
-        get { return itemInBackpack; }
+        get { return itemInOther; }
     }
     #endregion
 }

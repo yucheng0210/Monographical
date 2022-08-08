@@ -12,11 +12,11 @@ public class ShopMenu : Menu
 
     private void Update()
     {
-        if (shopDialog.OpenShop && !OpenBool)
+        if (shopDialog.OpenMenu && !OpenBool)
         {
             Open();
-            shopDialog.OpenShop = false;
-            shopUIManager.RefreshItem();
+            shopDialog.OpenMenu = false;
+            shopUIManager.RefreshItem(shopUIManager.MyBag);
             shopUIManager.UpdateItemInfo("");
         }
     }
