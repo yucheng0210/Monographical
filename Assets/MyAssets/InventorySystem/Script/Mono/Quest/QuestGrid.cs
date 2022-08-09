@@ -13,11 +13,16 @@ public class QuestGrid : Grid
 
     public override void OnUsed(Item_SO item)
     {
-        throw new System.NotImplementedException();
+        questUIManager.OnUsed(item);
     }
 
     public override void UpdateItemInfo(string itemDes)
     {
         questUIManager.UpdateItemInfo(itemDes);
+    }
+    public override void OnClicked()
+    {
+        base.OnClicked();
+        //questUIManager.UpdateItemInfo();
     }
 }

@@ -36,7 +36,7 @@ public abstract class Grid : MonoBehaviour
         GetUIManager();
     }
 
-    public void OnClicked()
+    public virtual void OnClicked()
     {
         UpdateItemInfo(gridItem.ItemInfo);
         useButton = GameObject.FindGameObjectWithTag("Use").GetComponent<Button>();
