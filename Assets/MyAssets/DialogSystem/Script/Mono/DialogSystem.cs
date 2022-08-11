@@ -35,14 +35,13 @@ public class DialogSystem : MonoBehaviour
     [SerializeField]
     private GameObject choiceManager;
 
-    [SerializeField]
     private List<Dialog_SO> dialogList = new List<Dialog_SO>();
 
-    [SerializeField]
     private Dialog_SO dialog;
 
     [SerializeField]
     private string branchID = "DEFAULT";
+    private bool continueBool;
     public bool OpenMenu
     {
         get { return openMenu; }
@@ -57,6 +56,8 @@ public class DialogSystem : MonoBehaviour
 
     private void OnEnable()
     {
+        continueBool = false;
+        branchID = "DEFAULT";
         index = 0;
         isTalking = true;
         textFinished = true;
@@ -66,13 +67,15 @@ public class DialogSystem : MonoBehaviour
     private void OnDisable()
     {
         isTalking = false;
-        for (int i = 0; i < choiceManager.transform.childCount; i++)
-            Destroy(choiceManager.transform.GetChild(i).gameObject);
+        DestroyChoice();
     }
 
     private void Update()
     {
+        if (Time.timeScale == 0)
+            return;
         SetType();
+        ContinueDialog();
     }
 
     private void GetTextFromFile(TextAsset file)
@@ -85,7 +88,7 @@ public class DialogSystem : MonoBehaviour
             string[] row = lineData[i].Split(new char[] { ',' });
             if (row[1] == "")
                 break;
-            dialog = new Dialog_SO();
+            dialog = ScriptableObject.CreateInstance<Dialog_SO>();
             dialog.Branch = row[0];
             dialog.Type = row[1];
             dialog.CharacterName = row[2];
@@ -97,17 +100,26 @@ public class DialogSystem : MonoBehaviour
 
     private void SetType()
     {
-        if (index == dialogList.Count)
+        if (index >= dialogList.Count)
         {
-            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
+            if (InSelection())
+                return;
+            if (continueBool)
                 gameObject.SetActive(false);
+            return;
+        }
+        if (dialogList[index].Branch != branchID)
+        {
+            if (!InSelection())
+                index++;
             return;
         }
         switch (dialogList[index].Type)
         {
             case "TALK":
-                if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
+                if (continueBool)
                 {
+                    continueBool = false;
                     if (textFinished)
                     {
                         currentTextWaitTime = maxTextWaitTime;
@@ -121,8 +133,11 @@ public class DialogSystem : MonoBehaviour
                 ChoiceMenu();
                 break;
             case "MENU":
-                openMenu = true;
-                gameObject.SetActive(false);
+                if (continueBool)
+                {
+                    openMenu = true;
+                    index++;
+                }
                 break;
         }
     }
@@ -160,18 +175,49 @@ public class DialogSystem : MonoBehaviour
 
     private void ChoiceMenu()
     {
+        string buttonBranchID = dialogList[index].CharacterName;
         GameObject choice;
         choice = Instantiate(choiceButton, choiceManager.transform.position, Quaternion.identity);
         choice.transform.SetParent(choiceManager.transform, false);
         choice.GetComponentInChildren<Text>().text = dialogList[index].Dialog;
-        choice.GetComponent<Button>().onClick.AddListener(GetBranchID);
+        choice
+            .GetComponent<Button>()
+            .onClick.AddListener(
+                () =>
+                {
+                    GetBranchID(buttonBranchID);
+                }
+            );
         index++;
         //foreach (GameObject choice in choiceList) { }
     }
 
-    private void GetBranchID()
+    private void GetBranchID(string buttonBranchID)
     {
-        branchID = dialogList[index].Branch;
-        index++;
+        branchID = buttonBranchID;
+        DestroyChoice();
+        if (index >= dialogList.Count)
+            gameObject.SetActive(false);
+        continueBool = true;
+    }
+
+    private void DestroyChoice()
+    {
+        for (int i = 0; i < choiceManager.transform.childCount; i++)
+            Destroy(choiceManager.transform.GetChild(i).gameObject);
+    }
+
+    private bool InSelection()
+    {
+        if (choiceManager.transform.childCount > 0)
+            return true;
+        else
+            return false;
+    }
+
+    private void ContinueDialog()
+    {
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
+            continueBool = true;
     }
 }
