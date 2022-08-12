@@ -13,7 +13,7 @@ public class DialogSystem : MonoBehaviour
 
     [SerializeField]
     private Sprite playerFace,
-        NPCFace;
+        npcFace;
 
     [SerializeField]
     private TextAsset textFile;
@@ -42,10 +42,20 @@ public class DialogSystem : MonoBehaviour
     [SerializeField]
     private string branchID = "DEFAULT";
     private bool continueBool;
+
+    [SerializeField]
+    private QuestManager questManager;
+
+    [SerializeField]
+    private QusetUIManager qusetUIManager;
     public bool OpenMenu
     {
         get { return openMenu; }
         set { openMenu = value; }
+    }
+    public List<Dialog_SO> DialogList
+    {
+        get { return dialogList; }
     }
 
     private void Awake()
@@ -91,8 +101,8 @@ public class DialogSystem : MonoBehaviour
             dialog = ScriptableObject.CreateInstance<Dialog_SO>();
             dialog.Branch = row[0];
             dialog.Type = row[1];
-            dialog.CharacterName = row[2];
-            dialog.Dialog = row[3];
+            dialog.TheName = row[2];
+            dialog.Content = row[3];
             dialogList.Add(dialog);
         }
         dialog.DialogList = dialogList;
@@ -139,6 +149,12 @@ public class DialogSystem : MonoBehaviour
                     index++;
                 }
                 break;
+            case "QUEST":
+                questManager.QuestActive(this, index);
+                qusetUIManager.RefreshItem();
+                if (continueBool)
+                    gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -146,27 +162,18 @@ public class DialogSystem : MonoBehaviour
     {
         textFinished = false;
         textLabel.text = "";
-        switch (dialogList[index].CharacterName)
+        switch (dialogList[index].TheName)
         {
             case "PLAYER":
                 faceImage.sprite = playerFace;
                 break;
             case "NPC":
-                faceImage.sprite = NPCFace;
+                faceImage.sprite = npcFace;
                 break;
-            /*case "MENU":
-                openMenu = true;
-                gameObject.SetActive(false);
-                break;
-            case "CHOICE":
-                index++;
-                ChoiceMenu(int.Parse(textList[index]));
-                //gameObject.SetActive(false);
-                break;*/
         }
-        for (int i = 0; i < dialogList[index].Dialog.Length; i++)
+        for (int i = 0; i < dialogList[index].Content.Length; i++)
         {
-            textLabel.text += dialogList[index].Dialog[i];
+            textLabel.text += dialogList[index].Content[i];
             yield return new WaitForSeconds(currentTextWaitTime);
         }
         textFinished = true;
@@ -175,11 +182,11 @@ public class DialogSystem : MonoBehaviour
 
     private void ChoiceMenu()
     {
-        string buttonBranchID = dialogList[index].CharacterName;
+        string buttonBranchID = dialogList[index].TheName;
         GameObject choice;
         choice = Instantiate(choiceButton, choiceManager.transform.position, Quaternion.identity);
         choice.transform.SetParent(choiceManager.transform, false);
-        choice.GetComponentInChildren<Text>().text = dialogList[index].Dialog;
+        choice.GetComponentInChildren<Text>().text = dialogList[index].Content;
         choice
             .GetComponent<Button>()
             .onClick.AddListener(

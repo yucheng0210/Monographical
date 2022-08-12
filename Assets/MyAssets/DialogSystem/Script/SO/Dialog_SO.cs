@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewDialog", menuName = "Dialog/NewDialog")]
+//[CreateAssetMenu(fileName = "NewDialog", menuName = "Dialog/NewDialog")]
 public class Dialog_SO : ScriptableObject
 {
     [SerializeField]
@@ -12,10 +12,10 @@ public class Dialog_SO : ScriptableObject
     private string type;
 
     [SerializeField]
-    private string characterName;
+    private string theName;
 
     [SerializeField]
-    private string dialog;
+    private string content;
 
     [SerializeField]
     private List<Dialog_SO> dialogList = new List<Dialog_SO>();
@@ -30,15 +30,15 @@ public class Dialog_SO : ScriptableObject
         get { return type; }
         set { type = value; }
     }
-    public string CharacterName
+    public string TheName
     {
-        get { return characterName; }
-        set { characterName = value; }
+        get { return theName; }
+        set { theName = value; }
     }
-    public string Dialog
+    public string Content
     {
-        get { return dialog; }
-        set { dialog = value; }
+        get { return content; }
+        set { content = value; }
     }
     public List<Dialog_SO> DialogList
     {
