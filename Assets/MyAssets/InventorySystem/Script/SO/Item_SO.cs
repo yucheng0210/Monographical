@@ -12,6 +12,9 @@ public class Item_SO : ScriptableObject
     }
 
     [SerializeField]
+    private int itemIndex;
+
+    [SerializeField]
     private int itemAbilityNum;
 
     [SerializeField]
@@ -40,6 +43,10 @@ public class Item_SO : ScriptableObject
     private Item_SO itemInOther;
 
     #region Read from Item_SO
+    public int ItemIndex
+    {
+        get { return itemIndex; }
+    }
     public ItemAbility itemAbility;
     public int ItemAbilityNum
     {

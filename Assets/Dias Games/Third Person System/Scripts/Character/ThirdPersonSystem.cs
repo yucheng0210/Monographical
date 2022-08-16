@@ -218,7 +218,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void OnDisable()
         {
-            GameManager.Instance.RemoveObservers(this);
+//            GameManager.Instance.RemoveObservers(this);
         }
 
         private void Awake()

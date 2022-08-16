@@ -5,23 +5,16 @@ using UnityEngine;
 public class QuestManager : MonoBehaviour
 {
     [SerializeField]
-    private TextAsset textFile;
-    private List<Quest_SO> questList = new List<Quest_SO>();
+    private QuestList_SO questList;
 
-    [SerializeField]
-    private Inventory_SO backpack;
+    public Inventory_SO backpack;
 
     private QusetUIManager qusetUIManager;
-    private string[] lineData;
-    public Inventory_SO Backpack
-    {
-        get { return backpack; }
-        set { backpack = value; }
-    }
-    public List<Quest_SO> QuestList
-    {
-        get { return questList; }
-    }
+
+    public Inventory_SO rewardInventory;
+
+    public Inventory_SO objectiveInventory;
+
 
     private void Awake()
     {
@@ -30,7 +23,14 @@ public class QuestManager : MonoBehaviour
 
     public void QuestActive(DialogSystem dialogSystem, int index)
     {
-        QuestList[int.Parse(dialogSystem.DialogList[index].Content)].Status = 1;
+        questList.QuestList[int.Parse(dialogSystem.DialogList[index].Content)].Status = 1;
         qusetUIManager.RefreshItem();
     }
+
+    public void GetReward()
+    {
+        foreach (Item_SO i in rewardInventory.ItemList)
+            Debug.Log("");
+    }
+
 }

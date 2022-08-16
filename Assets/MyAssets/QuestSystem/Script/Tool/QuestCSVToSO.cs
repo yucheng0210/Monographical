@@ -4,20 +4,21 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class QuestCsvToSO
+public class QuestCSVToSO
 {
+    private static string path = "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv";
+    private static QuestList_SO questList = new QuestList_SO();
+
     [MenuItem("CSVToSO/CreateQuestSO")]
     public static void CreateQuestSO()
     {
-        string[] allLineData = File.ReadAllLines(
-            "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv"
-        );
-        allLineData = allLineData[0].Split(new char[] { '\n' });
-        for (int i = 1; i < allLineData.Length - 1; i++)
+        string[] allLineData = File.ReadAllLines(path);
+        foreach (string s in allLineData)
         {
-            Debug.Log("0");
-            string[] row = allLineData[i].Split(',');
-            if (row[1] == "")
+            string[] row = s.Split(',');
+            if (row[0] == "ID")
+                continue;
+            if (row.Length != 8)
                 break;
             Quest_SO quest = ScriptableObject.CreateInstance<Quest_SO>();
             quest.ID = int.Parse(row[0]);
@@ -28,12 +29,17 @@ public class QuestCsvToSO
             quest.Rewards = row[5];
             quest.Task = row[6];
             quest.Parent = int.Parse(row[7]);
+            questList.QuestList.Add(quest);
             AssetDatabase.CreateAsset(
                 quest,
-                $"Assets/MyAssets/QuestSystem/QuestData/{quest.TheName}.asset"
+                $"Assets/MyAssets/QuestSystem/QuestData/Quest/{quest.TheName}.asset"
             );
         }
+
+        AssetDatabase.CreateAsset(
+            questList,
+            "Assets/MyAssets/QuestSystem/QuestData/QuestList/QuestList.asset"
+        );
         AssetDatabase.SaveAssets();
-        Debug.Log("哈哈");
     }
 }

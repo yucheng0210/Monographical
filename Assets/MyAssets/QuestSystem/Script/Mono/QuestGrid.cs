@@ -7,7 +7,6 @@ public class QuestGrid : MonoBehaviour
 {
     private Quest_SO gridItem;
 
-    [SerializeField]
     private Text gridName;
 
     private Button useButton;
@@ -23,9 +22,15 @@ public class QuestGrid : MonoBehaviour
         set { gridItem = value; }
     }
 
-    private void OnClicked()
+    private void Awake()
     {
-        qusetUIManager.UpdateQuestDes(gridItem.Des);
-        qusetUIManager.UpdateQuestRewards(gridItem.Rewards);
+        qusetUIManager = FindObjectOfType<QusetUIManager>();
+        gridName = GetComponentInChildren<Text>();
+    }
+
+    public void OnClicked()
+    {
+        qusetUIManager.UpdateQuestText(gridItem.Des, gridItem.Rewards);
+        qusetUIManager.RefreshObjective(gridItem.ID);
     }
 }

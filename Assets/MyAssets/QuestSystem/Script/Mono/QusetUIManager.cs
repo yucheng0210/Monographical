@@ -16,7 +16,16 @@ public class QusetUIManager : MonoBehaviour
 
     [SerializeField]
     private GameObject gridManager;
+
+    [SerializeField]
+    private GameObject objectiveManager;
+
+    [SerializeField]
+    private QuestObjectiveGrid objectivePrefab;
     private QuestManager questManager;
+
+    [SerializeField]
+    private QuestList_SO questList;
 
     private void Awake()
     {
@@ -25,14 +34,11 @@ public class QusetUIManager : MonoBehaviour
         questInfo.text = "";
     }
 
-    public void UpdateQuestDes(string questDes)
+    public void UpdateQuestText(string questDes, string reward)
     {
         questInfo.text = questDes;
-    }
-
-    public void UpdateQuestRewards(string reward)
-    {
         questRewards.text = reward;
+        //questObjective.text = objective;
     }
 
     private void CreateNewItem(Quest_SO quest)
@@ -47,19 +53,56 @@ public class QusetUIManager : MonoBehaviour
         newQuest.GridName.text = quest.TheName;
     }
 
+    private void CreateNewObjective(Item_SO item)
+    {
+        QuestObjectiveGrid newObjective = Instantiate(
+            objectivePrefab,
+            objectiveManager.transform.position,
+            Quaternion.identity
+        );
+        newObjective.gameObject.transform.SetParent(objectiveManager.transform, false);
+        foreach (Item_SO i in questManager.backpack.ItemList)
+        {
+            if (i.ItemInOther == item)
+            {
+                newObjective.ObjectiveText.text =
+                    i.ItemHeld.ToString() + "/" + item.ItemHeld.ToString();
+                newObjective.ObjectiveImage.sprite = item.ItemImage;
+            }
+        }
+    }
+
     public void RefreshItem()
     {
         for (int i = 0; i < gridManager.transform.childCount; i++)
             Destroy(gridManager.transform.GetChild(i).gameObject);
-        for (int i = 0; i < questManager.QuestList.Count; i++)
+        for (int i = 0; i < questList.QuestList.Count; i++)
         {
-            if (questManager.QuestList[i].Status != 1)
+            if (questList.QuestList[i].Status != 1)
             {
-                questManager.QuestList.Remove(questManager.QuestList[i]);
+                questList.QuestList.Remove(questList.QuestList[i]);
                 RefreshItem();
             }
             else
-                CreateNewItem(questManager.QuestList[i]);
+                CreateNewItem(questList.QuestList[i]);
+        }
+    }
+
+    public void RefreshObjective(int id)
+    {
+        for (int i = 0; i < objectiveManager.transform.childCount; i++)
+            Destroy(objectiveManager.transform.GetChild(i).gameObject);
+        for (int i = 0; i < questManager.objectiveInventory.ItemList.Count; i++)
+        {
+            if (questManager.objectiveInventory.ItemList[i].ItemHeld == 0)
+            {
+                questManager.objectiveInventory.ItemList.Remove(
+                    questManager.objectiveInventory.ItemList[i]
+                );
+                RefreshObjective(id);
+            }
+            else if (questManager.objectiveInventory.ItemList[i].ItemIndex == id)
+                CreateNewObjective(questManager.objectiveInventory.ItemList[i]);
         }
     }
 }

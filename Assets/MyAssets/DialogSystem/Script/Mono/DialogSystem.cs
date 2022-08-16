@@ -66,6 +66,7 @@ public class DialogSystem : MonoBehaviour
 
     private void OnEnable()
     {
+        currentTextWaitTime = maxTextWaitTime;
         continueBool = false;
         branchID = "DEFAULT";
         index = 0;
@@ -95,6 +96,7 @@ public class DialogSystem : MonoBehaviour
         string[] lineData = file.text.Split(new char[] { '\n' });
         for (int i = 1; i < lineData.Length - 1; i++)
         {
+            //Debug.Log(lineData.Length);
             string[] row = lineData[i].Split(new char[] { ',' });
             if (row[1] == "")
                 break;
@@ -151,7 +153,6 @@ public class DialogSystem : MonoBehaviour
                 break;
             case "QUEST":
                 questManager.QuestActive(this, index);
-                qusetUIManager.RefreshItem();
                 if (continueBool)
                     gameObject.SetActive(false);
                 break;

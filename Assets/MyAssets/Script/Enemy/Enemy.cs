@@ -115,7 +115,7 @@ public class Enemy : MonoBehaviour, IObserver
 
     private void OnDisable()
     {
-        GameManager.Instance.RemoveObservers(this);
+//        GameManager.Instance.RemoveObservers(this);
     }
 
     private void Update()
