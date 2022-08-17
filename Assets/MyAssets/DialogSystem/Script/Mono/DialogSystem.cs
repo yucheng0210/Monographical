@@ -18,6 +18,7 @@ public class DialogSystem : MonoBehaviour
     [SerializeField]
     private TextAsset textFile;
 
+    [SerializeField]
     private int index;
 
     [SerializeField]
@@ -40,8 +41,9 @@ public class DialogSystem : MonoBehaviour
     private Dialog_SO dialog;
 
     [SerializeField]
-    private string branchID = "DEFAULT";
+    private string currentBranchID = "DEFAULT";
     private bool continueBool;
+    private bool inSelection;
 
     [SerializeField]
     private QuestManager questManager;
@@ -68,7 +70,7 @@ public class DialogSystem : MonoBehaviour
     {
         currentTextWaitTime = maxTextWaitTime;
         continueBool = false;
-        branchID = "DEFAULT";
+        currentBranchID = "DEFAULT";
         index = 0;
         isTalking = true;
         textFinished = true;
@@ -104,7 +106,8 @@ public class DialogSystem : MonoBehaviour
             dialog.Branch = row[0];
             dialog.Type = row[1];
             dialog.TheName = row[2];
-            dialog.Content = row[3];
+            dialog.Order = row[3];
+            dialog.Content = row[4];
             dialogList.Add(dialog);
         }
         dialog.DialogList = dialogList;
@@ -114,22 +117,22 @@ public class DialogSystem : MonoBehaviour
     {
         if (index >= dialogList.Count)
         {
-            if (InSelection())
+            if (inSelection)
                 return;
             if (continueBool)
                 gameObject.SetActive(false);
             return;
         }
-        if (dialogList[index].Branch != branchID)
+        if (dialogList[index].Branch != currentBranchID)
         {
-            if (!InSelection())
+            if (!inSelection)
                 index++;
             return;
         }
         switch (dialogList[index].Type)
         {
             case "TALK":
-                if (continueBool)
+                if (continueBool && !inSelection)
                 {
                     continueBool = false;
                     if (textFinished)
@@ -183,7 +186,8 @@ public class DialogSystem : MonoBehaviour
 
     private void ChoiceMenu()
     {
-        string buttonBranchID = dialogList[index].TheName;
+        inSelection = true;
+        string buttonBranchID = dialogList[index].Order;
         GameObject choice;
         choice = Instantiate(choiceButton, choiceManager.transform.position, Quaternion.identity);
         choice.transform.SetParent(choiceManager.transform, false);
@@ -202,10 +206,11 @@ public class DialogSystem : MonoBehaviour
 
     private void GetBranchID(string buttonBranchID)
     {
-        branchID = buttonBranchID;
+        currentBranchID = buttonBranchID;
         DestroyChoice();
-        if (index >= dialogList.Count)
-            gameObject.SetActive(false);
+        /* if (index >= dialogList.Count)
+            gameObject.SetActive(false);*/
+        inSelection = false;
         continueBool = true;
     }
 
@@ -213,14 +218,6 @@ public class DialogSystem : MonoBehaviour
     {
         for (int i = 0; i < choiceManager.transform.childCount; i++)
             Destroy(choiceManager.transform.GetChild(i).gameObject);
-    }
-
-    private bool InSelection()
-    {
-        if (choiceManager.transform.childCount > 0)
-            return true;
-        else
-            return false;
     }
 
     private void ContinueDialog()

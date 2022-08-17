@@ -15,7 +15,6 @@ public class QuestManager : MonoBehaviour
 
     public Inventory_SO objectiveInventory;
 
-
     private void Awake()
     {
         qusetUIManager = GetComponent<QusetUIManager>();
@@ -23,7 +22,8 @@ public class QuestManager : MonoBehaviour
 
     public void QuestActive(DialogSystem dialogSystem, int index)
     {
-        questList.QuestList[int.Parse(dialogSystem.DialogList[index].Content)].Status = 1;
+        Debug.Log(int.Parse(dialogSystem.DialogList[index].Order));
+        questList.QuestList[int.Parse(dialogSystem.DialogList[index].Order)].Status = 1;
         qusetUIManager.RefreshItem();
     }
 
@@ -32,5 +32,4 @@ public class QuestManager : MonoBehaviour
         foreach (Item_SO i in rewardInventory.ItemList)
             Debug.Log("");
     }
-
 }

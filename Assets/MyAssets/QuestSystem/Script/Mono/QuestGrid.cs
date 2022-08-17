@@ -6,9 +6,7 @@ using UnityEngine.UI;
 public class QuestGrid : MonoBehaviour
 {
     private Quest_SO gridItem;
-
     private Text gridName;
-
     private Button useButton;
     private QusetUIManager qusetUIManager;
     public Text GridName

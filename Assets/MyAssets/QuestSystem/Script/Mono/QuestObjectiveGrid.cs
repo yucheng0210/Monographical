@@ -22,5 +22,12 @@ public class QuestObjectiveGrid : MonoBehaviour
     {
         objectiveText = GetComponentInChildren<Text>();
         objectiveImage = GetComponentInChildren<Image>();
+        //objectiveText.text = "";
+    }
+
+    private void OnEnable()
+    {
+        objectiveText.text = "";
+        objectiveImage.sprite = null;
     }
 }

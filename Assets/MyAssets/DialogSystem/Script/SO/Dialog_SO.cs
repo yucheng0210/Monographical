@@ -18,6 +18,9 @@ public class Dialog_SO : ScriptableObject
     private string content;
 
     [SerializeField]
+    private string order;
+
+    [SerializeField]
     private List<Dialog_SO> dialogList = new List<Dialog_SO>();
     #region Read from Dialog
     public string Branch
@@ -39,6 +42,11 @@ public class Dialog_SO : ScriptableObject
     {
         get { return content; }
         set { content = value; }
+    }
+    public string Order
+    {
+        get { return order; }
+        set { order = value; }
     }
     public List<Dialog_SO> DialogList
     {
