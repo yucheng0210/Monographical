@@ -24,8 +24,7 @@ public class QusetUIManager : MonoBehaviour
     private QuestObjectiveGrid objectivePrefab;
     private QuestManager questManager;
 
-    [SerializeField]
-    private QuestList_SO questList;
+    public QuestList_SO questList;
 
     private void Awake()
     {
@@ -60,7 +59,7 @@ public class QusetUIManager : MonoBehaviour
         newQuest.GridName.text = quest.TheName;
     }
 
-    private void CreateNewObjective(Item_SO objectiveItem)
+    private void CreateNewObjective(Item_SO objectiveItem, int id)
     {
         QuestObjectiveGrid newObjective = Instantiate(
             objectivePrefab,
@@ -68,13 +67,18 @@ public class QusetUIManager : MonoBehaviour
             Quaternion.identity
         );
         newObjective.gameObject.transform.SetParent(objectiveManager.transform, false);
-        foreach (Item_SO i in questManager.backpack.ItemList)
+        foreach (Item_SO backItem in questManager.backpack.ItemList)
         {
-            if (objectiveItem.ItemInOther == i)
+            if (objectiveItem.ItemInOther == backItem)
             {
                 newObjective.ObjectiveText.text =
-                    i.ItemHeld.ToString() + "/" + objectiveItem.ItemHeld.ToString();
+                    backItem.ItemHeld.ToString() + "/" + objectiveItem.ItemHeld.ToString();
                 newObjective.ObjectiveImage.sprite = objectiveItem.ItemImage;
+                if (questManager.GetQuestState(objectiveItem, backItem))
+                {
+                    questList.QuestList[id].Status = 2;
+                    backItem.ItemHeld -= objectiveItem.ItemHeld;
+                }
             }
         }
     }
@@ -95,15 +99,8 @@ public class QusetUIManager : MonoBehaviour
         DestroyObjective();
         for (int i = 0; i < questManager.objectiveInventory.ItemList.Count; i++)
         {
-            if (questManager.objectiveInventory.ItemList[i].ItemHeld == 0)
-            {
-                questManager.objectiveInventory.ItemList.Remove(
-                    questManager.objectiveInventory.ItemList[i]
-                );
-                RefreshObjective(id);
-            }
-            else if (questManager.objectiveInventory.ItemList[i].ItemIndex == id)
-                CreateNewObjective(questManager.objectiveInventory.ItemList[i]);
+            if (questManager.objectiveInventory.ItemList[i].ItemIndex == id)
+                CreateNewObjective(questManager.objectiveInventory.ItemList[i], id);
         }
     }
 

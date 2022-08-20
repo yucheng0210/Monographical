@@ -22,7 +22,9 @@ public class Dialog_SO : ScriptableObject
 
     [SerializeField]
     private List<Dialog_SO> dialogList = new List<Dialog_SO>();
+
     #region Read from Dialog
+
     public string Branch
     {
         get { return branch; }

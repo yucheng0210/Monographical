@@ -3374,6 +3374,12 @@ PrefabInstance:
       objectReference: {fileID: 4900000, guid: a411dd2126d0fd641ad40d65c7ac5a63, type: 3}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
+      propertyPath: dialogList
+      value: 
+      objectReference: {fileID: 11400000, guid: 2e2757b44f10cae409db9c0847faf476,
+        type: 2}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
       propertyPath: questManager
       value: 
       objectReference: {fileID: 1181844199}
@@ -7979,14 +7985,30 @@ PrefabInstance:
       objectReference: {fileID: 4900000, guid: 49d97814c86f5ef4784420354eb247d8, type: 3}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
+      propertyPath: dialogList
+      value: 
+      objectReference: {fileID: 11400000, guid: 25358dfd03261ab419c3d43f9dff2053,
+        type: 2}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
       propertyPath: questManager
       value: 
       objectReference: {fileID: 1181844199}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
+      propertyPath: isQuestDialog
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
       propertyPath: qusetUIManager
       value: 
       objectReference: {fileID: 1181844198}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
+      propertyPath: currentBranchID
+      value: DEFAULT
+      objectReference: {fileID: 0}
     - target: {fileID: 8601234741132718545, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
       propertyPath: textFile
@@ -10806,17 +10828,17 @@ PrefabInstance:
     - target: {fileID: 912061707186965012, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.064367145
+      value: -0.06436712
       objectReference: {fileID: 0}
     - target: {fileID: 912061707186965012, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 3.4777514e-10
+      value: -0.000000034178456
       objectReference: {fileID: 0}
     - target: {fileID: 912061707186965012, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 3.5848657e-11
+      value: -0.0000000011819485
       objectReference: {fileID: 0}
     - target: {fileID: 2922994174811391503, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
@@ -10831,12 +10853,12 @@ PrefabInstance:
     - target: {fileID: 6681220397465896246, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 4.439318e-16
+      value: 4.4393508e-16
       objectReference: {fileID: 0}
     - target: {fileID: 6681220397465896246, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1.1826493e-17
+      value: 1.17019306e-17
       objectReference: {fileID: 0}
     - target: {fileID: 6681220397534776799, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
@@ -10861,37 +10883,37 @@ PrefabInstance:
     - target: {fileID: 6681220397806150312, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 4.440779e-16
+      value: 4.4407878e-16
       objectReference: {fileID: 0}
     - target: {fileID: 6681220397806150312, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 3.1778929e-18
+      value: 3.0532897e-18
       objectReference: {fileID: 0}
     - target: {fileID: 6681220398316678945, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.029959612
+      value: -0.029959613
       objectReference: {fileID: 0}
     - target: {fileID: 6681220398316678945, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000018618093
+      value: 9.9671955e-20
       objectReference: {fileID: 0}
     - target: {fileID: 6681220398316678945, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -5.5804132e-11
+      value: 2.8652337e-19
       objectReference: {fileID: 0}
     - target: {fileID: 6681220398991808205, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -4.4402671e-16
+      value: -4.4402878e-16
       objectReference: {fileID: 0}
     - target: {fileID: 6681220398991808205, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -7.453731e-18
+      value: -7.329142e-18
       objectReference: {fileID: 0}
     - target: {fileID: 7034662626931553999, guid: 0d52ccc4b1a4e054c838092513741e4b,
         type: 3}
@@ -11290,6 +11312,12 @@ PrefabInstance:
       propertyPath: textFile
       value: 
       objectReference: {fileID: 4900000, guid: 0fa4cb462df349f49b20ed5296c9f262, type: 3}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
+      propertyPath: dialogList
+      value: 
+      objectReference: {fileID: 11400000, guid: 25f909f74cff77d46bfbdd82ccedaa94,
+        type: 2}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
       propertyPath: questManager

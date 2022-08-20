@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    [SerializeField]
-    private QuestList_SO questList;
+    public QuestList_SO questList;
 
     public Inventory_SO backpack;
 
@@ -20,11 +19,16 @@ public class QuestManager : MonoBehaviour
         qusetUIManager = GetComponent<QusetUIManager>();
     }
 
-    public void QuestActive(DialogSystem dialogSystem, int index)
+    public void SetQuestActive(DialogList_SO dialogList, int index)
     {
-        Debug.Log(int.Parse(dialogSystem.DialogList[index].Order));
-        questList.QuestList[int.Parse(dialogSystem.DialogList[index].Order)].Status = 1;
+        //Debug.Log(int.Parse(dialogSystem.DialogList[index].Order));
+        questList.QuestList[int.Parse(dialogList.DialogList[index].Order)].Status = 1;
         qusetUIManager.RefreshItem();
+    }
+
+    public bool GetQuestState(Item_SO objectiveItem, Item_SO backItem)
+    {
+        return backItem.ItemHeld >= objectiveItem.ItemHeld;
     }
 
     public void GetReward()
