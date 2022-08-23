@@ -7,6 +7,7 @@ public class BackpackManager : InventoryManager
     public static int abilityCount;
 
     private BackpackUIManager UIManager;
+    private QuestUIManager qusetUIManager;
 
     public override void GetUIManager()
     {

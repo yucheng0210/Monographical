@@ -8,7 +8,7 @@ public class QuestManager : MonoBehaviour
 
     public Inventory_SO backpack;
 
-    private QusetUIManager qusetUIManager;
+    private QuestUIManager questUIManager;
 
     public Inventory_SO rewardInventory;
 
@@ -16,24 +16,17 @@ public class QuestManager : MonoBehaviour
 
     private void Awake()
     {
-        qusetUIManager = GetComponent<QusetUIManager>();
+        questUIManager = GetComponent<QuestUIManager>();
     }
 
     public void SetQuestActive(DialogList_SO dialogList, int index)
     {
-        //Debug.Log(int.Parse(dialogSystem.DialogList[index].Order));
         questList.QuestList[int.Parse(dialogList.DialogList[index].Order)].Status = 1;
-        qusetUIManager.RefreshItem();
+        questUIManager.RefreshItem();
     }
 
     public bool GetQuestState(Item_SO objectiveItem, Item_SO backItem)
     {
         return backItem.ItemHeld >= objectiveItem.ItemHeld;
-    }
-
-    public void GetReward()
-    {
-        foreach (Item_SO i in rewardInventory.ItemList)
-            Debug.Log("");
     }
 }

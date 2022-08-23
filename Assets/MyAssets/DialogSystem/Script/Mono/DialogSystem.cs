@@ -17,8 +17,6 @@ public class DialogSystem : MonoBehaviour
 
     [SerializeField]
     private TextAsset textFile;
-
-    [SerializeField]
     private int index;
 
     [SerializeField]
@@ -49,7 +47,7 @@ public class DialogSystem : MonoBehaviour
     private QuestManager questManager;
 
     [SerializeField]
-    private QusetUIManager qusetUIManager;
+    private QuestUIManager questUIManager;
 
     [SerializeField]
     private bool isQuestDialog = false;
@@ -71,18 +69,13 @@ public class DialogSystem : MonoBehaviour
     {
         textFinished = false;
         textLabel.text = "";
-        currentBranchID = dialogList.StartBranch;
         currentTextWaitTime = maxTextWaitTime;
         continueBool = true;
         index = 0;
         isTalking = true;
         textFinished = true;
         SetImage();
-        if (isQuestDialog)
-        {
-            if (qusetUIManager.questList.QuestList[questID].Status == 2)
-                currentBranchID = "FINAL";
-        }
+        BranchInitialize();
     }
 
     private void OnDisable()
@@ -91,10 +84,30 @@ public class DialogSystem : MonoBehaviour
         DestroyChoice();
     }
 
+    private void BranchInitialize()
+    {
+        if (isQuestDialog)
+        {
+            switch (questManager.questList.QuestList[questID].Status)
+            {
+                case 0:
+                    dialogList.StartBranch = "DEFAULT";
+                    break;
+                case 2:
+                    dialogList.StartBranch = "FINAL";
+                    break;
+            }
+        }
+        else
+            dialogList.StartBranch = "DEFAULT";
+        currentBranchID = dialogList.StartBranch;
+    }
+
     private void Update()
     {
         if (Time.timeScale == 0)
             return;
+
         SetType();
         ContinueDialog();
     }

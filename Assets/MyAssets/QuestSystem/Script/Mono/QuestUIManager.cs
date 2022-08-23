@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QusetUIManager : MonoBehaviour
+public class QuestUIManager : MonoBehaviour
 {
     [SerializeField]
     private Text questInfo;
@@ -23,12 +23,12 @@ public class QusetUIManager : MonoBehaviour
     [SerializeField]
     private QuestObjectiveGrid objectivePrefab;
     private QuestManager questManager;
-
-    public QuestList_SO questList;
+    private BackpackManager backpackManager;
 
     private void Awake()
     {
         questManager = GetComponent<QuestManager>();
+        backpackManager = GetComponent<BackpackManager>();
         Initialize();
     }
 
@@ -44,7 +44,6 @@ public class QusetUIManager : MonoBehaviour
     {
         questInfo.text = questDes;
         questRewards.text = reward;
-        //questObjective.text = objective;
     }
 
     private void CreateNewItem(Quest_SO quest)
@@ -59,38 +58,46 @@ public class QusetUIManager : MonoBehaviour
         newQuest.GridName.text = quest.TheName;
     }
 
-    private void CreateNewObjective(Item_SO objectiveItem, int id)
+    private void CreateNewObjective(Item_SO objectiveItem, Item_SO rewardItem, int id)
     {
+        Debug.Log(rewardItem.ItemInOther != null);
         QuestObjectiveGrid newObjective = Instantiate(
             objectivePrefab,
             objectiveManager.transform.position,
             Quaternion.identity
         );
         newObjective.gameObject.transform.SetParent(objectiveManager.transform, false);
-        foreach (Item_SO backItem in questManager.backpack.ItemList)
+        for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
         {
-            if (objectiveItem.ItemInOther == backItem)
+            newObjective.ObjectiveImage.sprite = objectiveItem.ItemImage;
+            if (objectiveItem.ItemInOther == questManager.backpack.ItemList[i])
             {
                 newObjective.ObjectiveText.text =
-                    backItem.ItemHeld.ToString() + "/" + objectiveItem.ItemHeld.ToString();
-                newObjective.ObjectiveImage.sprite = objectiveItem.ItemImage;
-                if (questManager.GetQuestState(objectiveItem, backItem))
+                    questManager.backpack.ItemList[i].ItemHeld.ToString()
+                    + "/"
+                    + objectiveItem.ItemHeld.ToString();
+                if (questManager.GetQuestState(objectiveItem, questManager.backpack.ItemList[i]))
                 {
-                    questList.QuestList[id].Status = 2;
-                    backItem.ItemHeld -= objectiveItem.ItemHeld;
+                    questManager.questList.QuestList[id].Status = 2;
+                    questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
+                    backpackManager.AddMoney(rewardItem.ItemCost);
+                    if (rewardItem.ItemInOther != null)
+                        backpackManager.AddItem(rewardItem.ItemInOther);
                 }
             }
+            else
+                newObjective.ObjectiveText.text = "0" + "/" + objectiveItem.ItemHeld.ToString();
         }
     }
-
     public void RefreshItem()
     {
+        DestroyObjective();
         for (int i = 0; i < gridManager.transform.childCount; i++)
             Destroy(gridManager.transform.GetChild(i).gameObject);
-        for (int i = 0; i < questList.QuestList.Count; i++)
+        for (int i = 0; i < questManager.questList.QuestList.Count; i++)
         {
-            if (questList.QuestList[i].Status == 1)
-                CreateNewItem(questList.QuestList[i]);
+            if (questManager.questList.QuestList[i].Status == 1)
+                CreateNewItem(questManager.questList.QuestList[i]);
         }
     }
 
@@ -99,8 +106,18 @@ public class QusetUIManager : MonoBehaviour
         DestroyObjective();
         for (int i = 0; i < questManager.objectiveInventory.ItemList.Count; i++)
         {
-            if (questManager.objectiveInventory.ItemList[i].ItemIndex == id)
-                CreateNewObjective(questManager.objectiveInventory.ItemList[i], id);
+            for (int j = 0; j < questManager.rewardInventory.ItemList.Count; j++)
+            {
+                if (
+                    questManager.objectiveInventory.ItemList[i].ItemIndex == id
+                    && questManager.rewardInventory.ItemList[j].ItemIndex == id
+                )
+                    CreateNewObjective(
+                        questManager.objectiveInventory.ItemList[i],
+                        questManager.rewardInventory.ItemList[j],
+                        id
+                    );
+            }
         }
     }
 

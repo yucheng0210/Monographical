@@ -8,7 +8,7 @@ public class QuestGrid : MonoBehaviour
     private Quest_SO gridItem;
     private Text gridName;
     private Button useButton;
-    private QusetUIManager qusetUIManager;
+    private QuestUIManager qusetUIManager;
     public Text GridName
     {
         get { return gridName; }
@@ -22,7 +22,7 @@ public class QuestGrid : MonoBehaviour
 
     private void Awake()
     {
-        qusetUIManager = FindObjectOfType<QusetUIManager>();
+        qusetUIManager = FindObjectOfType<QuestUIManager>();
         gridName = GetComponentInChildren<Text>();
     }
 

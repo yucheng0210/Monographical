@@ -5,9 +5,17 @@ using UnityEngine.UI;
 
 public class QuestMenu : Menu
 {
+    [SerializeField]
+    private QuestUIManager questUIManager;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
             Close();
+    }
+
+    public void QuestInitialize()
+    {
+        questUIManager.Initialize();
     }
 }

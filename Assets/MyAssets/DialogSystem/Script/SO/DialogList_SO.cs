@@ -8,7 +8,6 @@ public class DialogList_SO : ScriptableObject
     [SerializeField]
     private string startBranch = "DEFAULT";
 
-    [SerializeField]
     private List<Dialog_SO> dialogList = new List<Dialog_SO>();
     public string StartBranch
     {
