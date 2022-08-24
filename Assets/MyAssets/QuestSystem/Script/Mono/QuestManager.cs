@@ -10,9 +10,7 @@ public class QuestManager : MonoBehaviour
 
     private QuestUIManager questUIManager;
 
-    public Inventory_SO rewardInventory;
-
-    public Inventory_SO objectiveInventory;
+    public List<QuestItemList_SO> questItemList = new List<QuestItemList_SO>();
 
     private void Awake()
     {

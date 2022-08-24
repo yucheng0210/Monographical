@@ -16,7 +16,7 @@ public class BackpackManager : InventoryManager
 
     public override void RefreshItem()
     {
-        UIManager.RefreshItem(MyBag);
+        UIManager.RefreshItem(myBag);
     }
 
     public override void UpdateItemInfo(string itemDes)

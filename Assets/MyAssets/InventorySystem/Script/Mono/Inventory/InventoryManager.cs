@@ -4,13 +4,7 @@ using UnityEngine;
 
 public abstract class InventoryManager : MonoBehaviour
 {
-    [SerializeField]
-    private Inventory_SO myBag;
-    public Inventory_SO MyBag
-    {
-        get { return myBag; }
-        set { myBag = value; }
-    }
+    public Inventory_SO myBag;
 
     public void Awake()
     {

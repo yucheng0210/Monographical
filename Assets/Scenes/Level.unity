@@ -2887,8 +2887,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questList: {fileID: 11400000, guid: 37e4c5e719f876d4582fdddf47469b0b, type: 2}
   backpack: {fileID: 11400000, guid: 2702c195e7c4eac4f9f5b8b712493713, type: 2}
-  rewardInventory: {fileID: 11400000, guid: e76d40efcb9adeb4195907083d6dd8a8, type: 2}
-  objectiveInventory: {fileID: 11400000, guid: fe274b74d2646bb48aecbbbcba2f0662, type: 2}
+  questItemList:
+  - {fileID: 11400000, guid: c94f26b421143244f98f4a5fb4386691, type: 2}
 --- !u!1 &609339973
 GameObject:
   m_ObjectHideFlags: 0
@@ -3420,12 +3420,22 @@ PrefabInstance:
         type: 3}
       propertyPath: questManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 576715216}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
+      propertyPath: questUIManager
+      value: 
+      objectReference: {fileID: 576715215}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
       propertyPath: qusetUIManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
+      propertyPath: backpackManager
+      value: 
+      objectReference: {fileID: 576715212}
     - target: {fileID: 8601234741132718546, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
       propertyPath: m_Pivot.x
@@ -7981,6 +7991,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
+      propertyPath: backpackManager
+      value: 
+      objectReference: {fileID: 576715212}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
       propertyPath: currentBranchID
       value: DEFAULT
       objectReference: {fileID: 0}
@@ -11297,12 +11312,22 @@ PrefabInstance:
         type: 3}
       propertyPath: questManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 576715216}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
+      propertyPath: questUIManager
+      value: 
+      objectReference: {fileID: 576715215}
     - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
       propertyPath: qusetUIManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6263267822707516963, guid: 14674524c0a3f0240a5d13c4d347ef55,
+        type: 3}
+      propertyPath: backpackManager
+      value: 
+      objectReference: {fileID: 576715212}
     - target: {fileID: 8601234741132718545, guid: 14674524c0a3f0240a5d13c4d347ef55,
         type: 3}
       propertyPath: textFile

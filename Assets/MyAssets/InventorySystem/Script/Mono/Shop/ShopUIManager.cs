@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ShopUIManager : InventoryUIManager
 {
-    private BackpackManager manager;
+    private BackpackManager backpackManager;
     private ShopManager shopManager;
     private bool switchBool;
 
@@ -17,7 +17,7 @@ public class ShopUIManager : InventoryUIManager
 
     public override void GetManager()
     {
-        manager = GetComponent<BackpackManager>();
+        backpackManager = GetComponent<BackpackManager>();
         shopManager = GetComponent<ShopManager>();
     }
 
@@ -25,20 +25,20 @@ public class ShopUIManager : InventoryUIManager
     {
         if (!switchBool)
         {
-            if (manager.GetMoney() >= item.ItemCost && item.ItemInShop)
+            if (backpackManager.GetMoney() >= item.ItemCost && item.ItemInShop)
             {
-                manager.ReduceMoney(item.ItemCost);
-                manager.AddItem(item.ItemInOther);
+                backpackManager.ReduceMoney(item.ItemCost);
+                backpackManager.AddItem(item.ItemInOther);
                 item.ItemHeld--;
-                RefreshItem(MyBag);
+                RefreshItem(myBag);
             }
         }
         else
         {
-            manager.AddMoney(item.ItemCost);
+            backpackManager.AddMoney(item.ItemCost);
             shopManager.AddItem(item.ItemInOther);
             item.ItemHeld--;
-            RefreshItem(Backpack);
+            RefreshItem(backpack);
         }
     }
 
@@ -46,14 +46,14 @@ public class ShopUIManager : InventoryUIManager
     {
         if (switchBool)
         {
-            RefreshItem(MyBag);
+            RefreshItem(myBag);
             buttonText.text = "Sell";
             useButtonText.text = "Buy";
             switchBool = false;
         }
         else
         {
-            RefreshItem(Backpack);
+            RefreshItem(backpack);
             buttonText.text = "Buy";
             useButtonText.text = "Sell";
             switchBool = true;

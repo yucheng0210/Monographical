@@ -14,22 +14,12 @@ public abstract class InventoryUIManager : MonoBehaviour
     [SerializeField]
     private Text itemInfo;
 
-    [SerializeField]
-    private Inventory_SO myBag;
+    public Inventory_SO myBag;
 
-    [SerializeField]
-    private Inventory_SO backpack;
+    public Inventory_SO backpack;
 
     [SerializeField]
     private Text moneyText;
-    public Inventory_SO MyBag
-    {
-        get { return myBag; }
-    }
-    public Inventory_SO Backpack
-    {
-        get { return backpack; }
-    }
 
     public void Awake()
     {

@@ -58,9 +58,8 @@ public class QuestUIManager : MonoBehaviour
         newQuest.GridName.text = quest.TheName;
     }
 
-    private void CreateNewObjective(Item_SO objectiveItem, Item_SO rewardItem, int id)
+    private void CreateNewObjective(Item_SO objectiveItem)
     {
-        Debug.Log(rewardItem.ItemInOther != null);
         QuestObjectiveGrid newObjective = Instantiate(
             objectivePrefab,
             objectiveManager.transform.position,
@@ -76,19 +75,12 @@ public class QuestUIManager : MonoBehaviour
                     questManager.backpack.ItemList[i].ItemHeld.ToString()
                     + "/"
                     + objectiveItem.ItemHeld.ToString();
-                if (questManager.GetQuestState(objectiveItem, questManager.backpack.ItemList[i]))
-                {
-                    questManager.questList.QuestList[id].Status = 2;
-                    questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
-                    backpackManager.AddMoney(rewardItem.ItemCost);
-                    if (rewardItem.ItemInOther != null)
-                        backpackManager.AddItem(rewardItem.ItemInOther);
-                }
             }
             else
                 newObjective.ObjectiveText.text = "0" + "/" + objectiveItem.ItemHeld.ToString();
         }
     }
+
     public void RefreshItem()
     {
         DestroyObjective();
@@ -104,21 +96,8 @@ public class QuestUIManager : MonoBehaviour
     public void RefreshObjective(int id)
     {
         DestroyObjective();
-        for (int i = 0; i < questManager.objectiveInventory.ItemList.Count; i++)
-        {
-            for (int j = 0; j < questManager.rewardInventory.ItemList.Count; j++)
-            {
-                if (
-                    questManager.objectiveInventory.ItemList[i].ItemIndex == id
-                    && questManager.rewardInventory.ItemList[j].ItemIndex == id
-                )
-                    CreateNewObjective(
-                        questManager.objectiveInventory.ItemList[i],
-                        questManager.rewardInventory.ItemList[j],
-                        id
-                    );
-            }
-        }
+        for (int i = 0; i < questManager.questItemList[id].ObjectiveItemList.Count; i++)
+            CreateNewObjective(questManager.questItemList[id].ObjectiveItemList[i]);
     }
 
     public void DestroyObjective()

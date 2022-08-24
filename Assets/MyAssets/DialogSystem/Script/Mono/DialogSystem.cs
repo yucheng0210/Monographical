@@ -50,6 +50,9 @@ public class DialogSystem : MonoBehaviour
     private QuestUIManager questUIManager;
 
     [SerializeField]
+    private BackpackManager backpackManager;
+
+    [SerializeField]
     private bool isQuestDialog = false;
 
     [SerializeField]
@@ -86,8 +89,17 @@ public class DialogSystem : MonoBehaviour
 
     private void BranchInitialize()
     {
-        if (isQuestDialog)
+        bool questCompelteBool = questManager.questList.QuestList[questID].Status == 2;
+        if (isQuestDialog && !questCompelteBool)
         {
+            for (int i = 0; i < questManager.questItemList[questID].ObjectiveItemList.Count; i++)
+            {
+                for (int j = 0; j < questManager.questItemList[questID].RewardItemList.Count; j++)
+                    SetQuestCompelte(
+                        questManager.questItemList[questID].ObjectiveItemList[i],
+                        questManager.questItemList[questID].RewardItemList[j]
+                    );
+            }
             switch (questManager.questList.QuestList[questID].Status)
             {
                 case 0:
@@ -101,6 +113,21 @@ public class DialogSystem : MonoBehaviour
         else
             dialogList.StartBranch = "DEFAULT";
         currentBranchID = dialogList.StartBranch;
+    }
+
+    private void SetQuestCompelte(Item_SO objectiveItem, Item_SO rewardItem)
+    {
+        for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
+        {
+            if (questManager.GetQuestState(objectiveItem, questManager.backpack.ItemList[i]))
+            {
+                questManager.questList.QuestList[questID].Status = 2;
+                questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
+                backpackManager.AddMoney(rewardItem.ItemCost);
+                if (rewardItem.ItemInOther != null)
+                    backpackManager.AddItem(rewardItem.ItemInOther);
+            }
+        }
     }
 
     private void Update()
@@ -119,7 +146,6 @@ public class DialogSystem : MonoBehaviour
         string[] lineData = file.text.Split(new char[] { '\n' });
         for (int i = 1; i < lineData.Length - 1; i++)
         {
-            //Debug.Log(lineData.Length);
             string[] row = lineData[i].Split(new char[] { ',' });
             if (row[1] == "")
                 break;

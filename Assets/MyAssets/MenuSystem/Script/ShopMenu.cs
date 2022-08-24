@@ -16,7 +16,7 @@ public class ShopMenu : Menu
         {
             Open();
             shopDialog.OpenMenu = false;
-            shopUIManager.RefreshItem(shopUIManager.MyBag);
+            shopUIManager.RefreshItem(shopUIManager.myBag);
             shopUIManager.UpdateItemInfo("");
         }
     }

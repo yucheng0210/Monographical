@@ -36,10 +36,10 @@ public class QuestCSVToSO
             );
         }
 
-        /*  AssetDatabase.CreateAsset(
+        AssetDatabase.CreateAsset(
             questList,
             "Assets/MyAssets/QuestSystem/QuestData/QuestList/QuestList.asset"
-        );*/
+        );
         AssetDatabase.SaveAssets();
     }
 }

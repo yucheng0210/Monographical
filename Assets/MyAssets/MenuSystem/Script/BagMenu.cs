@@ -14,7 +14,7 @@ public class BagMenu : Menu
             if (!OpenBool)
             {
                 Open();
-                backpackUIManager.RefreshItem(backpackUIManager.MyBag);
+                backpackUIManager.RefreshItem(backpackUIManager.myBag);
                 backpackUIManager.UpdateItemInfo("");
             }
             else
