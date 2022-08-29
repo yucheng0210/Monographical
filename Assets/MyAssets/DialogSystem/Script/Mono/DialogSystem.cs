@@ -78,7 +78,7 @@ public class DialogSystem : MonoBehaviour
         isTalking = true;
         textFinished = true;
         SetImage();
-        BranchInitialize();
+        Initialize();
     }
 
     private void OnDisable()
@@ -87,18 +87,39 @@ public class DialogSystem : MonoBehaviour
         DestroyChoice();
     }
 
-    private void BranchInitialize()
+    private void Update()
     {
-        bool questCompelteBool = questManager.questList.QuestList[questID].Status == 2;
-        if (isQuestDialog && !questCompelteBool)
+        if (Time.timeScale == 0)
+            return;
+
+        SetType();
+        ContinueDialog();
+    }
+
+    private void Initialize()
+    {
+        if (isQuestDialog)
         {
-            for (int i = 0; i < questManager.questItemList[questID].ObjectiveItemList.Count; i++)
+            bool questCompelteBool = questManager.questList.QuestList[questID].Status == 2;
+            if (!questCompelteBool)
             {
-                for (int j = 0; j < questManager.questItemList[questID].RewardItemList.Count; j++)
-                    SetQuestCompelte(
-                        questManager.questItemList[questID].ObjectiveItemList[i],
-                        questManager.questItemList[questID].RewardItemList[j]
-                    );
+                for (
+                    int i = 0;
+                    i < questManager.questItemList[questID].ObjectiveItemList.Count;
+                    i++
+                )
+                {
+                    for (
+                        int j = 0;
+                        j < questManager.questItemList[questID].RewardItemList.Count;
+                        j++
+                    )
+                        SetQuestCompelte(
+                            questManager.questItemList[questID].ObjectiveItemList[i],
+                            questManager.questItemList[questID].RewardItemList[j],
+                            questManager.questItemList[questID].RewardMoney
+                        );
+                }
             }
             switch (questManager.questList.QuestList[questID].Status)
             {
@@ -115,7 +136,11 @@ public class DialogSystem : MonoBehaviour
         currentBranchID = dialogList.StartBranch;
     }
 
-    private void SetQuestCompelte(Item_SO objectiveItem, Item_SO rewardItem)
+    private void SetQuestCompelte(
+        QuestObjective_SO objectiveItem,
+        QuestReward_SO rewardItem,
+        int rewardMoney
+    )
     {
         for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
         {
@@ -123,20 +148,11 @@ public class DialogSystem : MonoBehaviour
             {
                 questManager.questList.QuestList[questID].Status = 2;
                 questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
-                backpackManager.AddMoney(rewardItem.ItemCost);
-                if (rewardItem.ItemInOther != null)
-                    backpackManager.AddItem(rewardItem.ItemInOther);
+                backpackManager.AddMoney(rewardMoney);
+                if (rewardItem.RewardItem != null)
+                    backpackManager.AddItem(rewardItem.RewardItem);
             }
         }
-    }
-
-    private void Update()
-    {
-        if (Time.timeScale == 0)
-            return;
-
-        SetType();
-        ContinueDialog();
     }
 
     private void GetTextFromFile(TextAsset file)

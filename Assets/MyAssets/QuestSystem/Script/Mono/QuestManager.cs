@@ -23,7 +23,7 @@ public class QuestManager : MonoBehaviour
         questUIManager.RefreshItem();
     }
 
-    public bool GetQuestState(Item_SO objectiveItem, Item_SO backItem)
+    public bool GetQuestState(QuestObjective_SO objectiveItem, Item_SO backItem)
     {
         return backItem.ItemHeld >= objectiveItem.ItemHeld;
     }

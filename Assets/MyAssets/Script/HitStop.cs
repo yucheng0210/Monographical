@@ -4,21 +4,38 @@ using UnityEngine;
 
 public class HitStop : MonoBehaviour
 {
-    private bool waiting;
+    [SerializeField]
+    private bool isRestoreTime;
 
-    public void Stop(float duration)
+    [SerializeField]
+    private float restoreTime;
+    float testRealTime = 0;
+    public bool IsHitStop { get; private set; }
+
+    private void Update()
     {
-        if (waiting)
-            return;
-        Time.timeScale = 0.15f;
-        StartCoroutine(Wait(duration));
+        if (isRestoreTime && !Menu.menuIsOpen)
+        {
+            if (Time.timeScale < 1)
+            {
+                IsHitStop = true;
+                Time.timeScale += Time.unscaledDeltaTime / restoreTime;
+                testRealTime += Time.unscaledDeltaTime;
+            }
+            else
+            {
+                IsHitStop = false;
+                Debug.Log(testRealTime);
+                Time.timeScale = 1;
+                isRestoreTime = false;
+            }
+        }
     }
 
-    IEnumerator Wait(float duration)
+    public void StopTime()
     {
-        waiting = true;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1.0f;
-        waiting = false;
+        testRealTime = 0;
+        Time.timeScale = 0;
+        isRestoreTime = true;
     }
 }

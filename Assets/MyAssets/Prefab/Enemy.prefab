@@ -2266,13 +2266,12 @@ MonoBehaviour:
   moveSpeed: 0.1
   turnSpeed: 10
   gravity: 20
-  stopTime: 0.1
-  beakBackDis: 15
-  wanderRadius: 15
-  alertRadius: 12
+  beakBackForce: 10
+  wanderRadius: 12
+  alertRadius: 10
   chaseRadius: 5
   attackRadius: 1.2
-  turnBackRadius: 15
+  turnBackRadius: 12
   warning: 0
   lockMove: 0
   distance: 0
@@ -2407,6 +2406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddf69126143bbf4b91de90611c8eb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRestoreTime: 0
+  restoreTime: 0.5
 --- !u!114 &-3548015091740226212
 MonoBehaviour:
   m_ObjectHideFlags: 0

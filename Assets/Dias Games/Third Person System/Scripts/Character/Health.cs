@@ -35,9 +35,6 @@ namespace DiasGames.ThirdPersonSystem
         private float m_CurrentHealth;
         private Rigidbody[] ragdollRigidbodies;
         private List<Collider> allColliders = new List<Collider>();
-
-        [SerializeField]
-        private float stopTime;
         private Cinemachine.CinemachineImpulseSource myImpulse;
         private int enemyAttackLayer;
 
@@ -114,12 +111,17 @@ namespace DiasGames.ThirdPersonSystem
             {
                 attackerCharacterState = other.gameObject.GetComponentInParent<CharacterState>();
                 characterState.TakeDamage(attackerCharacterState, characterState);
-                gameObject.GetComponent<HitStop>().Stop(stopTime);
-                myImpulse.GenerateImpulse();
-                AudioManager.Instance.PlayerHurted();
+                HitEffect();
                 if (characterState.CurrentHealth <= 0)
                     Die();
             }
+        }
+
+        private void HitEffect()
+        {
+            gameObject.GetComponent<HitStop>().StopTime();
+            myImpulse.GenerateImpulse();
+            AudioManager.Instance.PlayerHurted();
         }
 
         private void RestoreHealth(GameObject obj, object value)

@@ -20,10 +20,7 @@ public class Enemy : MonoBehaviour, IObserver
     private float gravity = 20;
 
     [SerializeField]
-    private float stopTime = 0.2f;
-
-    [SerializeField]
-    private float beakBackDis = 15;
+    private float beakBackForce = 15;
 
     [Header("AI巡邏半徑參數")]
     [SerializeField]
@@ -77,8 +74,8 @@ public class Enemy : MonoBehaviour, IObserver
     private CharacterState characterState,
         attackerCharacterState;
     private int playerAttackLayer;
-
     private bool shutDown;
+    private Vector3 beakBackDirection;
 
     enum EnemyState
     {
@@ -86,7 +83,8 @@ public class Enemy : MonoBehaviour, IObserver
         Alert,
         Chase,
         Attack,
-        TurnBack
+        TurnBack,
+        BeakBack
     }
 
     private EnemyState currentState;
@@ -115,14 +113,29 @@ public class Enemy : MonoBehaviour, IObserver
 
     private void OnDisable()
     {
-//        GameManager.Instance.RemoveObservers(this);
+        //GameManager.Instance.RemoveObservers(this);
     }
 
     private void Update()
     {
-        ani.SetBool("isDead", isDead);
-        if (Time.timeScale == 0 || isDead || shutDown)
+        if (Time.timeScale == 0)
+        {
+            ani.updateMode = AnimatorUpdateMode.AnimatePhysics;
             return;
+        }
+        if (controller.isGrounded)
+        {
+            if (lockMove)
+                controller.Move(Vector3.zero);
+            ani.SetInteger(attack, 0);
+        }
+        else
+            movement.y -= gravity;
+        controller.Move(movement * Time.deltaTime);
+        ani.SetBool("isDead", isDead);
+        if (isDead || shutDown)
+            return;
+        StateSwitch();
         UpdateState();
         if (characterState.CurrentHealth <= 0)
             StartCoroutine(Death());
@@ -134,17 +147,6 @@ public class Enemy : MonoBehaviour, IObserver
             currentState = EnemyState.Alert;
         if (warning && distance > turnBackRadius)
             currentState = EnemyState.TurnBack;
-        if (controller.isGrounded)
-            StateSwitch();
-        else
-            movement.y -= gravity * Time.deltaTime;
-        if (lockMove)
-            controller.Move(Vector3.zero);
-        else
-        {
-            controller.Move(movement * Time.deltaTime);
-            ani.SetInteger(attack, 0);
-        }
     }
 
     private void InitialState()
@@ -199,6 +201,23 @@ public class Enemy : MonoBehaviour, IObserver
                     movement = transform.forward * moveSpeed * 2;
                 }
                 break;
+            case EnemyState.BeakBack:
+                if (gameObject.GetComponent<HitStop>().IsHitStop)
+                {
+                    AnimationRealTime(true);
+                    /*transform.position = Vector3.Lerp(
+                        transform.position,
+                        beakBackDirection * beakBackForce,
+                        Time.unscaledDeltaTime
+                    );*/
+                }
+                else
+                {
+                    AnimationRealTime(false);
+                    currentState = EnemyState.Chase;
+                }
+
+                break;
         }
     }
 
@@ -206,6 +225,7 @@ public class Enemy : MonoBehaviour, IObserver
     {
         isDead = true;
         AudioManager.Instance.PlayerDied();
+        collision.SetActive(false);
         yield return new WaitForSeconds(4);
         Instantiate(dropItem, transform.position, Quaternion.identity);
         Destroy(gameObject);
@@ -242,31 +262,38 @@ public class Enemy : MonoBehaviour, IObserver
             characterState.TakeDamage(attackerCharacterState, characterState);
             if (isDead)
                 return;
-            AudioManager.Instance.PlayerHurted();
             HitEffect();
-            ani.SetTrigger(isHited);
-            currentState = EnemyState.Chase;
         }
+    }
+
+    private void AnimationRealTime(bool realTimeBool)
+    {
+        if (realTimeBool)
+            ani.updateMode = AnimatorUpdateMode.UnscaledTime;
+        else
+            ani.updateMode = AnimatorUpdateMode.AnimatePhysics;
     }
 
     private void HitEffect()
     {
+        beakBackDirection = (transform.position - player.transform.position).normalized;
+        gameObject.GetComponent<HitStop>().StopTime();
+        ani.SetTrigger(isHited);
+        currentState = EnemyState.BeakBack;
+        AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
-        gameObject.GetComponent<HitStop>().Stop(stopTime);
         Ray ray = new Ray(transform.position, transform.up * 2);
         gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
-        controller.Move(
-            (transform.position - player.transform.position) * beakBackDis * Time.deltaTime
-        );
+        transform.position += beakBackDirection * beakBackForce * Time.unscaledDeltaTime;
     }
 
     public void EndNotify()
     {
         Debug.Log("Game Over");
-        shutDown = true;
         ani.SetBool("gameIsOver", true);
         ani.SetFloat(forward, 0);
         ani.SetInteger(attack, 0);
+        shutDown = true;
     }
 
     public void SceneLoadingNotify()

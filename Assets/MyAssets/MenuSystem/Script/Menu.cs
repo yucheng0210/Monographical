@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public abstract class Menu : MonoBehaviour
 {
     [SerializeField]
     private GameObject openMenu;
-    private bool openBool;
     public bool OpenBool { get; set; }
+    public static bool menuIsOpen;
 
     private void Awake()
     {
@@ -15,6 +16,7 @@ public abstract class Menu : MonoBehaviour
 
     public virtual void Open()
     {
+        menuIsOpen = true;
         AudioManager.Instance.MenuEnterAudio();
         Time.timeScale = 0;
         openMenu.SetActive(true);
@@ -23,6 +25,7 @@ public abstract class Menu : MonoBehaviour
 
     public virtual void Close()
     {
+        menuIsOpen = false;
         AudioManager.Instance.MenuExitAudio();
         Time.timeScale = 1;
         openMenu.SetActive(false);

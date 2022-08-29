@@ -6,18 +6,34 @@ using UnityEngine;
 public class QuestItemList_SO : ScriptableObject
 {
     [SerializeField]
-    private List<Item_SO> objectiveItemList = new List<Item_SO>();
+    private List<QuestObjective_SO> objectiveItemList = new List<QuestObjective_SO>();
 
     [SerializeField]
-    private List<Item_SO> rewardItemList = new List<Item_SO>();
-    public List<Item_SO> ObjectiveItemList
+    private List<QuestReward_SO> rewardItemList = new List<QuestReward_SO>();
+
+    [SerializeField]
+    private int rewardMoney;
+
+    [SerializeField]
+    private int objectiveMoney;
+    public List<QuestObjective_SO> ObjectiveItemList
     {
         get { return objectiveItemList; }
         set { objectiveItemList = value; }
     }
-    public List<Item_SO> RewardItemList
+    public List<QuestReward_SO> RewardItemList
     {
         get { return rewardItemList; }
         set { rewardItemList = value; }
+    }
+    public int RewardMoney
+    {
+        get { return rewardMoney; }
+        set { rewardMoney = value; }
+    }
+    public int ObjectiveMoney
+    {
+        get { return objectiveMoney; }
+        set { objectiveMoney = value; }
     }
 }

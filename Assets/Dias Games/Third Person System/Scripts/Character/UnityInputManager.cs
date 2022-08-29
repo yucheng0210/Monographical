@@ -313,9 +313,7 @@ namespace DiasGames.ThirdPersonSystem
                 waitTimeToHide = 0.1f;
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-                m_HideCursor = false;
-            if (Time.timeScale == 0)
+            if (Input.GetKeyDown(KeyCode.Escape) || Time.timeScale == 0 || DialogSystem.isTalking)
                 m_HideCursor = false;
         }
 

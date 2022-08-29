@@ -58,7 +58,7 @@ public class QuestUIManager : MonoBehaviour
         newQuest.GridName.text = quest.TheName;
     }
 
-    private void CreateNewObjective(Item_SO objectiveItem)
+    private void CreateNewObjective(QuestObjective_SO objectiveItem)
     {
         QuestObjectiveGrid newObjective = Instantiate(
             objectivePrefab,
@@ -68,15 +68,15 @@ public class QuestUIManager : MonoBehaviour
         newObjective.gameObject.transform.SetParent(objectiveManager.transform, false);
         for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
         {
-            newObjective.ObjectiveImage.sprite = objectiveItem.ItemImage;
-            if (objectiveItem.ItemInOther == questManager.backpack.ItemList[i])
+            newObjective.ObjectiveImage.sprite = objectiveItem.ObjectiveItem.ItemImage;
+            if (objectiveItem.ObjectiveItem == questManager.backpack.ItemList[i])
             {
                 newObjective.ObjectiveText.text =
                     questManager.backpack.ItemList[i].ItemHeld.ToString()
                     + "/"
                     + objectiveItem.ItemHeld.ToString();
             }
-            else
+            else if (newObjective.ObjectiveText.text == "")
                 newObjective.ObjectiveText.text = "0" + "/" + objectiveItem.ItemHeld.ToString();
         }
     }
