@@ -22,6 +22,9 @@ public class Enemy : MonoBehaviour, IObserver
     [SerializeField]
     private float beakBackForce = 15;
 
+    [SerializeField]
+    private float beakBackSpeed = 2;
+
     [Header("AI巡邏半徑參數")]
     [SerializeField]
     private float wanderRadius = 15;
@@ -77,6 +80,9 @@ public class Enemy : MonoBehaviour, IObserver
     private bool shutDown;
     private Vector3 beakBackDirection;
 
+    [SerializeField]
+    private GameObject hitEffect;
+
     enum EnemyState
     {
         Wander,
@@ -120,7 +126,7 @@ public class Enemy : MonoBehaviour, IObserver
     {
         if (Time.timeScale == 0)
         {
-            ani.updateMode = AnimatorUpdateMode.AnimatePhysics;
+            AnimationRealTime(false);
             return;
         }
         if (controller.isGrounded)
@@ -139,7 +145,9 @@ public class Enemy : MonoBehaviour, IObserver
         UpdateState();
         if (characterState.CurrentHealth <= 0)
             StartCoroutine(Death());
-        if (warning && distance <= attackRadius)
+        if (gameObject.GetComponent<HitStop>().IsHitStop)
+            currentState = EnemyState.BeakBack;
+        else if (warning && distance <= attackRadius)
             currentState = EnemyState.Attack;
         else if (warning && distance <= chaseRadius)
             currentState = EnemyState.Chase;
@@ -180,11 +188,13 @@ public class Enemy : MonoBehaviour, IObserver
                 warning = true;
                 break;
             case EnemyState.Chase:
+                AnimationRealTime(false);
                 ani.SetFloat(forward, 2);
                 Look(player.transform.position);
                 movement = transform.forward * moveSpeed * 2;
                 break;
             case EnemyState.Attack:
+                AnimationRealTime(false);
                 lockMove = true;
                 movement = Vector3.zero;
                 ani.SetFloat(forward, 0);
@@ -202,21 +212,15 @@ public class Enemy : MonoBehaviour, IObserver
                 }
                 break;
             case EnemyState.BeakBack:
-                if (gameObject.GetComponent<HitStop>().IsHitStop)
-                {
-                    AnimationRealTime(true);
-                    /*transform.position = Vector3.Lerp(
-                        transform.position,
+                AnimationRealTime(true);
+                Look(player.transform.position);
+                /* controller.Move(
+                    Vector3.Lerp(
                         beakBackDirection * beakBackForce,
-                        Time.unscaledDeltaTime
-                    );*/
-                }
-                else
-                {
-                    AnimationRealTime(false);
-                    currentState = EnemyState.Chase;
-                }
-
+                        Vector3.zero,
+                        Time.unscaledDeltaTime * beakBackSpeed
+                    )
+                );*/
                 break;
         }
     }
@@ -276,15 +280,15 @@ public class Enemy : MonoBehaviour, IObserver
 
     private void HitEffect()
     {
-        beakBackDirection = (transform.position - player.transform.position).normalized;
+        //beakBackDirection = (transform.position - player.transform.position).normalized;
+        //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
+        currentState = EnemyState.BeakBack;
         gameObject.GetComponent<HitStop>().StopTime();
         ani.SetTrigger(isHited);
-        currentState = EnemyState.BeakBack;
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
         Ray ray = new Ray(transform.position, transform.up * 2);
         gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
-        transform.position += beakBackDirection * beakBackForce * Time.unscaledDeltaTime;
     }
 
     public void EndNotify()

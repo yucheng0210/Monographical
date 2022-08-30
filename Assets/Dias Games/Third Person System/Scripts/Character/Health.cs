@@ -121,7 +121,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             gameObject.GetComponent<HitStop>().StopTime();
             myImpulse.GenerateImpulse();
-            AudioManager.Instance.PlayerHurted();
+            //AudioManager.Instance.PlayerHurted();
         }
 
         private void RestoreHealth(GameObject obj, object value)

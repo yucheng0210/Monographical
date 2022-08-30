@@ -2266,7 +2266,8 @@ MonoBehaviour:
   moveSpeed: 0.1
   turnSpeed: 10
   gravity: 20
-  beakBackForce: 10
+  beakBackForce: 0.05
+  beakBackSpeed: 50
   wanderRadius: 12
   alertRadius: 10
   chaseRadius: 5
@@ -2279,6 +2280,8 @@ MonoBehaviour:
   collision: {fileID: 8569674824298110385}
   healthSlider: {fileID: 6898380709392697190}
   dropItem: {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0,
+    type: 3}
+  hitEffect: {fileID: 8460667080445658512, guid: a3e2c3406e02f2c4ba86cfb1604277bd,
     type: 3}
 --- !u!143 &-8106785543682867760
 CharacterController:
@@ -2406,8 +2409,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddf69126143bbf4b91de90611c8eb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRestoreTime: 0
-  restoreTime: 0.5
+  restoreTime: 0.12
+  hitTimeScale: 0.1
 --- !u!114 &-3548015091740226212
 MonoBehaviour:
   m_ObjectHideFlags: 0
