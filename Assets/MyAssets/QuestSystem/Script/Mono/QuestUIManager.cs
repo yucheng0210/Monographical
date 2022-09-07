@@ -68,8 +68,8 @@ public class QuestUIManager : MonoBehaviour
         newObjective.gameObject.transform.SetParent(objectiveManager.transform, false);
         for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
         {
-            newObjective.ObjectiveImage.sprite = objectiveItem.ObjectiveItem.ItemImage;
-            if (objectiveItem.ObjectiveItem == questManager.backpack.ItemList[i])
+            newObjective.ObjectiveImage.sprite = objectiveItem.InBackpackItem.ItemImage;
+            if (objectiveItem.InBackpackItem == questManager.backpack.ItemList[i])
             {
                 newObjective.ObjectiveText.text =
                     questManager.backpack.ItemList[i].ItemHeld.ToString()

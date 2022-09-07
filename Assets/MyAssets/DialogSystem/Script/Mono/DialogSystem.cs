@@ -100,8 +100,8 @@ public class DialogSystem : MonoBehaviour
     {
         if (isQuestDialog)
         {
-            bool questCompelteBool = questManager.questList.QuestList[questID].Status == 2;
-            if (!questCompelteBool)
+            bool questInProgress = questManager.questList.QuestList[questID].Status == 1;
+            if (questInProgress)
             {
                 for (
                     int i = 0;
@@ -114,7 +114,7 @@ public class DialogSystem : MonoBehaviour
                         j < questManager.questItemList[questID].RewardItemList.Count;
                         j++
                     )
-                        SetQuestCompelte(
+                        SetQuestComplete(
                             questManager.questItemList[questID].ObjectiveItemList[i],
                             questManager.questItemList[questID].RewardItemList[j],
                             questManager.questItemList[questID].RewardMoney
@@ -127,6 +127,10 @@ public class DialogSystem : MonoBehaviour
                     dialogList.StartBranch = "DEFAULT";
                     break;
                 case 2:
+                    dialogList.StartBranch = "COMPLETE";
+                    questManager.questList.QuestList[questID].Status = 3;
+                    break;
+                case 3:
                     dialogList.StartBranch = "FINAL";
                     break;
             }
@@ -136,7 +140,7 @@ public class DialogSystem : MonoBehaviour
         currentBranchID = dialogList.StartBranch;
     }
 
-    private void SetQuestCompelte(
+    private void SetQuestComplete(
         QuestObjective_SO objectiveItem,
         QuestReward_SO rewardItem,
         int rewardMoney
@@ -144,13 +148,18 @@ public class DialogSystem : MonoBehaviour
     {
         for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
         {
-            if (questManager.GetQuestState(objectiveItem, questManager.backpack.ItemList[i]))
+            //Debug.Log(objectiveItem.InBackpackItem == questManager.backpack.ItemList[i]);
+            // Debug.Log(objectiveItem.ItemHeld >= questManager.backpack.ItemList[i].ItemHeld);
+            if (
+                objectiveItem.InBackpackItem == questManager.backpack.ItemList[i]
+                && objectiveItem.ItemHeld <= questManager.backpack.ItemList[i].ItemHeld
+            )
             {
                 questManager.questList.QuestList[questID].Status = 2;
                 questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
                 backpackManager.AddMoney(rewardMoney);
-                if (rewardItem.RewardItem != null)
-                    backpackManager.AddItem(rewardItem.RewardItem);
+                if (rewardItem.InBackpackItem != null)
+                    backpackManager.AddItem(rewardItem.InBackpackItem);
             }
         }
     }

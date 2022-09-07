@@ -22,9 +22,4 @@ public class QuestManager : MonoBehaviour
         questList.QuestList[int.Parse(dialogList.DialogList[index].Order)].Status = 1;
         questUIManager.RefreshItem();
     }
-
-    public bool GetQuestState(QuestObjective_SO objectiveItem, Item_SO backItem)
-    {
-        return backItem.ItemHeld >= objectiveItem.ItemHeld;
-    }
 }

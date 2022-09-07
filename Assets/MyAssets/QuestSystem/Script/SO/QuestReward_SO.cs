@@ -6,14 +6,14 @@ using UnityEngine;
 public class QuestReward_SO : ScriptableObject
 {
     [SerializeField]
-    private Item_SO rewardItem;
+    private Item_SO inBackpackItem;
 
     [SerializeField]
     private int itemHeld;
-    public Item_SO RewardItem
+    public Item_SO InBackpackItem
     {
-        get { return rewardItem; }
-        set { rewardItem = value; }
+        get { return inBackpackItem; }
+        set { inBackpackItem = value; }
     }
     public int ItemHeld
     {
