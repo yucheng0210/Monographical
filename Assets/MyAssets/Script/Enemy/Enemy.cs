@@ -138,7 +138,7 @@ public class Enemy : MonoBehaviour, IObserver
         else
             movement.y -= gravity;
         controller.Move(movement * Time.deltaTime);
-        ani.SetBool("isDead", isDead);
+        //ani.SetBool("isDead", isDead);
         if (isDead || shutDown)
             return;
         StateSwitch();
@@ -227,9 +227,12 @@ public class Enemy : MonoBehaviour, IObserver
 
     IEnumerator Death()
     {
+        beakBackDirection = (transform.position - player.transform.position).normalized;
         isDead = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
+        ani.enabled = false;
+        controller.Move(beakBackDirection * beakBackForce);
         yield return new WaitForSeconds(4);
         Instantiate(dropItem, transform.position, Quaternion.identity);
         Destroy(gameObject);
