@@ -458,7 +458,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 75
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -484,7 +484,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 515422273}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.65, y: -3.328, z: -2.4999983}
+  m_LocalPosition: {x: 2.65, y: -3.328, z: -2.4999971}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -646,8 +646,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 556467700}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4957268, y: -4.3, z: 8.49}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.4957268, y: -4.02, z: 8.49}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -690,7 +690,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 957384677}
   m_Lens:
-    FieldOfView: 75
+    FieldOfView: 70
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -712,7 +712,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 775026669}
   m_LocalRotation: {x: -0.17190957, y: 0.14204535, z: -0.024974773, w: -0.9744981}
-  m_LocalPosition: {x: 2.65, y: -3.328, z: -2.4999983}
+  m_LocalPosition: {x: 2.65, y: -3.328, z: -2.4999971}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 55975234}
@@ -735,6 +735,11 @@ PrefabInstance:
     - target: {fileID: 957384677, guid: dc45df78190b1864bb70c9ddc3a1c603, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4711905635457538873, guid: dc45df78190b1864bb70c9ddc3a1c603,
+        type: 3}
+      propertyPath: moveSpeed
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 6151256754576133157, guid: dc45df78190b1864bb70c9ddc3a1c603,
         type: 3}
@@ -759,7 +764,7 @@ PrefabInstance:
     - target: {fileID: 6151256754576166917, guid: dc45df78190b1864bb70c9ddc3a1c603,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0000016353401
+      value: 0.0000028474483
       objectReference: {fileID: 0}
     - target: {fileID: 6151256754576166917, guid: dc45df78190b1864bb70c9ddc3a1c603,
         type: 3}

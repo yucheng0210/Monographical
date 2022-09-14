@@ -218,7 +218,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void OnDisable()
         {
-//            GameManager.Instance.RemoveObservers(this);
+            //            GameManager.Instance.RemoveObservers(this);
         }
 
         private void Awake()
@@ -907,9 +907,22 @@ namespace DiasGames.ThirdPersonSystem
         }
 
         // TODO: 傳送中不能移動攻擊
-        public void SceneLoadingNotify()
+        public void SceneLoadingNotify(bool loadingBool)
         {
-            Debug.Log("不能動");
+            if (loadingBool)
+            {
+                m_Animator.SetBool("Standby", true);
+                m_Animator.SetFloat("Forward", 0);
+                m_Animator.SetFloat("Vertical", 0);
+                m_Animator.SetFloat("Horizontal", 0);
+                m_Animator.SetInteger("AttackMode", 0);
+                shutDown = true;
+            }
+            else
+            {
+                shutDown = false;
+                m_Animator.SetBool("Standby", false);
+            }
         }
     }
 }

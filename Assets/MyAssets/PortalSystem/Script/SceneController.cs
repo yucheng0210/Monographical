@@ -44,7 +44,7 @@ public class SceneController : Singleton<SceneController>
 
     IEnumerator Transition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
-        //GameManager.Instance.LoadingNotify();
+        GameManager.Instance.LoadingNotify(true);
         SceneFader fade = Instantiate(sceneFaderPrefab);
         player = GameManager.Instance.PlayerState.gameObject;
         progressSlider.value = 0.0f;
@@ -75,6 +75,7 @@ public class SceneController : Singleton<SceneController>
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
+            GameManager.Instance.LoadingNotify(false);
             yield return StartCoroutine(fade.FadeIn());
         }
         else
@@ -84,6 +85,7 @@ public class SceneController : Singleton<SceneController>
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
+            GameManager.Instance.LoadingNotify(false);
             yield return StartCoroutine(fade.FadeIn());
             yield return null;
         }

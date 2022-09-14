@@ -119,7 +119,7 @@ public class Enemy : MonoBehaviour, IObserver
 
     private void OnDisable()
     {
-        //GameManager.Instance.RemoveObservers(this);
+        GameManager.Instance.RemoveObservers(this);
     }
 
     private void Update()
@@ -297,17 +297,26 @@ public class Enemy : MonoBehaviour, IObserver
     public void EndNotify()
     {
         Debug.Log("Game Over");
-        ani.SetBool("gameIsOver", true);
+        ani.SetBool("Standby", true);
         ani.SetFloat(forward, 0);
         ani.SetInteger(attack, 0);
+        movement = Vector3.zero;
         shutDown = true;
     }
 
-    public void SceneLoadingNotify()
+    public void SceneLoadingNotify(bool loadingBool)
     {
-        shutDown = true;
-        ani.SetBool("gameIsOver", true);
-        ani.SetFloat(forward, 0);
-        ani.SetInteger(attack, 0);
+        if (loadingBool)
+        {
+            ani.SetBool("Standby", true);
+            ani.SetFloat(forward, 0);
+            ani.SetInteger(attack, 0);
+            shutDown = true;
+        }
+        else
+        {
+            ani.SetBool("Standby", false);
+            shutDown = false;
+        }
     }
 }

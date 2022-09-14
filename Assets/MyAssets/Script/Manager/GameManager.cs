@@ -32,10 +32,10 @@ public class GameManager : Singleton<GameManager>
             observer.EndNotify();
     }
 
-    public void LoadingNotify()
+    public void LoadingNotify(bool loadingBool)
     {
         foreach (var observer in observerList)
-            observer.SceneLoadingNotify();
+            observer.SceneLoadingNotify(loadingBool);
     }
 
     public void RegisterPlayer(CharacterState player)

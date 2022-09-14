@@ -1,5 +1,5 @@
 public interface IObserver
 {
     void EndNotify();
-    void SceneLoadingNotify();
+    void SceneLoadingNotify(bool loadingBool);
 }
