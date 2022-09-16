@@ -15,6 +15,8 @@ public class CharacterState : MonoBehaviour
 
     //[HideInInspector]
     private bool isCritical;
+    private float poiseRecoverTime;
+    private bool poiseRecoverBool;
 
     private void Awake()
     {
@@ -91,6 +93,28 @@ public class CharacterState : MonoBehaviour
                 characterData.currentDefence = characterData.baseDefence;
         }
     }
+    public float MaxPoise
+    {
+        get { return characterData.maxPoise; }
+        set
+        {
+            characterData.maxPoise = value;
+            if (characterData.maxPoise < 0)
+                characterData.maxPoise = 0;
+        }
+    }
+    public float CurrentPoise
+    {
+        get { return characterData.currentPoise; }
+        set
+        {
+            characterData.currentPoise = value;
+            if (characterData.currentPoise < 0)
+                characterData.currentPoise = 0;
+            if (characterData.currentPoise > characterData.maxPoise)
+                characterData.currentPoise = characterData.maxPoise;
+        }
+    }
     #endregion
     #region Read from AttackData_SO
 
@@ -162,6 +186,16 @@ public class CharacterState : MonoBehaviour
                 attackData.criticalMultiplier = 1;
         }
     }
+    public float PoiseAttack
+    {
+        get { return attackData.poiseAttack; }
+        set
+        {
+            attackData.poiseAttack = value;
+            if (attackData.poiseAttack < 0)
+                attackData.poiseAttack = 0;
+        }
+    }
     #endregion
     #region Read from Transform_SO
     public Vector3 Pos
@@ -180,10 +214,24 @@ public class CharacterState : MonoBehaviour
         get { return characterData; }
     }
 
+    private void Update()
+    {
+        if (poiseRecoverBool)
+            poiseRecoverTime += Time.deltaTime;
+        if (poiseRecoverTime >= 8)
+        {
+            CurrentPoise = MaxPoise;
+            poiseRecoverBool = false;
+        }
+    }
+
     public void TakeDamage(CharacterState attacker, CharacterState defender)
     {
+        poiseRecoverTime = 0;
+        poiseRecoverBool = true;
         int damage = (int)Mathf.Max(attacker.CurrentAttack() - defender.CurrentDefence, 0);
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+        CurrentPoise = Mathf.Max(defender.CurrentPoise - attacker.PoiseAttack, 0);
     }
 
     private int CurrentAttack()

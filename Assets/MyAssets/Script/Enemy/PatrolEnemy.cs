@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour, IObserver
+public class PatrolEnemy : MonoBehaviour, IObserver
 {
     private Animator ani;
-    private CharacterController controller;
+    private Rigidbody myBody;
+    private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
 
     [Header("移動參數")]
@@ -17,10 +18,10 @@ public class Enemy : MonoBehaviour, IObserver
     private float turnSpeed = 10;
 
     [SerializeField]
-    private float gravity = 20;
+    private float beakBackForce = 15;
 
     [SerializeField]
-    private float beakBackForce = 15;
+    private float losePoiseForce = 15;
 
     [Header("AI巡邏半徑參數")]
     [SerializeField]
@@ -41,9 +42,6 @@ public class Enemy : MonoBehaviour, IObserver
     [Header("狀態")]
     [SerializeField]
     private bool warning = false;
-
-    [SerializeField]
-    private bool lockMove = false;
 
     [SerializeField]
     private float distance;
@@ -86,13 +84,15 @@ public class Enemy : MonoBehaviour, IObserver
         BeakBack
     }
 
+    [SerializeField]
     private EnemyState currentState;
 
     private void Awake()
     {
         movement = Vector3.zero;
         ani = GetComponent<Animator>();
-        controller = GetComponent<CharacterController>();
+        myBody = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         startPos = transform.position;
         collision.SetActive(false);
         player = GameManager.Instance.PlayerState.gameObject;
@@ -122,18 +122,16 @@ public class Enemy : MonoBehaviour, IObserver
             AnimationRealTime(false);
             return;
         }
-        if (controller.isGrounded)
+        Debug.Log(OnGrounded());
+        Debug.Log(movement);
+        if (OnGrounded())
         {
-            ani.SetInteger(attack, 0);
             accumulateTime = 0;
             if (shutDown)
                 return;
-            if (lockMove)
-                controller.Move(Vector3.zero);
             StateSwitch();
+            UpdateValue();
             UpdateState();
-            if (characterState.CurrentHealth <= 0)
-                StartCoroutine(Death());
             if (gameObject.GetComponent<HitStop>().IsHitStop)
                 currentState = EnemyState.BeakBack;
             else if (warning && distance <= attackRadius)
@@ -144,27 +142,57 @@ public class Enemy : MonoBehaviour, IObserver
                 currentState = EnemyState.Alert;
             if (warning && distance > turnBackRadius)
                 currentState = EnemyState.TurnBack;
+            if (ani.GetInteger("AttackMode") != 0)
+                movement = Vector3.zero;
         }
-        else
+
+        /*  else
         {
             accumulateTime += Time.deltaTime;
             movement.y -= gravity * 0.5f * Mathf.Pow(accumulateTime, 2);
-        }
-        controller.Move(movement * Time.deltaTime);
+        }*/
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (OnGrounded())
+            myBody.velocity = movement * Time.fixedDeltaTime;
+        if (characterState.CurrentPoise <= 0)
+            LosePoise();
     }
 
     private void InitialState()
     {
         characterState.CurrentHealth = characterState.MaxHealth;
         characterState.CurrentDefence = characterState.BaseDefence;
+        characterState.CurrentPoise = characterState.MaxPoise;
     }
 
-    private void UpdateState()
+    private void UpdateValue()
     {
         distance = Vector3.Distance(transform.position, player.transform.position);
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, player.transform.position - transform.position);
         healthSlider.value = (characterState.CurrentHealth / characterState.MaxHealth);
+    }
+
+    private void UpdateState()
+    {
+        if (characterState.CurrentHealth <= 0)
+            StartCoroutine(Death());
+    }
+
+    private bool OnGrounded()
+    {
+        float radius = capsuleCollider.radius;
+        Vector3 pointBottom = transform.position + transform.up * radius;
+        Vector3 pointTop = transform.position + transform.up * (capsuleCollider.height - radius);
+        Collider[] colliders = Physics.OverlapCapsule(pointBottom, pointTop, radius, ~(1 << 15));
+        if (colliders.Length != 0)
+            return true;
+        else
+            return false;
     }
 
     private void StateSwitch()
@@ -187,12 +215,10 @@ public class Enemy : MonoBehaviour, IObserver
                 AnimationRealTime(false);
                 ani.SetFloat(forward, 2);
                 Look(player.transform.position);
-                movement = transform.forward * moveSpeed * 2;
+                movement = transform.forward * moveSpeed * 3;
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
-                lockMove = true;
-                movement = Vector3.zero;
                 ani.SetFloat(forward, 0);
                 ani.SetInteger(attack, 1);
                 break;
@@ -204,11 +230,12 @@ public class Enemy : MonoBehaviour, IObserver
                 {
                     ani.SetFloat(forward, 2);
                     Look(startPos);
-                    movement = transform.forward * moveSpeed * 2;
+                    movement = transform.forward * moveSpeed * 3;
                 }
                 break;
             case EnemyState.BeakBack:
                 AnimationRealTime(true);
+                BeakBack();
                 Look(player.transform.position);
                 break;
         }
@@ -217,10 +244,10 @@ public class Enemy : MonoBehaviour, IObserver
     IEnumerator Death()
     {
         //BeakBack();
+        ani.SetBool("isDead", true);
         shutDown = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
-        ani.enabled = false;
         yield return new WaitForSeconds(4);
         Instantiate(dropItem, transform.position, Quaternion.identity);
         Destroy(gameObject);
@@ -230,13 +257,22 @@ public class Enemy : MonoBehaviour, IObserver
     {
         movement = Vector3.zero;
         Vector3 beakBackDirection = (transform.position - player.transform.position).normalized;
-        movement.y = Mathf.Sin(Mathf.Deg2Rad * 30) * accumulateTime;
-        movement.x = beakBackDirection.x;
-        movement.z = beakBackDirection.z;
+        myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
+    }
+
+    private void LosePoise()
+    {
+        movement = Vector3.zero;
+        Vector3 losePoiseDirection =
+            (transform.position - player.transform.position).normalized + transform.up;
+        myBody.AddForce(losePoiseDirection * losePoiseForce, ForceMode.Impulse);
+        characterState.CurrentPoise = characterState.MaxPoise;
     }
 
     private void Look(Vector3 target)
     {
+        if (ani.GetInteger("AttackMode") != 0)
+            return;
         targetRotation = Quaternion.LookRotation(target - transform.position);
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
@@ -248,14 +284,11 @@ public class Enemy : MonoBehaviour, IObserver
     public void ColliderSwitch(int switchCount)
     {
         if (switchCount == 1)
-        {
             collision.SetActive(true);
-            lockMove = true;
-        }
         else
         {
             collision.SetActive(false);
-            lockMove = false;
+            ani.SetInteger(attack, 0);
         }
     }
 
@@ -283,8 +316,9 @@ public class Enemy : MonoBehaviour, IObserver
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
         currentState = EnemyState.BeakBack;
+        if (characterState.CurrentPoise > 0)
+            ani.SetTrigger(isHited);
         gameObject.GetComponent<HitStop>().StopTime();
-        ani.SetTrigger(isHited);
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
         Ray ray = new Ray(transform.position, transform.up * 2);

@@ -9,4 +9,5 @@ public class AttackData_SO : ScriptableObject
     public int maxAttack;
     public float criticalMultiplier;
     public float criticalChance;
+    public float poiseAttack;
 }

@@ -10,6 +10,8 @@ public class CharacterData_SO : ScriptableObject
     public int currentHealth;
     public int baseDefence;
     public int currentDefence;
+    public float maxPoise;
+    public float currentPoise;
 
     [Header("位置")]
     public Vector3 currentPos;
