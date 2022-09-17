@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PatrolEnemy : MonoBehaviour, IObserver
 {
     private Animator ani;
+    private AnimatorStateInfo animatorStateInfo;
     private Rigidbody myBody;
     private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
@@ -41,7 +42,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [Header("狀態")]
     [SerializeField]
+    private bool shutDown;
+
+    [SerializeField]
     private bool warning = false;
+
+    [SerializeField]
+    private bool lockMove;
 
     [SerializeField]
     private float distance;
@@ -71,7 +78,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private CharacterState characterState,
         attackerCharacterState;
     private int playerAttackLayer;
-    private bool shutDown;
     private float accumulateTime = 0;
 
     enum EnemyState
@@ -108,6 +114,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private void Start()
     {
         GameManager.Instance.AddObservers(this);
+        AudioManager.Instance.MainAudio();
     }
 
     private void OnDisable()
@@ -123,7 +130,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             return;
         }
         Debug.Log(OnGrounded());
-        Debug.Log(movement);
         if (OnGrounded())
         {
             accumulateTime = 0;
@@ -132,17 +138,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             StateSwitch();
             UpdateValue();
             UpdateState();
-            if (gameObject.GetComponent<HitStop>().IsHitStop)
-                currentState = EnemyState.BeakBack;
-            else if (warning && distance <= attackRadius)
-                currentState = EnemyState.Attack;
-            else if (warning && distance <= chaseRadius)
-                currentState = EnemyState.Chase;
-            else if (distance <= alertRadius && angle < 120 * 0.5f && !warning)
-                currentState = EnemyState.Alert;
-            if (warning && distance > turnBackRadius)
-                currentState = EnemyState.TurnBack;
-            if (ani.GetInteger("AttackMode") != 0)
+            if (lockMove)
                 movement = Vector3.zero;
         }
 
@@ -158,8 +154,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (OnGrounded())
             myBody.velocity = movement * Time.fixedDeltaTime;
-        if (characterState.CurrentPoise <= 0)
-            LosePoise();
     }
 
     private void InitialState()
@@ -175,20 +169,48 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, player.transform.position - transform.position);
         healthSlider.value = (characterState.CurrentHealth / characterState.MaxHealth);
+        animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
     }
 
     private void UpdateState()
     {
+        Debug.Log(movement);
         if (characterState.CurrentHealth <= 0)
             StartCoroutine(Death());
+        if (gameObject.GetComponent<HitStop>().IsHitStop)
+            currentState = EnemyState.BeakBack;
+        else if (warning && distance <= attackRadius)
+            currentState = EnemyState.Attack;
+        else if (warning && distance <= chaseRadius)
+            currentState = EnemyState.Chase;
+        else if (distance <= alertRadius && angle < 120 * 0.5f && !warning)
+            currentState = EnemyState.Alert;
+        if (warning && distance > turnBackRadius)
+            currentState = EnemyState.TurnBack;
+        if (
+            animatorStateInfo.tagHash == Animator.StringToHash("Attack")
+            || animatorStateInfo.tagHash == Animator.StringToHash("isHited")
+        )
+        {
+            ani.SetInteger(attack, 0);
+            lockMove = true;
+        }
+        else
+            lockMove = false;
     }
 
     private bool OnGrounded()
     {
         float radius = capsuleCollider.radius;
+        int intLayer = LayerMask.NameToLayer("Ground");
         Vector3 pointBottom = transform.position + transform.up * radius;
         Vector3 pointTop = transform.position + transform.up * (capsuleCollider.height - radius);
-        Collider[] colliders = Physics.OverlapCapsule(pointBottom, pointTop, radius, ~(1 << 15));
+        Collider[] colliders = Physics.OverlapCapsule(
+            pointBottom,
+            pointTop,
+            radius,
+            (1 << 14)
+        );
         if (colliders.Length != 0)
             return true;
         else
@@ -206,6 +228,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 movement = transform.forward * moveSpeed;
                 break;
             case EnemyState.Alert:
+                if (!warning)
+                    AudioManager.Instance.BattleAudio();
                 ani.SetFloat(forward, 0);
                 movement = Vector3.zero;
                 Look(player.transform.position);
@@ -223,6 +247,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 ani.SetInteger(attack, 1);
                 break;
             case EnemyState.TurnBack:
+                if (warning)
+                    AudioManager.Instance.MainAudio();
                 warning = false;
                 if (wanderDistance < wanderRadius)
                     currentState = EnemyState.Wander;
@@ -236,7 +262,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.BeakBack:
                 AnimationRealTime(true);
                 BeakBack();
-                Look(player.transform.position);
+                currentState = EnemyState.Chase;
                 break;
         }
     }
@@ -255,14 +281,17 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void BeakBack()
     {
-        movement = Vector3.zero;
         Vector3 beakBackDirection = (transform.position - player.transform.position).normalized;
-        myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
+        movement = Vector3.zero;
+        if (characterState.CurrentPoise <= 0)
+            LosePoise();
+        else
+            myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
+        movement = Vector3.zero;
     }
 
     private void LosePoise()
     {
-        movement = Vector3.zero;
         Vector3 losePoiseDirection =
             (transform.position - player.transform.position).normalized + transform.up;
         myBody.AddForce(losePoiseDirection * losePoiseForce, ForceMode.Impulse);
@@ -271,7 +300,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void Look(Vector3 target)
     {
-        if (ani.GetInteger("AttackMode") != 0)
+        if (lockMove)
             return;
         targetRotation = Quaternion.LookRotation(target - transform.position);
         transform.rotation = Quaternion.Slerp(
@@ -286,14 +315,16 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         if (switchCount == 1)
             collision.SetActive(true);
         else
-        {
             collision.SetActive(false);
-            ani.SetInteger(attack, 0);
-        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        int intLayer = LayerMask.NameToLayer("Ground");
+        if (other.gameObject.layer == intLayer)
+        {
+            Debug.Log("Ground");
+        }
         if (other.gameObject.layer == playerAttackLayer)
         {
             characterState.TakeDamage(attackerCharacterState, characterState);
@@ -323,6 +354,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         myImpulse.GenerateImpulse();
         Ray ray = new Ray(transform.position, transform.up * 2);
         gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
+        Debug.Log(transform.position);
     }
 
     public void EndNotify()

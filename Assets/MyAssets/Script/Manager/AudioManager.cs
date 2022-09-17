@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>
 {
+    [Header("主音效")]
+    [SerializeField]
+    private AudioClip mainClip;
+
+    [SerializeField]
+    private AudioClip battleClip;
+
     [Header("FX音效")]
     [SerializeField]
     private AudioClip buttonTouchClip;
@@ -23,7 +30,8 @@ public class AudioManager : Singleton<AudioManager>
     private AudioClip death;
     private AudioSource menuSource,
         fxSource,
-        playerSource;
+        playerSource,
+        mainSource;
 
     protected override void Awake()
     {
@@ -32,6 +40,7 @@ public class AudioManager : Singleton<AudioManager>
         menuSource = gameObject.AddComponent<AudioSource>();
         fxSource = gameObject.AddComponent<AudioSource>();
         playerSource = gameObject.AddComponent<AudioSource>();
+        mainSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void MenuEnterAudio()
@@ -62,5 +71,19 @@ public class AudioManager : Singleton<AudioManager>
     {
         Instance.playerSource.clip = Instance.death;
         Instance.playerSource.Play();
+    }
+
+    public void MainAudio()
+    {
+        Instance.mainSource.clip = Instance.mainClip;
+        Instance.mainSource.loop = true;
+        Instance.mainSource.Play();
+    }
+
+    public void BattleAudio()
+    {
+        Instance.mainSource.clip = Instance.battleClip;
+        Instance.mainSource.loop = true;
+        Instance.mainSource.Play();
     }
 }

@@ -198,7 +198,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private MeleeWeaponTrail trail;
 
-        public int hitCount;
+        public int combo;
         public static bool canRoll;
         private int attack = Animator.StringToHash("AttackMode");
         private CharacterState characterState;
@@ -223,6 +223,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Awake()
         {
+            //AudioManager.Instance.MainAudio();
             // Get components
             m_Rigidbody = GetComponent<Rigidbody>();
             m_Animator = GetComponent<Animator>();
@@ -312,28 +313,28 @@ namespace DiasGames.ThirdPersonSystem
         {
             collision.SetActive(false);
             currentEndurance = maxEndurance;
-            hitCount = 0;
+            combo = 0;
         }
 
         private void AttackState()
         {
             if (Input.GetMouseButtonDown(0) && free && currentEndurance >= attackConsume)
             {
-                if (m_Animator.GetInteger(attack) == 0 && hitCount == 0)
+                if (m_Animator.GetInteger(attack) == 0 && combo == 0)
                 {
-                    hitCount = 1;
+                    combo = 1;
                     AttackSwitch();
                 }
-                else if (m_Animator.GetInteger(attack) == 1 && hitCount == 1)
-                    hitCount = 2;
-                else if (m_Animator.GetInteger(attack) == 2 && hitCount == 2)
-                    hitCount = 3;
+                else if (m_Animator.GetInteger(attack) == 1 && combo == 1)
+                    combo = 2;
+                else if (m_Animator.GetInteger(attack) == 2 && combo == 2)
+                    combo = 3;
             }
         }
 
         public void AttackSwitch()
         {
-            m_Animator.SetInteger(attack, hitCount);
+            m_Animator.SetInteger(attack, combo);
         }
 
         public void ReduceEndurance(float consume)

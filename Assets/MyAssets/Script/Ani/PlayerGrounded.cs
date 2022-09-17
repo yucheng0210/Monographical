@@ -15,7 +15,7 @@ public class PlayerGrounded : StateMachineBehaviour
     {
         tS = animator.gameObject.GetComponent<DiasGames.ThirdPersonSystem.ThirdPersonSystem>();
         animator.SetInteger("AttackMode", 0);
-        tS.hitCount = 0;
+        tS.combo = 0;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

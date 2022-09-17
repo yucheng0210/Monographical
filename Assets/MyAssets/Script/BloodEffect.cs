@@ -12,14 +12,14 @@ public class BloodEffect : MonoBehaviour
     public void SpurtingBlood(Ray ray, Vector3 transform)
     {
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit) || true)
         {
             float angle = Mathf.Atan2(hit.normal.x, hit.normal.z) * Mathf.Rad2Deg + 180;
             if (effectIdx == BloodFX.Length)
                 effectIdx = 0;
             var instance = Instantiate(
                 BloodFX[effectIdx],
-                hit.point + new Vector3(0, 0.75f, 0),
+                transform + new Vector3(0, 0.75f, 0),
                 Quaternion.Euler(0, angle + 90, 0)
             );
             effectIdx++;
