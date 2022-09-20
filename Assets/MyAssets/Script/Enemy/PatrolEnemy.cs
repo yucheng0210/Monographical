@@ -42,6 +42,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [Header("狀態")]
     [SerializeField]
+    private bool isOnGrounded;
+
+    [SerializeField]
     private bool shutDown;
 
     [SerializeField]
@@ -65,6 +68,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private GameObject dropItem;
+
+    [SerializeField]
+    private float capsuleOffset = 0.3f;
     private Vector3 movement,
         startPos;
     private Quaternion targetRotation;
@@ -129,8 +135,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             AnimationRealTime(false);
             return;
         }
-        Debug.Log(OnGrounded());
-        if (OnGrounded())
+        OnGrounded();
+        Debug.Log(isOnGrounded);
+        if (isOnGrounded)
         {
             accumulateTime = 0;
             if (shutDown)
@@ -152,7 +159,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void FixedUpdate()
     {
-        if (OnGrounded())
+        if (isOnGrounded)
             myBody.velocity = movement * Time.fixedDeltaTime;
     }
 
@@ -174,7 +181,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void UpdateState()
     {
-        Debug.Log(movement);
         if (characterState.CurrentHealth <= 0)
             StartCoroutine(Death());
         if (gameObject.GetComponent<HitStop>().IsHitStop)
@@ -199,22 +205,23 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             lockMove = false;
     }
 
-    private bool OnGrounded()
+    private void OnGrounded()
     {
         float radius = capsuleCollider.radius;
-        int intLayer = LayerMask.NameToLayer("Ground");
-        Vector3 pointBottom = transform.position + transform.up * radius;
-        Vector3 pointTop = transform.position + transform.up * (capsuleCollider.height - radius);
+        int intLayer = LayerMask.NameToLayer("Character");
+        Vector3 pointBottom = transform.position + transform.up * (radius - capsuleOffset);
+        Vector3 pointTop =
+            transform.position + transform.up * (capsuleCollider.height - radius - capsuleOffset);
         Collider[] colliders = Physics.OverlapCapsule(
             pointBottom,
             pointTop,
             radius,
-            (1 << 14)
+            ~(1 << intLayer)
         );
         if (colliders.Length != 0)
-            return true;
+            isOnGrounded = true;
         else
-            return false;
+            isOnGrounded = false;
     }
 
     private void StateSwitch()
@@ -320,11 +327,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void OnTriggerEnter(Collider other)
     {
-        int intLayer = LayerMask.NameToLayer("Ground");
-        if (other.gameObject.layer == intLayer)
-        {
-            Debug.Log("Ground");
-        }
         if (other.gameObject.layer == playerAttackLayer)
         {
             characterState.TakeDamage(attackerCharacterState, characterState);
@@ -354,7 +356,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         myImpulse.GenerateImpulse();
         Ray ray = new Ray(transform.position, transform.up * 2);
         gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
-        Debug.Log(transform.position);
     }
 
     public void EndNotify()
