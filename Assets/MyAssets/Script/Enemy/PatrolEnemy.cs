@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RootMotion.FinalIK;
 
 public class PatrolEnemy : MonoBehaviour, IObserver
 {
@@ -10,6 +11,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private Rigidbody myBody;
     private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
+    private LookAtIK lookAtIK;
 
     [Header("移動參數")]
     [SerializeField]
@@ -114,6 +116,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         characterState = GetComponent<CharacterState>();
         attackerCharacterState = player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
+        lookAtIK = GetComponent<LookAtIK>();
         InitialState();
     }
 
@@ -136,7 +139,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             return;
         }
         OnGrounded();
-        Debug.Log(isOnGrounded);
+        //Debug.Log(isOnGrounded);
         if (isOnGrounded)
         {
             accumulateTime = 0;
@@ -168,6 +171,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         characterState.CurrentHealth = characterState.MaxHealth;
         characterState.CurrentDefence = characterState.BaseDefence;
         characterState.CurrentPoise = characterState.MaxPoise;
+        lookAtIK.solver.target = player.transform.GetChild(0).transform;
     }
 
     private void UpdateValue()
@@ -236,13 +240,17 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.Alert:
                 if (!warning)
+                {
+                    GazeSwitch(true);
                     AudioManager.Instance.BattleAudio();
+                }
                 ani.SetFloat(forward, 0);
                 movement = Vector3.zero;
-                Look(player.transform.position);
+                //Look(player.transform.position);
                 warning = true;
                 break;
             case EnemyState.Chase:
+            GazeSwitch(false);
                 AnimationRealTime(false);
                 ani.SetFloat(forward, 2);
                 Look(player.transform.position);
@@ -255,7 +263,10 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.TurnBack:
                 if (warning)
+                {
+                    GazeSwitch(false);
                     AudioManager.Instance.MainAudio();
+                }
                 warning = false;
                 if (wanderDistance < wanderRadius)
                     currentState = EnemyState.Wander;
@@ -315,6 +326,15 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             targetRotation,
             turnSpeed * Time.deltaTime
         );
+    }
+
+    private void GazeSwitch(bool gazeSwitch)
+    {
+        if (gazeSwitch)
+            lookAtIK.solver.SetIKPositionWeight(1);
+        else
+            lookAtIK.solver.SetIKPositionWeight(0);
+        //lookAtIK.solver.wei
     }
 
     public void ColliderSwitch(int switchCount)
