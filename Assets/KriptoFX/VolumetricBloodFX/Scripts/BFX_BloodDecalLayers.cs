@@ -42,7 +42,7 @@ public class BFX_BloodDecalLayers : MonoBehaviour
     void OnDisable()
     {
         GetComponent<Camera>().depthTextureMode = defaultMode;
-        RenderTexture.ReleaseTemporary(rt);
+         RenderTexture.ReleaseTemporary(rt);
         Shader.DisableKeyword("USE_CUSTOM_DECAL_LAYERS");
         if (DecalRenderingMode == DecalLayersProperty.IgnoreSelectedLayers) Shader.DisableKeyword("USE_CUSTOM_DECAL_LAYERS_IGNORE_MODE");
     }

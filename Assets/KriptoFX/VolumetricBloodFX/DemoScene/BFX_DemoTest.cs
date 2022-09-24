@@ -87,7 +87,6 @@ public class BFX_DemoTest : MonoBehaviour
                     //settings.FreezeDecalDisappearance = InfiniteDecal;
                     settings.LightIntensityMultiplier = DirLight.intensity;
 
-
                     var nearestBone = GetNearestObject(hit.transform.root, hit.point);
                     if(nearestBone != null)
                     {

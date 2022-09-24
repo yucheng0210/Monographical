@@ -133,11 +133,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void Update()
     {
+        // TODO: 戰鬥模式更改，會緩緩地靠近對手，轉向動畫
         if (Time.timeScale == 0)
         {
             AnimationRealTime(false);
             return;
         }
+        Debug.Log(angle < 60);
         OnGrounded();
         //Debug.Log(isOnGrounded);
         if (isOnGrounded)
@@ -189,7 +191,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             StartCoroutine(Death());
         if (gameObject.GetComponent<HitStop>().IsHitStop)
             currentState = EnemyState.BeakBack;
-        else if (warning && distance <= attackRadius)
+        else if (warning && distance <= attackRadius && angle < 60)
             currentState = EnemyState.Attack;
         else if (warning && distance <= chaseRadius)
             currentState = EnemyState.Chase;
@@ -250,10 +252,12 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 warning = true;
                 break;
             case EnemyState.Chase:
-            GazeSwitch(false);
                 AnimationRealTime(false);
-                ani.SetFloat(forward, 2);
+                GazeSwitch(false);
                 Look(player.transform.position);
+                if (angle > 60)
+                    return;
+                ani.SetFloat(forward, 2);
                 movement = transform.forward * moveSpeed * 3;
                 break;
             case EnemyState.Attack:
@@ -320,7 +324,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (lockMove)
             return;
-        targetRotation = Quaternion.LookRotation(target - transform.position);
+        targetRotation = Quaternion.LookRotation(
+            new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z)
+        );
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             targetRotation,
