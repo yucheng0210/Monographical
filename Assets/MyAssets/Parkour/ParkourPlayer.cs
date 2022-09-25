@@ -26,8 +26,12 @@ public class ParkourPlayer : MonoBehaviour
 
     [SerializeField]
     private float jumpForce;
+
+    [SerializeField]
+    private float dodgeForce;
     private bool slowTimeBool;
     private Vector3 movement;
+    private bool isDead;
 
     private void Awake()
     {
@@ -46,8 +50,8 @@ public class ParkourPlayer : MonoBehaviour
     {
         OnGrounded();
         movement = transform.forward * moveSpeed;
-       // Debug.Log(isOnGrounded);  
-        if (!isOnGrounded)
+        // Debug.Log(isOnGrounded);
+        if (myBody.velocity.y < 0 && !isOnGrounded)
             animator.SetBool("isFall", true);
         else
             animator.SetBool("isFall", false);
@@ -67,12 +71,46 @@ public class ParkourPlayer : MonoBehaviour
                         slowTimeBool = false;
                     }
                     break;
+                case Baffle.BaffleType.Left:
+                    if (Input.GetKeyDown(KeyCode.A))
+                    {
+                        Time.timeScale = 1;
+                        animator.SetTrigger("isDodgeL");
+                        myBody.AddForce(-transform.right * dodgeForce, ForceMode.Impulse);
+                        //Debug.Log(myBody.velocity);
+                        accumulatedTime = 0;
+                        slowTimeBool = false;
+                    }
+                    break;
+                case Baffle.BaffleType.Right:
+                    if (Input.GetKeyDown(KeyCode.D))
+                    {
+                        Time.timeScale = 1;
+                        animator.SetTrigger("isDodgeR");
+                        myBody.AddForce(transform.right * dodgeForce, ForceMode.Impulse);
+                        //Debug.Log(myBody.velocity);
+                        accumulatedTime = 0;
+                        slowTimeBool = false;
+                    }
+                    break;
+                case Baffle.BaffleType.Down:
+                    if (Input.GetKeyDown(KeyCode.S))
+                    {
+                        Time.timeScale = 1;
+                        animator.SetTrigger("isRoll");
+                        //Debug.Log(myBody.velocity);
+                        accumulatedTime = 0;
+                        slowTimeBool = false;
+                    }
+                    break;
             }
             if (accumulatedTime >= slowTime)
             {
+                capsuleCollider.isTrigger = false;
                 Time.timeScale = 1;
                 accumulatedTime = 0;
                 slowTimeBool = false;
+                isDead = true;
             }
         }
     }
@@ -101,12 +139,18 @@ public class ParkourPlayer : MonoBehaviour
         if (other.CompareTag("Baffle"))
         {
             baffle = other.GetComponent<Baffle>();
-
-            if (baffle.baffleType == Baffle.BaffleType.Up)
-            {
-                Time.timeScale = baffleTimeScale;
-                slowTimeBool = true;
-            }
+            capsuleCollider.isTrigger = true;
+            Time.timeScale = baffleTimeScale;
+            slowTimeBool = true;
         }
+        if (other.CompareTag("Dead"))
+            if (isDead)
+                animator.SetTrigger("isDead");
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Baffle"))
+            capsuleCollider.isTrigger = false;
     }
 }

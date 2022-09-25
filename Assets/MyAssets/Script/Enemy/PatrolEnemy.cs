@@ -262,6 +262,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
+                GazeSwitch(false);
                 ani.SetFloat(forward, 0);
                 ani.SetInteger(attack, 1);
                 break;
