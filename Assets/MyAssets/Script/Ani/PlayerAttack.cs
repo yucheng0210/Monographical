@@ -13,10 +13,9 @@ public class PlayerAttack : StateMachineBehaviour
         int layerIndex
     )
     {
-        tS = animator.gameObject.GetComponent<DiasGames.ThirdPersonSystem.ThirdPersonSystem>();
-        tS.ReduceEndurance(tS.attackConsume);
+       /* tS = animator.gameObject.GetComponent<DiasGames.ThirdPersonSystem.ThirdPersonSystem>();
+        tS.ReduceEndurance(tS.attackConsume);*/
     }
-
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{

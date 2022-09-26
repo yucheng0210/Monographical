@@ -15,6 +15,12 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField]
     private AudioClip buttonTouchClip;
 
+    [SerializeField]
+    private AudioClip swordSlashClip_1;
+
+    [SerializeField]
+    private AudioClip swordSlashClip_2;
+
     [Header("Menu音效")]
     [SerializeField]
     private AudioClip menuEnterClip;
@@ -85,5 +91,19 @@ public class AudioManager : Singleton<AudioManager>
         Instance.mainSource.clip = Instance.battleClip;
         Instance.mainSource.loop = true;
         Instance.mainSource.Play();
+    }
+
+    public void SlashAudio(int count)
+    {
+        switch (count)
+        {
+            case 1:
+                Instance.fxSource.clip = Instance.swordSlashClip_1;
+                break;
+            case 2:
+                Instance.fxSource.clip = Instance.swordSlashClip_2;
+                break;
+        }
+        Instance.fxSource.Play();
     }
 }

@@ -205,6 +205,7 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private bool shutDown;
+        private AnimatorStateInfo animatorStateInfo;
 
         public void SetControllerAsAI()
         {
@@ -318,23 +319,32 @@ namespace DiasGames.ThirdPersonSystem
 
         private void AttackState()
         {
+            animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
             if (Input.GetMouseButtonDown(0) && free && currentEndurance >= attackConsume)
             {
-                if (m_Animator.GetInteger(attack) == 0 && combo == 0)
+                //Debug.Log(combo);
+                if (combo == 0)
                 {
                     combo = 1;
                     AttackSwitch();
                 }
-                else if (m_Animator.GetInteger(attack) == 1 && combo == 1)
+                else if (animatorStateInfo.IsName("NormalAttack1") && combo == 1)
                     combo = 2;
-                else if (m_Animator.GetInteger(attack) == 2 && combo == 2)
-                    combo = 3;
+                /*else if (animatorStateInfo.IsName("NormalAttack2") && combo == 2)
+                    combo = 3;*/
             }
         }
 
         public void AttackSwitch()
         {
+            if (m_Animator.GetInteger("AttackMode") == combo && combo != 0)
+            {
+                m_Animator.SetInteger("AttackMode", 0);
+                combo = 0;
+            }
             m_Animator.SetInteger(attack, combo);
+            if (combo != 0)
+                ReduceEndurance(attackConsume);
         }
 
         public void ReduceEndurance(float consume)
@@ -345,7 +355,18 @@ namespace DiasGames.ThirdPersonSystem
         public void ColliderSwitch(int switchCount)
         {
             if (switchCount == 1)
+            {
                 collision.SetActive(true);
+                switch (combo)
+                {
+                    case 1:
+                        AudioManager.Instance.SlashAudio(1);
+                        break;
+                    case 2:
+                        AudioManager.Instance.SlashAudio(2);
+                        break;
+                }
+            }
             else
                 collision.SetActive(false);
         }

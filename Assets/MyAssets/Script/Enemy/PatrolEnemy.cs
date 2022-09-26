@@ -139,7 +139,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             AnimationRealTime(false);
             return;
         }
-        Debug.Log(angle < 60);
+//        Debug.Log(angle < 60);
         OnGrounded();
         //Debug.Log(isOnGrounded);
         if (isOnGrounded)
