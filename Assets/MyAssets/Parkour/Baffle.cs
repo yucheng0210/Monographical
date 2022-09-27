@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Baffle : MonoBehaviour
 {
@@ -14,6 +15,14 @@ public class Baffle : MonoBehaviour
 
     [SerializeField]
     private GameObject clueCanvas;
+
+    [SerializeField]
+    private Image ringImage;
+    public Image RingImage
+    {
+        get { return ringImage; }
+        set { ringImage = value; }
+    }
 
     public BaffleType baffleType;
 

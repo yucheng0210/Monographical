@@ -304,10 +304,8 @@ namespace DiasGames.ThirdPersonSystem
                 m_ActiveAbility.UpdateAbility();
 
             // ----------------------------------------------------------------- //
-            if (currentEndurance >= rollConsume)
-                canRoll = true;
-            else
-                canRoll = false;
+
+            canRoll = currentEndurance >= rollConsume ? true : false;
         }
 
         private void InitialState()
@@ -357,15 +355,10 @@ namespace DiasGames.ThirdPersonSystem
             if (switchCount == 1)
             {
                 collision.SetActive(true);
-                switch (combo)
-                {
-                    case 1:
-                        AudioManager.Instance.SlashAudio(1);
-                        break;
-                    case 2:
-                        AudioManager.Instance.SlashAudio(2);
-                        break;
-                }
+                if (animatorStateInfo.IsName("NormalAttack1"))
+                    AudioManager.Instance.SlashAudio(1);
+                else if (animatorStateInfo.IsName("NormalAttack2"))
+                    AudioManager.Instance.SlashAudio(2);
             }
             else
                 collision.SetActive(false);

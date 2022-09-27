@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ParkourPlayer : MonoBehaviour
 {
@@ -58,6 +59,7 @@ public class ParkourPlayer : MonoBehaviour
         if (slowTimeBool)
         {
             accumulatedTime += Time.unscaledDeltaTime;
+            baffle.RingImage.fillAmount = (slowTime - accumulatedTime) / slowTime;
             switch (baffle.baffleType)
             {
                 case Baffle.BaffleType.Up:
@@ -139,6 +141,7 @@ public class ParkourPlayer : MonoBehaviour
         if (other.CompareTag("Baffle"))
         {
             baffle = other.GetComponent<Baffle>();
+            baffle.RingImage.fillAmount = 1;
             capsuleCollider.isTrigger = true;
             Time.timeScale = baffleTimeScale;
             slowTimeBool = true;
