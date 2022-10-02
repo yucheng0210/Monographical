@@ -73,6 +73,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private float capsuleOffset = 0.3f;
+
+    [SerializeField]
+    private GameObject rImage;
     private Vector3 movement,
         startPos;
     private Quaternion targetRotation;
@@ -82,6 +85,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private int forward = Animator.StringToHash("Forward");
     private int attack = Animator.StringToHash("AttackMode");
     private int isHited = Animator.StringToHash("isHited");
+    private int isLosePoise = Animator.StringToHash("isLosePoise");
     private Cinemachine.CinemachineImpulseSource myImpulse;
     private CharacterState characterState,
         attackerCharacterState;
@@ -139,7 +143,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             AnimationRealTime(false);
             return;
         }
-//        Debug.Log(angle < 60);
+        //        Debug.Log(angle < 60);
         OnGrounded();
         //Debug.Log(isOnGrounded);
         if (isOnGrounded)
@@ -199,7 +203,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             currentState = EnemyState.Alert;
         if (warning && distance > turnBackRadius)
             currentState = EnemyState.TurnBack;
-        if (
+        /*if (
             animatorStateInfo.tagHash == Animator.StringToHash("Attack")
             || animatorStateInfo.tagHash == Animator.StringToHash("isHited")
         )
@@ -208,7 +212,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             lockMove = true;
         }
         else
+            lockMove = false;*/
+        if (animatorStateInfo.IsName("Grounded"))
             lockMove = false;
+        if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+            ani.SetInteger(attack, 0);
+
+
     }
 
     private void OnGrounded()
@@ -224,10 +234,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             radius,
             ~(1 << intLayer)
         );
-        if (colliders.Length != 0)
-            isOnGrounded = true;
-        else
-            isOnGrounded = false;
+        isOnGrounded = colliders.Length != 0 ? true : false;
     }
 
     private void StateSwitch()
@@ -263,6 +270,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Attack:
                 AnimationRealTime(false);
                 GazeSwitch(false);
+                lockMove = true;
                 ani.SetFloat(forward, 0);
                 ani.SetInteger(attack, 1);
                 break;
@@ -305,19 +313,19 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private void BeakBack()
     {
         Vector3 beakBackDirection = (transform.position - player.transform.position).normalized;
-        movement = Vector3.zero;
+        lockMove = true;
         if (characterState.CurrentPoise <= 0)
             LosePoise();
         else
             myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
-        movement = Vector3.zero;
+        //movement = Vector3.zero;
     }
 
     private void LosePoise()
     {
-        Vector3 losePoiseDirection =
-            (transform.position - player.transform.position).normalized + transform.up;
-        myBody.AddForce(losePoiseDirection * losePoiseForce, ForceMode.Impulse);
+        lockMove = true;
+        ani.SetTrigger(isLosePoise);
+        rImage.SetActive(true);
         characterState.CurrentPoise = characterState.MaxPoise;
     }
 
@@ -360,6 +368,17 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             if (shutDown)
                 return;
             HitEffect();
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player") && rImage.activeSelf && Input.GetKeyDown(KeyCode.E))
+        {
+            Animator playerAni = player.GetComponent<Animator>();
+            player.gameObject.transform.LookAt(gameObject.transform);
+            playerAni.SetTrigger("isExecution");
+            ani.SetTrigger("isExecuted");
         }
     }
 
