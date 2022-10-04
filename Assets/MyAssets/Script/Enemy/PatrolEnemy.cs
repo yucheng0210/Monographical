@@ -23,9 +23,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private float beakBackForce = 15;
 
-    [SerializeField]
-    private float losePoiseForce = 15;
-
     [Header("AI巡邏半徑參數")]
     [SerializeField]
     private float wanderRadius = 15;
@@ -81,6 +78,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private Quaternion targetRotation;
     private GameObject player;
     private float angle;
+    private DiasGames.ThirdPersonSystem.UnityInputManager unityInputManager;
     private int direction = Animator.StringToHash("Direction");
     private int forward = Animator.StringToHash("Forward");
     private int attack = Animator.StringToHash("AttackMode");
@@ -99,7 +97,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         Chase,
         Attack,
         TurnBack,
-        BeakBack
+        BeakBack,
     }
 
     [SerializeField]
@@ -121,6 +119,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         attackerCharacterState = player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         lookAtIK = GetComponent<LookAtIK>();
+        unityInputManager = player.GetComponent<DiasGames.ThirdPersonSystem.UnityInputManager>();
         InitialState();
     }
 
@@ -214,7 +213,11 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         else
             lockMove = false;*/
         if (animatorStateInfo.IsName("Grounded"))
+        {
+            rImage.SetActive(false);
             lockMove = false;
+            unityInputManager.enabled = true;
+        }
         if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             ani.SetInteger(attack, 0);
 
@@ -293,7 +296,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.BeakBack:
                 AnimationRealTime(true);
                 BeakBack();
-                currentState = EnemyState.Chase;
+                //currentState = EnemyState.Chase;
                 break;
         }
     }
@@ -312,12 +315,15 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void BeakBack()
     {
+        if (!warning)
+            AudioManager.Instance.BattleAudio();
         Vector3 beakBackDirection = (transform.position - player.transform.position).normalized;
         lockMove = true;
-        if (characterState.CurrentPoise <= 0)
+        warning = true;
+        /*if (characterState.CurrentPoise <= 0)
             LosePoise();
-        else
-            myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
+        else*/
+        myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
         //movement = Vector3.zero;
     }
 
@@ -367,6 +373,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             characterState.TakeDamage(attackerCharacterState, characterState);
             if (shutDown)
                 return;
+            if (characterState.CurrentPoise > 0)
+            {
+                ani.SetTrigger(isHited);
+                currentState = EnemyState.BeakBack;
+            }
+            else
+                LosePoise();
             HitEffect();
         }
     }
@@ -377,6 +390,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         {
             Animator playerAni = player.GetComponent<Animator>();
             player.gameObject.transform.LookAt(gameObject.transform);
+            unityInputManager.enabled = false;
             playerAni.SetTrigger("isExecution");
             ani.SetTrigger("isExecuted");
         }
@@ -384,19 +398,20 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void AnimationRealTime(bool realTimeBool)
     {
-        if (realTimeBool)
+        /*if (realTimeBool)
             ani.updateMode = AnimatorUpdateMode.UnscaledTime;
         else
-            ani.updateMode = AnimatorUpdateMode.AnimatePhysics;
+            ani.updateMode = AnimatorUpdateMode.AnimatePhysics;*/
+        ani.updateMode = realTimeBool
+            ? AnimatorUpdateMode.UnscaledTime
+            : AnimatorUpdateMode.AnimatePhysics;
     }
 
     private void HitEffect()
     {
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
-        currentState = EnemyState.BeakBack;
-        if (characterState.CurrentPoise > 0)
-            ani.SetTrigger(isHited);
+
         gameObject.GetComponent<HitStop>().StopTime();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
