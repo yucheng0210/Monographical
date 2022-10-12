@@ -207,6 +207,9 @@ namespace DiasGames.ThirdPersonSystem
         private bool shutDown;
         private AnimatorStateInfo animatorStateInfo;
 
+        [SerializeField]
+        private bool isRunning;
+
         public void SetControllerAsAI()
         {
             m_IsAICharacter = true;
@@ -419,14 +422,27 @@ namespace DiasGames.ThirdPersonSystem
             m_HorizontalAmount = Vector3.Dot(m_StrafeDirection, transform.right);
 
             m_TurnAmount = Mathf.Atan2(FreeMoveDirection.x, FreeMoveDirection.z);
+            //Run(修改程式)
+            if (InputManager.runButton.WasPressed && FreeMoveDirection.magnitude > 0.1f)
+            {
+                isRunning = true;
+            }
+            else if (FreeMoveDirection.magnitude < 0.1f)
+                isRunning = false;
 
-            if (FreeOnMove(InputManager.RelativeInput) || !IsGrounded)
+            if (
+                FreeOnMove(InputManager.RelativeInput) /*|| !IsGrounded*/
+            )
+            {
                 m_ForwardAmount = FreeMoveDirection.z;
+                if (isRunning)
+                    m_ForwardAmount = Mathf.Lerp(m_ForwardAmount * 2, 3f, Time.fixedDeltaTime);
+            }
             else
+            {
+                isRunning = false;
                 m_ForwardAmount = 0;
-
-            if (InputManager.walkButton.IsPressed) //Run(修改程式)
-                m_ForwardAmount = Mathf.Clamp(m_ForwardAmount, 2f, 3f);
+            }
         }
 
         /// <summary>

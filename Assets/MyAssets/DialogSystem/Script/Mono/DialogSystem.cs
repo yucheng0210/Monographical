@@ -8,8 +8,11 @@ public class DialogSystem : MonoBehaviour
     [SerializeField]
     private Text textLabel;
 
+    /*[SerializeField]
+    private Image faceImage;*/
+
     [SerializeField]
-    private Image faceImage;
+    private Text characterName;
 
     [SerializeField]
     private Sprite playerFace,
@@ -77,7 +80,7 @@ public class DialogSystem : MonoBehaviour
         index = 0;
         isTalking = true;
         textFinished = true;
-        SetImage();
+        SetCharacterInfo();
         Initialize();
     }
 
@@ -91,7 +94,6 @@ public class DialogSystem : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
-
         SetType();
         ContinueDialog();
     }
@@ -242,7 +244,7 @@ public class DialogSystem : MonoBehaviour
     {
         textFinished = false;
         textLabel.text = "";
-        SetImage();
+        SetCharacterInfo();
         for (int i = 0; i < dialogList.DialogList[index].Content.Length; i++)
         {
             textLabel.text += dialogList.DialogList[index].Content[i];
@@ -252,9 +254,9 @@ public class DialogSystem : MonoBehaviour
         index++;
     }
 
-    private void SetImage()
+    private void SetCharacterInfo()
     {
-        switch (dialogList.DialogList[index].TheName)
+        /*switch (dialogList.DialogList[index].TheName)
         {
             case "PLAYER":
                 faceImage.sprite = playerFace;
@@ -262,7 +264,8 @@ public class DialogSystem : MonoBehaviour
             case "NPC":
                 faceImage.sprite = npcFace;
                 break;
-        }
+        }*/
+        characterName.text = dialogList.DialogList[index].TheName;
     }
 
     private void ChoiceMenu()

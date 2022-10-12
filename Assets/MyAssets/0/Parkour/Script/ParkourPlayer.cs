@@ -30,9 +30,13 @@ public class ParkourPlayer : MonoBehaviour
 
     [SerializeField]
     private float dodgeForce;
+
+    [SerializeField]
+    private GameObject dialog;
     private bool slowTimeBool;
     private Vector3 movement;
     private bool isDead;
+    private bool canMove;
 
     private void Awake()
     {
@@ -43,19 +47,30 @@ public class ParkourPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isOnGrounded)
+        if (isOnGrounded && canMove)
             myBody.velocity = movement * Time.fixedDeltaTime;
     }
 
     private void Update()
     {
         OnGrounded();
+        SwitchStateValue();
+        SwitchBaffleType();
+    }
+
+    private void SwitchStateValue()
+    {
+        canMove = dialog.activeSelf ? false : true;
         movement = transform.forward * moveSpeed;
         // Debug.Log(isOnGrounded);
         if (myBody.velocity.y < 0 && !isOnGrounded)
             animator.SetBool("isFall", true);
         else
             animator.SetBool("isFall", false);
+    }
+
+    private void SwitchBaffleType()
+    {
         if (slowTimeBool)
         {
             accumulatedTime += Time.unscaledDeltaTime;

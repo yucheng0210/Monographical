@@ -47,7 +47,7 @@ namespace DiasGames.ThirdPersonSystem
     public enum InputReference
     {
         Jump,
-        Walk,
+        Run,
         Roll,
         Crouch,
         Crawl,
@@ -77,7 +77,7 @@ namespace DiasGames.ThirdPersonSystem
         // --------------------- INPUT BUTTONS --------------------- //
 
         public InputButton jumpButton { get; private set; }
-        public InputButton walkButton { get; private set; }
+        public InputButton runButton { get; private set; }
         public InputButton rollButton { get; private set; }
         public InputButton crouchButton { get; private set; }
         public InputButton crawlButton { get; private set; }
@@ -103,7 +103,7 @@ namespace DiasGames.ThirdPersonSystem
 
         [Space()]
         [SerializeField]
-        private string m_WalkInputName = "Walk";
+        private string m_RunInputName = "Run";
 
         [Space()]
         [SerializeField]
@@ -210,7 +210,7 @@ namespace DiasGames.ThirdPersonSystem
 
             // Initialize buttons
             jumpButton = new InputButton(m_JumpInputName);
-            walkButton = new InputButton(m_WalkInputName);
+            runButton = new InputButton(m_RunInputName);
             rollButton = new InputButton(m_RollInputName);
             crouchButton = new InputButton(m_CrouchInputName);
             crawlButton = new InputButton(m_CrawlInputName);
@@ -263,7 +263,7 @@ namespace DiasGames.ThirdPersonSystem
                 return;
 
             jumpButton.Update();
-            walkButton.Update();
+            runButton.Update();
             rollButton.Update();
             crouchButton.Update();
             crawlButton.Update();
@@ -323,8 +323,8 @@ namespace DiasGames.ThirdPersonSystem
             {
                 case InputReference.Jump:
                     return jumpButton;
-                case InputReference.Walk:
-                    return walkButton;
+                case InputReference.Run:
+                    return runButton;
                 case InputReference.Roll:
                     return rollButton;
                 case InputReference.Crouch:
@@ -354,7 +354,7 @@ namespace DiasGames.ThirdPersonSystem
                 case InputReference.Action03:
                     return action03;
                 default:
-                    return walkButton;
+                    return runButton;
             }
         }
     }
