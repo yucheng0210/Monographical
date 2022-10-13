@@ -2,20 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Menu : MonoBehaviour
+public abstract class Menu : MonoBehaviour, IObserver
 {
     [SerializeField]
     private GameObject openMenu;
     public bool OpenBool { get; set; }
     public static bool menuIsOpen;
+    private bool shutDown;
 
     private void Awake()
     {
         openMenu.SetActive(false);
     }
 
+    private void Start()
+    {
+        GameManager.Instance.AddObservers(this);
+    }
+
     public virtual void Open()
     {
+        if (shutDown)
+            return;
         menuIsOpen = true;
         AudioManager.Instance.MenuEnterAudio();
         Time.timeScale = 0;
@@ -35,5 +43,15 @@ public abstract class Menu : MonoBehaviour
     public virtual void TouchAudio()
     {
         AudioManager.Instance.ButtonTouchAudio();
+    }
+
+    public void EndNotify()
+    {
+        shutDown = true;
+    }
+
+    public void SceneLoadingNotify(bool loadingBool)
+    {
+        shutDown = loadingBool ? true : false;
     }
 }

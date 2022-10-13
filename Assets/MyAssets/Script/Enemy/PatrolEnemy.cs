@@ -50,6 +50,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private bool warning = false;
 
     [SerializeField]
+    private bool turnBool;
+
+    [SerializeField]
     private bool lockMove;
 
     [SerializeField]
@@ -265,7 +268,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 AnimationRealTime(false);
                 GazeSwitch(false);
                 Look(player.transform.position);
-                if (angle > 60)
+                if (turnBool)
                     return;
                 ani.SetFloat(forward, 2);
                 movement = transform.forward * moveSpeed * 3;
@@ -288,8 +291,10 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     currentState = EnemyState.Wander;
                 else
                 {
-                    ani.SetFloat(forward, 2);
                     Look(startPos);
+                    if (turnBool)
+                        return;
+                    ani.SetFloat(forward, 2);
                     movement = transform.forward * moveSpeed * 3;
                 }
                 break;
@@ -339,6 +344,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (lockMove)
             return;
+        movement = Vector3.zero;
+        float targetAngle = Vector3.Angle(transform.forward, target - transform.position);
         targetRotation = Quaternion.LookRotation(
             new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z)
         );
@@ -347,6 +354,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             targetRotation,
             turnSpeed * Time.deltaTime
         );
+        if (targetAngle > 60)
+        {
+            ani.SetFloat(forward, -1);
+            turnBool = true;
+        }
+        else
+            turnBool = false;
     }
 
     private void GazeSwitch(bool gazeSwitch)
