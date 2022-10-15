@@ -369,7 +369,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             lookAtIK.solver.SetIKPositionWeight(1);
         else
             lookAtIK.solver.SetIKPositionWeight(0);
-        //lookAtIK.solver.wei
     }
 
     public void ColliderSwitch(int switchCount)

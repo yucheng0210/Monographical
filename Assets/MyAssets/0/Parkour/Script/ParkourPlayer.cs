@@ -2,22 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RootMotion.FinalIK;
 
 public class ParkourPlayer : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed;
     private Rigidbody myBody;
     private Animator animator;
-    private Baffle baffle;
     private CapsuleCollider capsuleCollider;
-    private bool isOnGrounded;
+
+    [Header("參數")]
+    [SerializeField]
+    private float moveSpeed;
 
     [SerializeField]
     private float baffleTimeScale = 0.1f;
 
     [SerializeField]
     private float slowTime;
+
+    [SerializeField]
+    private float turnSpeed;
 
     [SerializeField]
     private float accumulatedTime;
@@ -31,18 +35,41 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private float dodgeForce;
 
+    [Header("狀態")]
     [SerializeField]
-    private GameObject dialog;
-    private bool slowTimeBool;
-    private Vector3 movement;
+    private bool isOnGrounded;
+
+    [SerializeField]
     private bool isDead;
+
+    [SerializeField]
     private bool canMove;
+
+    [SerializeField]
+    private bool slowTimeBool;
+
+    [Header("其他")]
+    [SerializeField]
+    private Transform followTargetTrans;
+
+    [SerializeField]
+    private DialogSystem dialogSystem;
+    private Baffle baffle;
+    private Vector3 movement;
+    private LookAtIK lookAtIK;
 
     private void Awake()
     {
         myBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
+        lookAtIK = GetComponent<LookAtIK>();
+    }
+
+    private void Start()
+    {
+        //LookBack(true);
+        StartCoroutine(LookBack());
     }
 
     private void FixedUpdate()
@@ -56,11 +83,13 @@ public class ParkourPlayer : MonoBehaviour
         OnGrounded();
         SwitchStateValue();
         SwitchBaffleType();
+        // StartCoroutine(LookBack(true));
     }
 
     private void SwitchStateValue()
     {
-        canMove = dialog.activeSelf ? false : true;
+        if (dialogSystem.BlockContinue == false)
+            canMove = dialogSystem.gameObject.activeSelf ? false : true;
         movement = transform.forward * moveSpeed;
         // Debug.Log(isOnGrounded);
         if (myBody.velocity.y < 0 && !isOnGrounded)
@@ -149,6 +178,37 @@ public class ParkourPlayer : MonoBehaviour
             isOnGrounded = true;
         else
             isOnGrounded = false;
+    }
+
+    private IEnumerator LookBack()
+    {
+        dialogSystem.BlockContinue = true;
+        Quaternion lookPos = Quaternion.Euler(0, -180, 0);
+        lookAtIK.solver.SetIKPositionWeight(1);
+        while (!Mathf.Approximately(followTargetTrans.rotation.y, -lookPos.y))
+        {
+            followTargetTrans.rotation = Quaternion.Slerp(
+                followTargetTrans.rotation,
+                lookPos,
+                Time.deltaTime * turnSpeed
+            );
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(1);
+        lookPos = Quaternion.Euler(0, 0, 0);
+        lookAtIK.solver.SetIKPositionWeight(0);
+        while ((followTargetTrans.rotation.y - lookPos.y) > 0.01f)
+        {
+            followTargetTrans.rotation = Quaternion.Slerp(
+                followTargetTrans.rotation,
+                lookPos,
+                Time.deltaTime * turnSpeed
+            );
+            yield return null;
+        }
+        followTargetTrans.rotation = lookPos;
+        dialogSystem.gameObject.SetActive(true);
+        dialogSystem.BlockContinue = false;
     }
 
     private void OnTriggerEnter(Collider other)

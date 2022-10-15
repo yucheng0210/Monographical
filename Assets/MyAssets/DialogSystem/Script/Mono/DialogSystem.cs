@@ -65,6 +65,7 @@ public class DialogSystem : MonoBehaviour
         get { return openMenu; }
         set { openMenu = value; }
     }
+    public bool BlockContinue { get; set; }
 
     private void Awake()
     {
@@ -306,7 +307,9 @@ public class DialogSystem : MonoBehaviour
 
     private void ContinueDialog()
     {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
+        if (
+            (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0)) && !BlockContinue
+        )
             continueBool = true;
     }
 }
