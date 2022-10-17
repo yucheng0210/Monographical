@@ -53,7 +53,7 @@ public class ParkourPlayer : MonoBehaviour
     private Transform followTargetTrans;
 
     [SerializeField]
-    private DialogSystem dialogSystem;
+    private DialogSystem[] dialogSystem;
     private Baffle baffle;
     private Vector3 movement;
     private LookAtIK lookAtIK;
@@ -69,7 +69,7 @@ public class ParkourPlayer : MonoBehaviour
     private void Start()
     {
         //LookBack(true);
-        StartCoroutine(LookBack());
+        StartCoroutine(Beginning());
     }
 
     private void FixedUpdate()
@@ -88,8 +88,8 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchStateValue()
     {
-        if (dialogSystem.BlockContinue == false)
-            canMove = dialogSystem.gameObject.activeSelf ? false : true;
+        if (dialogSystem[1].BlockContinue == false)
+            canMove = dialogSystem[1].gameObject.activeSelf ? false : true;
         movement = transform.forward * moveSpeed;
         // Debug.Log(isOnGrounded);
         if (myBody.velocity.y < 0 && !isOnGrounded)
@@ -180,9 +180,11 @@ public class ParkourPlayer : MonoBehaviour
             isOnGrounded = false;
     }
 
-    private IEnumerator LookBack()
+    private IEnumerator Beginning()
     {
-        dialogSystem.BlockContinue = true;
+        dialogSystem[1].BlockContinue = true;
+        while (dialogSystem[0].gameObject.activeSelf)
+            yield return null;
         Quaternion lookPos = Quaternion.Euler(0, -180, 0);
         lookAtIK.solver.SetIKPositionWeight(1);
         while (!Mathf.Approximately(followTargetTrans.rotation.y, -lookPos.y))
@@ -207,8 +209,8 @@ public class ParkourPlayer : MonoBehaviour
             yield return null;
         }
         followTargetTrans.rotation = lookPos;
-        dialogSystem.gameObject.SetActive(true);
-        dialogSystem.BlockContinue = false;
+        dialogSystem[1].gameObject.SetActive(true);
+        dialogSystem[1].BlockContinue = false;
     }
 
     private void OnTriggerEnter(Collider other)
