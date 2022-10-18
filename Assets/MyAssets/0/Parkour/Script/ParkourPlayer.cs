@@ -213,6 +213,33 @@ public class ParkourPlayer : MonoBehaviour
         dialogSystem[1].BlockContinue = false;
     }
 
+    private IEnumerator LookBack()
+    {
+        Quaternion lookPos = Quaternion.Euler(0, -180, 0);
+        lookAtIK.solver.SetIKPositionWeight(1);
+        while (!Mathf.Approximately(followTargetTrans.rotation.y, -lookPos.y))
+        {
+            followTargetTrans.rotation = Quaternion.Slerp(
+                followTargetTrans.rotation,
+                lookPos,
+                Time.deltaTime * turnSpeed
+            );
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(1);
+        lookPos = Quaternion.Euler(0, 0, 0);
+        lookAtIK.solver.SetIKPositionWeight(0);
+        while ((followTargetTrans.rotation.y - lookPos.y) > 0.01f)
+        {
+            followTargetTrans.rotation = Quaternion.Slerp(
+                followTargetTrans.rotation,
+                lookPos,
+                Time.deltaTime * turnSpeed
+            );
+            yield return null;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Baffle"))
