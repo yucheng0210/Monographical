@@ -52,11 +52,12 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private Transform followTargetTrans;
 
-    [SerializeField]
-    private DialogSystem[] dialogSystem;
+    /* [SerializeField]
+    private DialogSystem[] dialogSystem;*/
     private Baffle baffle;
     private Vector3 movement;
     private LookAtIK lookAtIK;
+    private Cinemachine.CinemachineImpulseSource runImpulse;
 
     private void Awake()
     {
@@ -64,18 +65,25 @@ public class ParkourPlayer : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         lookAtIK = GetComponent<LookAtIK>();
+        runImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
     }
 
     private void Start()
     {
         //LookBack(true);
-        StartCoroutine(Beginning());
+        //StartCoroutine(Beginning());
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAnimation, HandleAnimation);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventGameStart, HandleGameStart);
     }
 
     private void FixedUpdate()
     {
-        if (isOnGrounded && canMove)
-            myBody.velocity = movement * Time.fixedDeltaTime;
+        if (isOnGrounded)
+        {
+            runImpulse.GenerateImpulse();
+            if (canMove)
+                myBody.velocity = movement * Time.fixedDeltaTime;
+        }
     }
 
     private void Update()
@@ -88,8 +96,6 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchStateValue()
     {
-        if (dialogSystem[1].BlockContinue == false)
-            canMove = dialogSystem[1].gameObject.activeSelf ? false : true;
         movement = transform.forward * moveSpeed;
         // Debug.Log(isOnGrounded);
         if (myBody.velocity.y < 0 && !isOnGrounded)
@@ -174,12 +180,11 @@ public class ParkourPlayer : MonoBehaviour
             radius,
             (1 << intLayer)
         );
-        if (colliders.Length != 0)
-            isOnGrounded = true;
-        else
-            isOnGrounded = false;
+        isOnGrounded = colliders.Length != 0 ? true : false;
     }
 
+#region "沒使用事件管理器的開頭"
+    /*
     private IEnumerator Beginning()
     {
         dialogSystem[1].BlockContinue = true;
@@ -212,7 +217,8 @@ public class ParkourPlayer : MonoBehaviour
         dialogSystem[1].gameObject.SetActive(true);
         dialogSystem[1].BlockContinue = false;
     }
-
+    */
+#endregion
     private IEnumerator LookBack()
     {
         Quaternion lookPos = Quaternion.Euler(0, -180, 0);
@@ -238,6 +244,8 @@ public class ParkourPlayer : MonoBehaviour
             );
             yield return null;
         }
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventAnimation, HandleAnimation);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -259,5 +267,15 @@ public class ParkourPlayer : MonoBehaviour
     {
         if (other.CompareTag("Baffle"))
             capsuleCollider.isTrigger = false;
+    }
+
+    private void HandleAnimation(params object[] args)
+    {
+        StartCoroutine(LookBack());
+    }
+
+    private void HandleGameStart(params object[] args)
+    {
+        canMove = true;
     }
 }
