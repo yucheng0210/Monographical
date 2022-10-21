@@ -92,6 +92,10 @@ public class ParkourPlayer : MonoBehaviour
         SwitchStateValue();
         SwitchBaffleType();
         // StartCoroutine(LookBack(true));
+        if (Input.GetButtonDown("Jump"))
+        {
+            Debug.Log("jump");
+        }
     }
 
     private void SwitchStateValue()
@@ -113,7 +117,7 @@ public class ParkourPlayer : MonoBehaviour
             switch (baffle.baffleType)
             {
                 case Baffle.BaffleType.Up:
-                    if (Input.GetKeyDown(KeyCode.Space))
+                    if (Input.GetButtonDown("Jump"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isJump");
@@ -124,7 +128,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Left:
-                    if (Input.GetKeyDown(KeyCode.A))
+                    if (Input.GetButtonDown("Left"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeL");
@@ -135,7 +139,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Right:
-                    if (Input.GetKeyDown(KeyCode.D))
+                    if (Input.GetButtonDown("Right"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeR");
@@ -146,7 +150,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Down:
-                    if (Input.GetKeyDown(KeyCode.S))
+                    if (Input.GetButtonDown("Roll"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isRoll");
