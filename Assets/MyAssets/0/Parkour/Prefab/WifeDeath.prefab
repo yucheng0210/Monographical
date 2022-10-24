@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2456833106577979884}
   - component: {fileID: 2456833106577979886}
   - component: {fileID: 2456833106577979885}
-  - component: {fileID: 2456833106577979880}
   - component: {fileID: 2456833106577979887}
+  - component: {fileID: 2456833106577979880}
   m_Layer: 5
   m_Name: WifeDeath
   m_TagString: Untagged
@@ -77,6 +77,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &2456833106577979887
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2456833106577979875}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!114 &2456833106577979880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,15 +102,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeTime: 1
---- !u!225 &2456833106577979887
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2456833106577979875}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0

@@ -308,7 +308,11 @@ public class DialogSystem : MonoBehaviour
     private void ContinueDialog()
     {
         if (
-            (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0)) && !BlockContinue
+            (
+                Input.GetKeyDown(KeyCode.KeypadEnter)
+                || Input.GetMouseButtonDown(0)
+                || Input.GetButtonDown("A")
+            ) && !BlockContinue
         )
             continueBool = true;
     }

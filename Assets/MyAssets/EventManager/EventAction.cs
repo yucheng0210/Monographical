@@ -14,7 +14,8 @@ public class EventAction : MonoBehaviour
     {
         Conversation,
         Animation,
-        GameStart
+        GameStart,
+        MenuOpen
     }
 
     public ThisActionType thisActionType;
@@ -42,6 +43,13 @@ public class EventAction : MonoBehaviour
                     HandleAction
                 );
                 EventManager.Instance.DispatchEvent(EventDefinition.eventGameStart, this);
+                break;
+            case ThisActionType.MenuOpen:
+                EventManager.Instance.AddEventRegister(
+                    EventDefinition.eventNextMainLine,
+                    HandleAction
+                );
+                EventManager.Instance.DispatchEvent(EventDefinition.eventMenuOpen, this);
                 break;
         }
     }

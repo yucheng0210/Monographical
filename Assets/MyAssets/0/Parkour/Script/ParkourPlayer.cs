@@ -52,6 +52,9 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private Transform followTargetTrans;
 
+    [SerializeField]
+    private SceneFader wifeDeathImage;
+
     /* [SerializeField]
     private DialogSystem[] dialogSystem;*/
     private Baffle baffle;
@@ -74,6 +77,7 @@ public class ParkourPlayer : MonoBehaviour
         //StartCoroutine(Beginning());
         EventManager.Instance.AddEventRegister(EventDefinition.eventAnimation, HandleAnimation);
         EventManager.Instance.AddEventRegister(EventDefinition.eventGameStart, HandleGameStart);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMenuOpen, HandleMenuOpen);
     }
 
     private void FixedUpdate()
@@ -117,7 +121,7 @@ public class ParkourPlayer : MonoBehaviour
             switch (baffle.baffleType)
             {
                 case Baffle.BaffleType.Up:
-                    if (Input.GetButtonDown("Jump"))
+                    if (Input.GetButtonDown("X"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isJump");
@@ -128,7 +132,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Left:
-                    if (Input.GetButtonDown("Left"))
+                    if (Input.GetButtonDown("Y"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeL");
@@ -139,7 +143,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Right:
-                    if (Input.GetButtonDown("Right"))
+                    if (Input.GetButtonDown("A"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeR");
@@ -150,7 +154,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Down:
-                    if (Input.GetButtonDown("Roll"))
+                    if (Input.GetButtonDown("B"))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isRoll");
@@ -281,5 +285,10 @@ public class ParkourPlayer : MonoBehaviour
     private void HandleGameStart(params object[] args)
     {
         canMove = true;
+    }
+
+    private void HandleMenuOpen(params object[] args)
+    {
+        wifeDeathImage.StartCoroutine(wifeDeathImage.FadeOutIn(5));
     }
 }
