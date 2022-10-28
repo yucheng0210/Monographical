@@ -321,7 +321,11 @@ namespace DiasGames.ThirdPersonSystem
         private void AttackState()
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
-            if (Input.GetMouseButtonDown(0) && free && currentEndurance >= attackConsume)
+            if (
+                (Input.GetMouseButtonDown(0) || Input.GetButtonDown("R"))
+                && free
+                && currentEndurance >= attackConsume
+            )
             {
                 //Debug.Log(combo);
                 if (combo == 0)

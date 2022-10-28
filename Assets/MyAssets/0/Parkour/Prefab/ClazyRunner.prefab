@@ -230,11 +230,17 @@ MonoBehaviour:
   moveSpeed: 100
   baffleTimeScale: 0.1
   slowTime: 0
+  turnSpeed: 0
   accumulatedTime: 0
   capsuleOffset: 0
   jumpForce: 0
   dodgeForce: 0
-  dialog: {fileID: 0}
+  isOnGrounded: 0
+  isDead: 0
+  canMove: 0
+  slowTimeBool: 0
+  followTargetTrans: {fileID: 0}
+  wifeDeathImage: {fileID: 0}
 --- !u!114 &1122540388463940661
 MonoBehaviour:
   m_ObjectHideFlags: 0

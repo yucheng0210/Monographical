@@ -52,9 +52,6 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private Transform followTargetTrans;
 
-    [SerializeField]
-    private SceneFader wifeDeathImage;
-
     /* [SerializeField]
     private DialogSystem[] dialogSystem;*/
     private Baffle baffle;
@@ -77,12 +74,11 @@ public class ParkourPlayer : MonoBehaviour
         //StartCoroutine(Beginning());
         EventManager.Instance.AddEventRegister(EventDefinition.eventAnimation, HandleAnimation);
         EventManager.Instance.AddEventRegister(EventDefinition.eventGameStart, HandleGameStart);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMenuOpen, HandleMenuOpen);
     }
 
     private void FixedUpdate()
     {
-        if (isOnGrounded)
+        if (isOnGrounded && !isDead)
         {
             runImpulse.GenerateImpulse();
             if (canMove)
@@ -96,10 +92,6 @@ public class ParkourPlayer : MonoBehaviour
         SwitchStateValue();
         SwitchBaffleType();
         // StartCoroutine(LookBack(true));
-        if (Input.GetButtonDown("Jump"))
-        {
-            Debug.Log("jump");
-        }
     }
 
     private void SwitchStateValue()
@@ -266,9 +258,11 @@ public class ParkourPlayer : MonoBehaviour
             Time.timeScale = baffleTimeScale;
             slowTimeBool = true;
         }
-        if (other.CompareTag("Dead"))
-            if (isDead)
-                animator.SetTrigger("isDead");
+        if (other.CompareTag("Dead") && isDead)
+        {
+            animator.SetTrigger("isDead");
+            GameManager.Instance.EndNotifyObservers();
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -287,8 +281,5 @@ public class ParkourPlayer : MonoBehaviour
         canMove = true;
     }
 
-    private void HandleMenuOpen(params object[] args)
-    {
-        wifeDeathImage.StartCoroutine(wifeDeathImage.FadeOutIn(5));
-    }
+
 }
