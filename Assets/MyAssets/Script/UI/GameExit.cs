@@ -13,31 +13,11 @@ public class GameExit : MonoBehaviour
     private void Awake()
     {
         exitButton.onClick.AddListener(ExitGame);
-        AddEventTriggerListener();
-    }
-
-    private void AddEventTriggerListener()
-    {
-        EventTrigger eventTrigger = exitButton.GetComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener(
-            (functionIWant) =>
-            {
-                TouchAudio();
-            }
-        );
-        eventTrigger.triggers.Add(entry);
     }
 
     public void ExitGame()
     {
-        EditorApplication.isPlaying = false;
+        //EditorApplication.isPlaying = false;
         Application.Quit();
-    }
-
-    private void TouchAudio()
-    {
-        AudioManager.Instance.ButtonTouchAudio();
     }
 }

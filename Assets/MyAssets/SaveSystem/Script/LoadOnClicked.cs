@@ -8,8 +8,8 @@ public class LoadOnClicked : MonoBehaviour
     private Button button;
     private Text buttonText;
     private int loadID;
-
-    private void Awake()
+#region "SaveManager"
+/*    private void Awake()
     {
         button = GetComponent<Button>();
         buttonText = GetComponentInChildren<Text>();
@@ -31,5 +31,10 @@ public class LoadOnClicked : MonoBehaviour
     {
         SaveManager.Instance.LoadPlayerData(loadID);
         buttonText.text = SaveManager.Instance.HasData(loadID);
+    }*/
+    #endregion
+    private void Awake() 
+    {
+    button=GetComponent<Button>();    
     }
 }

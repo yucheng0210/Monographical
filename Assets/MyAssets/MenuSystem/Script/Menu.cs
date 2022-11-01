@@ -10,36 +10,43 @@ public abstract class Menu : MonoBehaviour, IObserver
     protected GameObject openMenu;
 
     [SerializeField]
-    protected Button touchButton;
+    private Button touchButton;
 
     public bool OpenBool { get; set; }
     public static bool menuIsOpen;
     private bool shutDown;
 
+    public enum ActionType
+    {
+        Open,
+        Close
+    }
+
+    public ActionType actionType;
+
     private void Awake()
     {
         openMenu.SetActive(false);
-        if (touchButton != null)
-            AddEventTriggerListener();
     }
 
     private void Start()
     {
         GameManager.Instance.AddObservers(this);
+        if (touchButton != null)
+            AddOnClickListener();
     }
 
-    private void AddEventTriggerListener()
+    private void AddOnClickListener()
     {
-        EventTrigger eventTrigger = touchButton.GetComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.Select;
-        entry.callback.AddListener(
-            (functionIWant) =>
-            {
-                TouchAudio();
-            }
-        );
-        eventTrigger.triggers.Add(entry);
+        switch (actionType)
+        {
+            case ActionType.Open:
+                touchButton.onClick.AddListener(Open);
+                break;
+            case ActionType.Close:
+                touchButton.onClick.AddListener(Close);
+                break;
+        }
     }
 
     public virtual void Open()

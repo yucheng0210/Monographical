@@ -14,7 +14,7 @@ public class SceneFader : MonoBehaviour
     {
         canvasGroup = GetComponent<CanvasGroup>();
         DontDestroyOnLoad(this);
-        canvasGroup.alpha = 0;
+        //canvasGroup.alpha = 0;
     }
 
     public IEnumerator FadeOut()

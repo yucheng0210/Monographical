@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ChangeScene : MonoBehaviour
 {
@@ -10,11 +11,11 @@ public class ChangeScene : MonoBehaviour
 
     private void Start()
     {
-        gameObject.GetComponent<Button>().onClick.AddListener(Load);
+        gameObject.GetComponent<Button>().onClick.AddListener(LoadScene);
     }
 
-    private void Load()
+    private void LoadScene()
     {
-        StartCoroutine(SceneController.Instance.LoadLevel(sceneName));
+        StartCoroutine(SceneController.Instance.Transition(sceneName));
     }
 }

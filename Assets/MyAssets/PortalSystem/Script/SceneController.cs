@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneController : Singleton<SceneController>
+public class SceneController : Singleton<SceneController>, ISavable
 {
     private GameObject player;
 
@@ -29,20 +29,31 @@ public class SceneController : Singleton<SceneController>
         DontDestroyOnLoad(this);
     }
 
+    private void Start()
+    {
+        ISavable savable = this;
+        savable.AddSavableRegister();
+    }
+
     public void TransitionToDestination(TransitionPoint transitionPoint)
     {
         switch (transitionPoint.Type)
         {
             case TransitionPoint.TransitionType.SameScene:
-                StartCoroutine(Transition(SceneManager.GetActiveScene().name, transitionPoint.Tag));
+                StartCoroutine(
+                    PortalTransition(SceneManager.GetActiveScene().name, transitionPoint.Tag)
+                );
                 break;
             case TransitionPoint.TransitionType.DifferentScene:
-                StartCoroutine(Transition(transitionPoint.SceneName, transitionPoint.Tag));
+                StartCoroutine(PortalTransition(transitionPoint.SceneName, transitionPoint.Tag));
                 break;
         }
     }
 
-    IEnumerator Transition(string sceneName, TransitionDestination.DestinationTag destinationTag)
+    IEnumerator PortalTransition(
+        string sceneName,
+        TransitionDestination.DestinationTag destinationTag
+    )
     {
         GameManager.Instance.LoadingNotify(true);
         SceneFader fade = Instantiate(sceneFaderPrefab);
@@ -104,7 +115,7 @@ public class SceneController : Singleton<SceneController>
         return null;
     }
 
-    public IEnumerator LoadLevel(string sceneName)
+    public IEnumerator Transition(string sceneName)
     {
         SceneFader fade = Instantiate(sceneFaderPrefab);
         progressSlider.value = 0.0f;
@@ -128,5 +139,22 @@ public class SceneController : Singleton<SceneController>
         progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
         yield return StartCoroutine(fade.FadeIn());
+    }
+
+    public void AddSavableRegister()
+    {
+        SaveLoadManager.Instance.AddRegister(this);
+    }
+
+    public GameSaveData GenerateGameData()
+    {
+        GameSaveData gameSaveData = new GameSaveData();
+        gameSaveData.currentScene = SceneManager.GetActiveScene().name;
+        return gameSaveData;
+    }
+
+    public void RestoreGameData(GameSaveData gameSaveData)
+    {
+        StartCoroutine(Transition(gameSaveData.currentScene));
     }
 }
