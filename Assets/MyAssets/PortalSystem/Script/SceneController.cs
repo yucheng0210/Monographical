@@ -22,6 +22,7 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     [SerializeField]
     private SceneFader sceneFaderPrefab;
+    private Dictionary<int, string> sceneNameDic = new Dictionary<int, string>();
 
     protected override void Awake()
     {
@@ -33,6 +34,14 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         ISavable savable = this;
         savable.AddSavableRegister();
+        AddSceneName();
+    }
+
+    private void AddSceneName()
+    {
+        sceneNameDic.Add(0, "0");
+        sceneNameDic.Add(1, "序章：下雨中的市集");
+        sceneNameDic.Add(2, "序章：宋江廟");
     }
 
     public void TransitionToDestination(TransitionPoint transitionPoint)
@@ -150,6 +159,8 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         GameSaveData gameSaveData = new GameSaveData();
         gameSaveData.currentScene = SceneManager.GetActiveScene().name;
+        Debug.Log(SceneManager.GetActiveScene().buildIndex);
+        gameSaveData.dataName = sceneNameDic[SceneManager.GetActiveScene().buildIndex];
         return gameSaveData;
     }
 

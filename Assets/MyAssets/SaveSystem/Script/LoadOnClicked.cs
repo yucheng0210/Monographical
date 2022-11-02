@@ -7,9 +7,10 @@ public class LoadOnClicked : MonoBehaviour
 {
     private Button button;
     private Text buttonText;
+    [SerializeField]
     private int loadID;
 #region "SaveManager"
-/*    private void Awake()
+    /*    private void Awake()
     {
         button = GetComponent<Button>();
         buttonText = GetComponentInChildren<Text>();
@@ -33,8 +34,25 @@ public class LoadOnClicked : MonoBehaviour
         buttonText.text = SaveManager.Instance.HasData(loadID);
     }*/
     #endregion
-    private void Awake() 
+    private void Awake()
     {
-    button=GetComponent<Button>();    
+        button = GetComponent<Button>();
+        buttonText = GetComponentInChildren<Text>();
+    }
+
+    private void Start()
+    {
+        button.onClick.AddListener(LoadData);
+    }
+
+    private void OnEnable()
+    {
+        loadID = gameObject.transform.GetSiblingIndex();
+        buttonText.text = SaveLoadManager.Instance.GetDataName(loadID);
+    }
+
+    private void LoadData()
+    {
+        SaveLoadManager.Instance.Load(loadID);
     }
 }

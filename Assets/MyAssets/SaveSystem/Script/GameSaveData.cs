@@ -5,4 +5,5 @@ using UnityEngine;
 public class GameSaveData
 {
     public string currentScene;
+    public string dataName;
 }

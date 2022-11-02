@@ -10,8 +10,9 @@ public class ShopMenu : Menu
     [SerializeField]
     private ShopUIManager shopUIManager;
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (shopDialog.OpenMenu && !OpenBool)
         {
             Open();

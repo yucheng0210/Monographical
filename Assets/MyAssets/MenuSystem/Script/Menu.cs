@@ -36,6 +36,12 @@ public abstract class Menu : MonoBehaviour, IObserver
             AddOnClickListener();
     }
 
+    protected virtual void Update()
+    {
+        if (Input.GetButtonDown("B") && OpenBool)
+            Close();
+    }
+
     private void AddOnClickListener()
     {
         switch (actionType)
@@ -53,6 +59,7 @@ public abstract class Menu : MonoBehaviour, IObserver
     {
         if (shutDown)
             return;
+        EventSystem.current.SetSelectedGameObject(null);
         menuIsOpen = true;
         AudioManager.Instance.MenuEnterAudio();
         Time.timeScale = 0;
@@ -67,6 +74,7 @@ public abstract class Menu : MonoBehaviour, IObserver
         Time.timeScale = 1;
         openMenu.SetActive(false);
         OpenBool = false;
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     public virtual void TouchAudio()

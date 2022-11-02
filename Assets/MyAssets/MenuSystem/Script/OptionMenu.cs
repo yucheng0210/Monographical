@@ -6,9 +6,10 @@ using UnityEngine.UI;
 
 public class OptionMenu : Menu
 {
-    private void Update()
+    protected override void Update()
     {
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("B")) && OpenBool)
+        base.Update();
+        if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
             Close();
     }
 }

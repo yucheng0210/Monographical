@@ -15,12 +15,19 @@ public class EventAction : MonoBehaviour
         Conversation,
         Animation,
         GameStart,
-        MenuOpen
+        MenuOpen,
+        AutoSave,
+        Initialize
     }
 
     public ThisActionType thisActionType;
 
     private void Start()
+    {
+        ActionType();
+    }
+
+    private void ActionType()
     {
         switch (thisActionType)
         {
@@ -50,6 +57,22 @@ public class EventAction : MonoBehaviour
                     HandleAction
                 );
                 EventManager.Instance.DispatchEvent(EventDefinition.eventMenuOpen, this);
+                break;
+            case ThisActionType.AutoSave:
+                EventManager.Instance.AddEventRegister(
+                    EventDefinition.eventNextMainLine,
+                    HandleAction
+                );
+                EventManager.Instance.DispatchEvent(EventDefinition.eventAutoSave, this);
+                gameObject.SetActive(false);
+                break;
+            case ThisActionType.Initialize:
+                EventManager.Instance.AddEventRegister(
+                    EventDefinition.eventNextMainLine,
+                    HandleAction
+                );
+                EventManager.Instance.DispatchEvent(EventDefinition.eventInitialize, this);
+                gameObject.SetActive(false);
                 break;
         }
     }

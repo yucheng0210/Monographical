@@ -7,8 +7,9 @@ public class BagMenu : Menu
     [SerializeField]
     private BackpackUIManager backpackUIManager;
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (!OpenBool)

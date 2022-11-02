@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class LoadMenu : Menu
 {
-    private void Update()
+    [SerializeField]
+    private Button firstButton;
+
+    protected override void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F7))
-        {
-            if (!OpenBool)
-                Open();
-            else
-                Close();
-        }
+        base.Update();
+        if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+        if (Input.GetKeyDown(KeyCode.F7) && OpenBool)
+            Close();
     }
 }

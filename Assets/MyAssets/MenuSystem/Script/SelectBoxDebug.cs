@@ -11,7 +11,7 @@ public class SelectBoxDebug : MonoBehaviour
 
     private void Update()
     {
-        if (EventSystem.current.currentSelectedGameObject == null)
+        if (EventSystem.current.currentSelectedGameObject == null && !Menu.menuIsOpen)
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
     }
 }
