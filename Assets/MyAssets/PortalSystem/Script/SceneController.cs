@@ -126,6 +126,7 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     public IEnumerator Transition(string sceneName)
     {
+        GameManager.Instance.LoadingNotify(true);
         SceneFader fade = Instantiate(sceneFaderPrefab);
         progressSlider.value = 0.0f;
         yield return StartCoroutine(fade.FadeOut());
@@ -147,6 +148,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         yield return new WaitForSeconds(0.5f);
         progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
+        GameManager.Instance.LoadingNotify(false);
         yield return StartCoroutine(fade.FadeIn());
     }
 
@@ -158,9 +160,17 @@ public class SceneController : Singleton<SceneController>, ISavable
     public GameSaveData GenerateGameData()
     {
         GameSaveData gameSaveData = new GameSaveData();
-        gameSaveData.currentScene = SceneManager.GetActiveScene().name;
-        Debug.Log(SceneManager.GetActiveScene().buildIndex);
-        gameSaveData.dataName = sceneNameDic[SceneManager.GetActiveScene().buildIndex];
+        if (SceneManager.GetActiveScene().name == "StartMenu")
+        {
+            gameSaveData.currentScene = "Prologue_1";
+            gameSaveData.dataName = sceneNameDic[SceneManager.GetActiveScene().buildIndex + 1];
+            StartCoroutine(Transition("Prologue_1"));
+        }
+        else
+        {
+            gameSaveData.currentScene = SceneManager.GetActiveScene().name;
+            gameSaveData.dataName = sceneNameDic[SceneManager.GetActiveScene().buildIndex];
+        }
         return gameSaveData;
     }
 

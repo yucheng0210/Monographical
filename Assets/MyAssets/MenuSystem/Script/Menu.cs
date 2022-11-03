@@ -10,7 +10,7 @@ public abstract class Menu : MonoBehaviour, IObserver
     protected GameObject openMenu;
 
     [SerializeField]
-    private Button touchButton;
+    protected Button touchButton;
 
     public bool OpenBool { get; set; }
     public static bool menuIsOpen;
@@ -29,11 +29,16 @@ public abstract class Menu : MonoBehaviour, IObserver
         openMenu.SetActive(false);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         GameManager.Instance.AddObservers(this);
         if (touchButton != null)
             AddOnClickListener();
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.RemoveObservers(this);
     }
 
     protected virtual void Update()
@@ -87,8 +92,10 @@ public abstract class Menu : MonoBehaviour, IObserver
         shutDown = true;
     }
 
-    public void SceneLoadingNotify(bool loadingBool)
+    public virtual void SceneLoadingNotify(bool loadingBool)
     {
         shutDown = loadingBool ? true : false;
+        openMenu.SetActive(false);
+        //        gameObject.SetActive(false);
     }
 }

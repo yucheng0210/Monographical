@@ -21,7 +21,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     private void Start()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventAutoSave, HandleAutoSave);
-        Debug.Log("enable");
     }
 
     private void Update()
@@ -79,6 +78,5 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     private void HandleAutoSave(params object[] args)
     {
         Save(currentId);
-        Debug.Log("peko");
     }
 }

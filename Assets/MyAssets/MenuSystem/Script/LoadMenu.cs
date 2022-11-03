@@ -14,7 +14,5 @@ public class LoadMenu : Menu
         base.Update();
         if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
-        if (Input.GetKeyDown(KeyCode.F7) && OpenBool)
-            Close();
     }
 }

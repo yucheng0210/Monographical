@@ -1,18 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class MainMenu : Menu
 {
+    [SerializeField]
+    private Button[] buttons;
+
+    protected override void Start()
+    {
+        base.Start();
+        buttons[0].onClick.AddListener(Close);
+        buttons[1].onClick.AddListener(ChangeScene);
+    }
+
     protected override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!OpenBool)
-                Open();
-            else
-                Close();
-        }
+        if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("+")) && !OpenBool)
+            Open();
+    }
+
+    private void ChangeScene()
+    {
+        StartCoroutine(SceneController.Instance.Transition("StartMenu"));
+        Time.timeScale = 1;
     }
 }

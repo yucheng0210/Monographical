@@ -79,8 +79,15 @@ public class EventAction : MonoBehaviour
 
     private void OnDisable()
     {
-        EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventNextMainLine, HandleAction);
+        try
+        {
+            EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
+            EventManager.Instance.RemoveEventRegister(
+                EventDefinition.eventNextMainLine,
+                HandleAction
+            );
+        }
+        catch { }
     }
 
     private void HandleAction(params object[] args)

@@ -7,6 +7,7 @@ public class LoadOnClicked : MonoBehaviour
 {
     private Button button;
     private Text buttonText;
+
     [SerializeField]
     private int loadID;
 #region "SaveManager"
@@ -54,5 +55,6 @@ public class LoadOnClicked : MonoBehaviour
     private void LoadData()
     {
         SaveLoadManager.Instance.Load(loadID);
+        Time.timeScale = 1;
     }
 }
