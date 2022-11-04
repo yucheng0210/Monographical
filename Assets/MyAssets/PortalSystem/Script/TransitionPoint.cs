@@ -10,6 +10,8 @@ public class TransitionPoint : MonoBehaviour
         DifferentScene
     }
 
+    [SerializeField]
+    private bool immediatelyTrans;
     private bool canTrans;
 
     [SerializeField]
@@ -35,7 +37,7 @@ public class TransitionPoint : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && canTrans)
+        if ((Input.GetKeyDown(KeyCode.E) || immediatelyTrans) && canTrans)
             SceneController.Instance.TransitionToDestination(this);
     }
 

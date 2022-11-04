@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour, IObserver
 
     private void Start()
     {
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMenuOpen, HandleMenuOpen);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
         GameManager.Instance.AddObservers(this);
     }
 
@@ -24,16 +24,17 @@ public class UIManager : MonoBehaviour, IObserver
 
     public void EndNotify()
     {
-        deadImage.StartCoroutine(deadImage.FadeOutIn(2, 3));
+        deadImage.StartCoroutine(deadImage.FadeOutIn(2, 3, false));
     }
 
     public void SceneLoadingNotify(bool loadingBool)
     {
-//        throw new System.NotImplementedException();
+        //        throw new System.NotImplementedException();
     }
 
-    private void HandleMenuOpen(params object[] args)
+    private void HandleMainLine(params object[] args)
     {
-        wifeDeathImage.StartCoroutine(wifeDeathImage.FadeOutIn(0, 5));
+        if ((int)args[0] == 3)
+            StartCoroutine(wifeDeathImage.FadeOutIn(0, 5, true));
     }
 }

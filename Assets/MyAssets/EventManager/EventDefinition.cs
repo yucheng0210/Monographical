@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventDefinition : MonoBehaviour
+public class EventDefinition
 {
+    public const string eventMainLine = "MAIN_LINE";
     public const string eventNextMainLine = "NEXT_MAIN_LINE";
-    public const string eventAnimation = "ANIMATION";
-    public const string eventGameStart = "GAMESTART";
-    public const string eventMenuOpen = "MENUOPEN";
-    public const string eventAutoSave = "AUTOSAVE";
-    public const string eventInitialize = "INITIALIZE";
+    public const string eventAutoSave = "EVENT_AUTO_SAVE";
 }

@@ -9,18 +9,13 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     private string jsonFolder;
     private List<ISavable> savableList = new List<ISavable>();
     private Dictionary<string, GameSaveData> saveDataDic = new Dictionary<string, GameSaveData>();
-    private int currentId = 0;
+    private int currentPathId = 0;
 
     protected override void Awake()
     {
         base.Awake();
         jsonFolder = Application.dataPath + "/SAVE/";
         DontDestroyOnLoad(this);
-    }
-
-    private void Start()
-    {
-        EventManager.Instance.AddEventRegister(EventDefinition.eventAutoSave, HandleAutoSave);
     }
 
     private void Update()
@@ -61,7 +56,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         {
             savable.RestoreGameData(jsonData[savable.GetType().Name]);
         }
-        currentId = id;
+        currentPathId = id;
     }
 
     public string GetDataName(int id)
@@ -75,8 +70,9 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         return jsonData["SceneController"].dataName;
     }
 
-    private void HandleAutoSave(params object[] args)
+    public void AutoSave()
     {
-        Save(currentId);
+        Save(currentPathId);
+        Debug.Log("autosave" + currentPathId.ToString());
     }
 }

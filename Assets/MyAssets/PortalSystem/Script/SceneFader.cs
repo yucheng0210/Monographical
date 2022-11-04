@@ -36,7 +36,7 @@ public class SceneFader : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public IEnumerator FadeOutIn(float firstWaitTime,float secondWaitTime)
+    public IEnumerator FadeOutIn(float firstWaitTime, float secondWaitTime, bool nextMainLineBool)
     {
         yield return new WaitForSecondsRealtime(firstWaitTime);
         while (canvasGroup.alpha < 1)
@@ -50,6 +50,8 @@ public class SceneFader : MonoBehaviour
             canvasGroup.alpha -= Time.deltaTime / fadeTime;
             yield return null;
         }
+        if (nextMainLineBool)
+            EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
         Destroy(gameObject);
     }
 }

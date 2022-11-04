@@ -72,8 +72,7 @@ public class ParkourPlayer : MonoBehaviour
     {
         //LookBack(true);
         //StartCoroutine(Beginning());
-        EventManager.Instance.AddEventRegister(EventDefinition.eventAnimation, HandleAnimation);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventGameStart, HandleGameStart);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
     }
 
     private void FixedUpdate()
@@ -232,10 +231,9 @@ public class ParkourPlayer : MonoBehaviour
             );
             yield return null;
         }
-        yield return new WaitForSecondsRealtime(1);
         lookPos = Quaternion.Euler(0, 0, 0);
         lookAtIK.solver.SetIKPositionWeight(0);
-        while ((followTargetTrans.rotation.y - lookPos.y) > 0.01f)
+        while ((followTargetTrans.rotation.y - lookPos.y) > 0.1f)
         {
             followTargetTrans.rotation = Quaternion.Slerp(
                 followTargetTrans.rotation,
@@ -244,7 +242,7 @@ public class ParkourPlayer : MonoBehaviour
             );
             yield return null;
         }
-        EventManager.Instance.RemoveEventRegister(EventDefinition.eventAnimation, HandleAnimation);
+        followTargetTrans.rotation = lookPos;
         EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
     }
 
@@ -271,15 +269,16 @@ public class ParkourPlayer : MonoBehaviour
             capsuleCollider.isTrigger = false;
     }
 
-    private void HandleAnimation(params object[] args)
+    private void HandleMainLine(params object[] args)
     {
-        StartCoroutine(LookBack());
+        switch ((int)args[0])
+        {
+            case 1:
+                StartCoroutine(LookBack());
+                break;
+            case 5:
+                canMove = true;
+                break;
+        }
     }
-
-    private void HandleGameStart(params object[] args)
-    {
-        canMove = true;
-    }
-
-
 }

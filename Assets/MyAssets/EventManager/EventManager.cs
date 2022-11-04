@@ -4,33 +4,30 @@ using UnityEngine;
 
 public class EventManager : Singleton<EventManager>
 {
-    public delegate void EventDelegate(object[] args);
-    private Dictionary<string, Dictionary<int, EventDelegate>> eventListenters = new Dictionary<
+    public delegate void EventHandler(params object[] args);
+    private Dictionary<string, EventHandler> eventListenters = new Dictionary<
         string,
-        Dictionary<int, EventDelegate>
+        EventHandler
     >();
 
-    public void AddEventRegister(string eventName, EventDelegate handler)
+    public void AddEventRegister(string eventName, EventHandler handler)
     {
         if (handler == null)
             return;
-        if (!eventListenters.ContainsKey(eventName))
-            eventListenters.Add(eventName, new Dictionary<int, EventDelegate>());
-        var handlerDic = eventListenters[eventName];
-        var handlerHash = handler.GetHashCode();
-        if (handlerDic.ContainsKey(handlerHash))
-            handlerDic.Remove(handlerHash);
-        eventListenters[eventName].Add(handlerHash.GetHashCode(), handler);
+        if (eventListenters.ContainsKey(eventName))
+            eventListenters[eventName] += handler;
+        else
+            eventListenters.Add(eventName, handler);
     }
 
-    public void RemoveEventRegister(string eventName, EventDelegate handler)
+    public void RemoveEventRegister(string eventName, EventHandler handler)
     {
         if (handler == null)
             return;
         if (eventListenters.ContainsKey(eventName))
         {
-            eventListenters[eventName].Remove(handler.GetHashCode());
-            if (eventListenters[eventName] == null || eventListenters[eventName].Count == 0)
+            eventListenters[eventName] -= handler;
+            if (eventListenters[eventName] == null)
                 eventListenters.Remove(eventName);
         }
     }
@@ -39,22 +36,9 @@ public class EventManager : Singleton<EventManager>
     {
         if (eventListenters.ContainsKey(eventName))
         {
-            var handlerDic = eventListenters[eventName];
-            if (handlerDic != null && handlerDic.Count > 0)
-            {
-                var dic = new Dictionary<int, EventDelegate>(handlerDic);
-                foreach (var i in dic.Values)
-                {
-                    try
-                    {
-                        i(objs);
-                    }
-                    catch (System.Exception)
-                    {
-                        throw;
-                    }
-                }
-            }
+            EventHandler eventHandler = eventListenters[eventName];
+            if (eventHandler != null)
+                eventHandler(objs);
         }
     }
 
