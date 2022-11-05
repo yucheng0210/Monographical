@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>, ISavable
 {
     private bool gameIsOver;
     private List<Enemy> enemies;
     private CharacterState playerState;
+    private float gameTime;
     List<IObserver> observerList = new List<IObserver>();
 
     protected override void Awake()
@@ -14,6 +16,20 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
         DontDestroyOnLoad(this);
         enemies = new List<Enemy>();
+    }
+
+    private void Start()
+    {
+        ISavable savable = this;
+        savable.AddSavableRegister();
+    }
+
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "StartMenu")
+            gameTime = 0;
+        else
+            gameTime += Time.unscaledDeltaTime;
     }
 
     public void AddObservers(IObserver observer)
@@ -51,5 +67,22 @@ public class GameManager : Singleton<GameManager>
     public void AddEnemyToList(Enemy script)
     {
         enemies.Add(script);
+    }
+
+    public void AddSavableRegister()
+    {
+        SaveLoadManager.Instance.AddRegister(this);
+    }
+
+    public GameSaveData GenerateGameData()
+    {
+        GameSaveData gameSaveData = new GameSaveData();
+        gameSaveData.gameTime = this.gameTime;
+        return gameSaveData;
+    }
+
+    public void RestoreGameData(GameSaveData gameSaveData)
+    {
+        this.gameTime = gameSaveData.gameTime;
     }
 }

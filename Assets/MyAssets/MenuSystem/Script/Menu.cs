@@ -74,6 +74,8 @@ public abstract class Menu : MonoBehaviour, IObserver
 
     public virtual void Close()
     {
+        if (shutDown)
+            return;
         menuIsOpen = false;
         AudioManager.Instance.MenuExitAudio();
         Time.timeScale = 1;

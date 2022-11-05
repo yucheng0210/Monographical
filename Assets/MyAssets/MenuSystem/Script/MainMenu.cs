@@ -13,7 +13,7 @@ public class MainMenu : Menu
     {
         base.Start();
         buttons[0].onClick.AddListener(Close);
-        buttons[1].onClick.AddListener(ChangeScene);
+        buttons[1].onClick.AddListener(BackToStartMenu);
     }
 
     protected override void Update()
@@ -25,8 +25,9 @@ public class MainMenu : Menu
             Open();
     }
 
-    private void ChangeScene()
+    private void BackToStartMenu()
     {
+        SaveLoadManager.Instance.AutoSave();
         StartCoroutine(SceneController.Instance.Transition("StartMenu"));
         Time.timeScale = 1;
     }

@@ -6,9 +6,8 @@ using UnityEngine.UI;
 public class LoadOnClicked : MonoBehaviour
 {
     private Button button;
-    private Text buttonText;
-
-    [SerializeField]
+    private Text dataName;
+    private Text dataTime;
     private int loadID;
 #region "SaveManager"
     /*    private void Awake()
@@ -38,7 +37,8 @@ public class LoadOnClicked : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
-        buttonText = GetComponentInChildren<Text>();
+        dataName = gameObject.transform.GetChild(0).GetComponent<Text>();
+        dataTime = gameObject.transform.GetChild(1).GetComponent<Text>();
     }
 
     private void Start()
@@ -49,7 +49,8 @@ public class LoadOnClicked : MonoBehaviour
     private void OnEnable()
     {
         loadID = gameObject.transform.GetSiblingIndex();
-        buttonText.text = SaveLoadManager.Instance.GetDataName(loadID);
+        dataName.text = SaveLoadManager.Instance.GetDataName(loadID);
+        dataTime.text = SaveLoadManager.Instance.GetDataTime(loadID);
     }
 
     private void LoadData()

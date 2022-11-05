@@ -259,6 +259,7 @@ public class ParkourPlayer : MonoBehaviour
         if (other.CompareTag("Dead") && isDead)
         {
             animator.SetTrigger("isDead");
+            runImpulse.GenerateImpulse(new Vector3(20, 20, 0));
             GameManager.Instance.EndNotifyObservers();
         }
     }

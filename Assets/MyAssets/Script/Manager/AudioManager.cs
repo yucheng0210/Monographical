@@ -42,7 +42,7 @@ public class AudioManager : Singleton<AudioManager>
     protected override void Awake()
     {
         base.Awake();
-        DontDestroyOnLoad(this);
+       // DontDestroyOnLoad(this);
         menuSource = gameObject.AddComponent<AudioSource>();
         fxSource = gameObject.AddComponent<AudioSource>();
         playerSource = gameObject.AddComponent<AudioSource>();

@@ -61,7 +61,7 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public string GetDataName(int id)
     {
-        string dataName = "NODATA";
+        string dataName = "NO DATA";
         var resultPath = jsonFolder + "data" + (id + 1).ToString() + ".sav";
         if (!File.Exists(resultPath))
             return dataName;
@@ -70,9 +70,30 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         return jsonData["SceneController"].dataName;
     }
 
+    public string GetDataTime(int id)
+    {
+        string dataName = "";
+        var resultPath = jsonFolder + "data" + (id + 1).ToString() + ".sav";
+        if (!File.Exists(resultPath))
+            return dataName;
+        var stringData = File.ReadAllText(resultPath);
+        var jsonData = JsonConvert.DeserializeObject<Dictionary<string, GameSaveData>>(stringData);
+        float gameTime = jsonData["GameManager"].gameTime;
+        int hours = (int)(gameTime / 3600);
+        int minutes = (int)((gameTime % 3600) / 60);
+        int seconds = (int)(gameTime % 60);
+        string timeText =
+            "遊玩時間："
+            + hours.ToString("00")
+            + "："
+            + minutes.ToString("00")
+            + "："
+            + seconds.ToString("00");
+        return timeText;
+    }
+
     public void AutoSave()
     {
         Save(currentPathId);
-        Debug.Log("autosave" + currentPathId.ToString());
     }
 }

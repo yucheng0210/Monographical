@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class SaveOnClicked : MonoBehaviour
 {
     private Button button;
-    private Text buttonText;
+    private Text dataName;
+    private Text dataTime;
     private int saveID;
 #region "SaveManager"
     /*
@@ -38,7 +39,8 @@ public class SaveOnClicked : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
-        buttonText = GetComponentInChildren<Text>();
+        dataName = gameObject.transform.GetChild(0).GetComponent<Text>();
+        dataTime = gameObject.transform.GetChild(1).GetComponent<Text>();
     }
 
     private void Start()
@@ -49,12 +51,13 @@ public class SaveOnClicked : MonoBehaviour
     private void OnEnable()
     {
         saveID = gameObject.transform.GetSiblingIndex();
-        buttonText.text = SaveLoadManager.Instance.GetDataName(saveID);
+        dataName.text = SaveLoadManager.Instance.GetDataName(saveID);
+        dataTime.text = SaveLoadManager.Instance.GetDataTime(saveID);
     }
 
     private void SaveData()
     {
-        if (SaveLoadManager.Instance.GetDataName(saveID) != "NODATA")
+        if (SaveLoadManager.Instance.GetDataName(saveID) != "NO DATA")
             ClueMenu.currentSaveID = saveID;
         else
         {
