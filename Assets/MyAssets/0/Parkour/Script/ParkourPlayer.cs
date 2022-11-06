@@ -35,6 +35,9 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private float dodgeForce;
 
+    [SerializeField]
+    private Vector3 beakBackForce;
+
     [Header("狀態")]
     [SerializeField]
     private bool isOnGrounded;
@@ -257,11 +260,21 @@ public class ParkourPlayer : MonoBehaviour
             slowTimeBool = true;
         }
         if (other.CompareTag("Dead") && isDead)
-        {
-            animator.SetTrigger("isDead");
-            runImpulse.GenerateImpulse(new Vector3(20, 20, 0));
-            GameManager.Instance.EndNotifyObservers();
-        }
+            StartCoroutine(Death());
+    }
+
+    private IEnumerator Death()
+    {
+        animator.SetTrigger("isDead");
+        Time.timeScale = 0.5f;
+        runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
+        GameManager.Instance.EndNotifyObservers();
+        myBody.AddForce(beakBackForce, ForceMode.Impulse);
+        yield return new WaitForSecondsRealtime(2);
+        Time.timeScale = 1;
+        yield return new WaitForSecondsRealtime(5);
+        SaveLoadManager.Instance.AutoSave();
+        StartCoroutine(SceneController.Instance.Transition("StartMenu"));
     }
 
     private void OnTriggerExit(Collider other)

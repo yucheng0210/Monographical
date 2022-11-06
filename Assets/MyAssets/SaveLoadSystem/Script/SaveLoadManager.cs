@@ -96,4 +96,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     {
         Save(currentPathId);
     }
+
+
 }

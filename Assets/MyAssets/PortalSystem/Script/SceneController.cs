@@ -178,4 +178,6 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         StartCoroutine(Transition(gameSaveData.currentScene));
     }
+
+
 }
