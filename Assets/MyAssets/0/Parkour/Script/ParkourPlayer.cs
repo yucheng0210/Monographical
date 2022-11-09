@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,6 +50,9 @@ public class ParkourPlayer : MonoBehaviour
     private bool canMove;
 
     [SerializeField]
+    private bool isJump;
+
+    [SerializeField]
     private bool slowTimeBool;
 
     [Header("其他")]
@@ -61,6 +65,7 @@ public class ParkourPlayer : MonoBehaviour
     private Vector3 movement;
     private LookAtIK lookAtIK;
     private Cinemachine.CinemachineImpulseSource runImpulse;
+    private float x;
 
     private void Awake()
     {
@@ -98,11 +103,15 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchStateValue()
     {
-        movement = transform.forward * moveSpeed;
+        x = Input.GetAxis("Horizontal");
+        movement = (transform.forward + new Vector3(x, 0, 0)) * moveSpeed;
         // Debug.Log(isOnGrounded);
         if (myBody.velocity.y < 0 && !isOnGrounded)
+        {
+            isJump = false;
             animator.SetBool("isFall", true);
-        else
+        }
+        if (isOnGrounded)
             animator.SetBool("isFall", false);
     }
 
@@ -115,18 +124,26 @@ public class ParkourPlayer : MonoBehaviour
             switch (baffle.baffleType)
             {
                 case Baffle.BaffleType.Up:
-                    if (Input.GetButtonDown("X"))
+                    if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space))
                     {
                         Time.timeScale = 1;
-                        animator.SetTrigger("isJump");
                         myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-                        //Debug.Log(myBody.velocity);
+                        if (!isJump)
+                        {
+                            isJump = true;
+                            animator.SetTrigger("isJump");
+                        }
+                        else
+                        {
+                            animator.SetTrigger("isDoubleJump");
+                            runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
+                        }
                         accumulatedTime = 0;
                         slowTimeBool = false;
                     }
                     break;
                 case Baffle.BaffleType.Left:
-                    if (Input.GetButtonDown("Y"))
+                    if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeL");
@@ -137,7 +154,7 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Right:
-                    if (Input.GetButtonDown("A"))
+                    if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeR");
@@ -148,11 +165,20 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.Down:
-                    if (Input.GetButtonDown("B"))
+                    if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S))
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isRoll");
                         //Debug.Log(myBody.velocity);
+                        accumulatedTime = 0;
+                        slowTimeBool = false;
+                    }
+                    break;
+                case Baffle.BaffleType.TurnRight:
+                    if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
+                    {
+                        Time.timeScale = 1;
+                        StartCoroutine(Turn(90));
                         accumulatedTime = 0;
                         slowTimeBool = false;
                     }
@@ -247,6 +273,21 @@ public class ParkourPlayer : MonoBehaviour
         }
         followTargetTrans.rotation = lookPos;
         EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
+    }
+
+    private IEnumerator Turn(float direction)
+    {
+        Quaternion lookPos = Quaternion.Euler(0, direction, 0);
+        while (!Mathf.Approximately(transform.rotation.y, -lookPos.y))
+        {
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                lookPos,
+                Time.deltaTime * turnSpeed * 2
+            );
+            yield return null;
+        }
+        transform.rotation = lookPos;
     }
 
     private void OnTriggerEnter(Collider other)

@@ -10,7 +10,8 @@ public class Baffle : MonoBehaviour, IObserver
         Up,
         Down,
         Right,
-        Left
+        Left,
+        TurnRight
     }
 
     [SerializeField]
@@ -55,6 +56,6 @@ public class Baffle : MonoBehaviour, IObserver
 
     public void SceneLoadingNotify(bool loadingBool)
     {
-//        throw new System.NotImplementedException();
+        //        throw new System.NotImplementedException();
     }
 }

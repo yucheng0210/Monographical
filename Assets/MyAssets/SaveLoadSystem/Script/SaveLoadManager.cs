@@ -20,8 +20,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F6))
-            Save(0); /*
+        /*if (Input.GetKeyDown(KeyCode.F6))
+            Save(0); 
         if (Input.GetKeyDown(KeyCode.F7))
             Load();*/
     }
@@ -96,6 +96,4 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     {
         Save(currentPathId);
     }
-
-
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SaveOnClicked : MonoBehaviour
 {
@@ -62,6 +63,8 @@ public class SaveOnClicked : MonoBehaviour
         else
         {
             SaveLoadManager.Instance.Save(saveID);
+            if (SceneManager.GetActiveScene().name == "StartMenu")
+                SaveLoadManager.Instance.Load(saveID);
             Time.timeScale = 1;
         }
     }

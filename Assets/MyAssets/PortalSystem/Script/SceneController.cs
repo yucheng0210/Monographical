@@ -164,7 +164,6 @@ public class SceneController : Singleton<SceneController>, ISavable
         {
             gameSaveData.currentScene = "Prologue_1";
             gameSaveData.dataName = sceneNameDic[SceneManager.GetActiveScene().buildIndex + 1];
-            StartCoroutine(Transition("Prologue_1"));
         }
         else
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class ClueMenu : Menu
 {
@@ -33,6 +34,8 @@ public class ClueMenu : Menu
     private void SaveData()
     {
         SaveLoadManager.Instance.Save(currentSaveID);
+        if (SceneManager.GetActiveScene().name == "StartMenu")
+            SaveLoadManager.Instance.Load(currentSaveID);
         Time.timeScale = 1;
     }
 }
