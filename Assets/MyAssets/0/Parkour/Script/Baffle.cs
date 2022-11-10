@@ -11,11 +11,15 @@ public class Baffle : MonoBehaviour, IObserver
         Down,
         Right,
         Left,
-        TurnRight
+        TurnRight,
+        Trap
     }
 
     [SerializeField]
     private GameObject clueCanvas;
+
+    [SerializeField]
+    private float slowTime = 1.2f;
 
     [SerializeField]
     private Image ringImage;
@@ -24,7 +28,10 @@ public class Baffle : MonoBehaviour, IObserver
         get { return ringImage; }
         set { ringImage = value; }
     }
-
+    public float SlowTime
+    {
+        get { return slowTime; }
+    }
     public BaffleType baffleType;
 
     private void Start()

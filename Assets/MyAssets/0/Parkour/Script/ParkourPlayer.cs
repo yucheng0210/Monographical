@@ -50,10 +50,13 @@ public class ParkourPlayer : MonoBehaviour
     private bool canMove;
 
     [SerializeField]
-    private bool isJump;
+    private bool upTheAir;
 
     [SerializeField]
     private bool slowTimeBool;
+
+    [SerializeField]
+    private bool outOfTime;
 
     [Header("其他")]
     [SerializeField]
@@ -65,6 +68,7 @@ public class ParkourPlayer : MonoBehaviour
     private Vector3 movement;
     private LookAtIK lookAtIK;
     private Cinemachine.CinemachineImpulseSource runImpulse;
+    private AnimatorStateInfo animatorStateInfo;
     private float x;
 
     private void Awake()
@@ -85,6 +89,7 @@ public class ParkourPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
+        animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
         if (isOnGrounded && !isDead)
         {
             runImpulse.GenerateImpulse();
@@ -105,14 +110,17 @@ public class ParkourPlayer : MonoBehaviour
     {
         x = Input.GetAxis("Horizontal");
         movement = (transform.forward + new Vector3(x, 0, 0)) * moveSpeed;
-        // Debug.Log(isOnGrounded);
-        if (myBody.velocity.y < 0 && !isOnGrounded)
+        if (!isOnGrounded)
         {
-            isJump = false;
-            animator.SetBool("isFall", true);
+            if (myBody.velocity.y < 0)
+                animator.SetBool("isFall", true);
         }
-        if (isOnGrounded)
+        else
             animator.SetBool("isFall", false);
+        if (animatorStateInfo.tagHash == Animator.StringToHash("UPTheAir"))
+            upTheAir = true;
+        else
+            upTheAir = false;
     }
 
     private void SwitchBaffleType()
@@ -128,11 +136,8 @@ public class ParkourPlayer : MonoBehaviour
                     {
                         Time.timeScale = 1;
                         myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-                        if (!isJump)
-                        {
-                            isJump = true;
+                        if (!upTheAir)
                             animator.SetTrigger("isJump");
-                        }
                         else
                         {
                             animator.SetTrigger("isDoubleJump");
@@ -190,7 +195,7 @@ public class ParkourPlayer : MonoBehaviour
                 Time.timeScale = 1;
                 accumulatedTime = 0;
                 slowTimeBool = false;
-                isDead = true;
+                outOfTime = true;
             }
         }
     }
@@ -295,17 +300,29 @@ public class ParkourPlayer : MonoBehaviour
         if (other.CompareTag("Baffle"))
         {
             baffle = other.GetComponent<Baffle>();
+            slowTime = baffle.SlowTime;
             baffle.RingImage.fillAmount = 1;
             capsuleCollider.isTrigger = true;
             Time.timeScale = baffleTimeScale;
             slowTimeBool = true;
         }
-        if (other.CompareTag("Dead") && isDead)
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Dead") && !isDead && outOfTime)
             StartCoroutine(Death());
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Baffle"))
+            capsuleCollider.isTrigger = false;
     }
 
     private IEnumerator Death()
     {
+        isDead = true;
         animator.SetTrigger("isDead");
         Time.timeScale = 0.5f;
         runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
@@ -316,12 +333,6 @@ public class ParkourPlayer : MonoBehaviour
         yield return new WaitForSecondsRealtime(5);
         SaveLoadManager.Instance.AutoSave();
         StartCoroutine(SceneController.Instance.Transition("StartMenu"));
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Baffle"))
-            capsuleCollider.isTrigger = false;
     }
 
     private void HandleMainLine(params object[] args)
