@@ -12,6 +12,7 @@ public class Baffle : MonoBehaviour, IObserver
         Right,
         Left,
         TurnRight,
+        TurnLeft,
         Trap
     }
 

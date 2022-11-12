@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,6 +101,7 @@ public class ParkourPlayer : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(myBody.velocity);
         OnGrounded();
         SwitchStateValue();
         SwitchBaffleType();
@@ -110,17 +112,11 @@ public class ParkourPlayer : MonoBehaviour
     {
         x = Input.GetAxis("Horizontal");
         movement = (transform.forward + new Vector3(x, 0, 0)) * moveSpeed;
-        if (!isOnGrounded)
-        {
-            if (myBody.velocity.y < 0)
-                animator.SetBool("isFall", true);
-        }
+        if (myBody.velocity.y < -0.5f)
+            animator.SetBool("isFall", true);
         else
             animator.SetBool("isFall", false);
-        if (animatorStateInfo.tagHash == Animator.StringToHash("UPTheAir"))
-            upTheAir = true;
-        else
-            upTheAir = false;
+        upTheAir = animatorStateInfo.tagHash == Animator.StringToHash("UPTheAir") ? true : false;
     }
 
     private void SwitchBaffleType()
@@ -188,6 +184,15 @@ public class ParkourPlayer : MonoBehaviour
                         slowTimeBool = false;
                     }
                     break;
+                case Baffle.BaffleType.TurnLeft:
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
+                    {
+                        Time.timeScale = 1;
+                        StartCoroutine(Turn(-90));
+                        accumulatedTime = 0;
+                        slowTimeBool = false;
+                    }
+                break;
             }
             if (accumulatedTime >= slowTime)
             {
@@ -282,7 +287,7 @@ public class ParkourPlayer : MonoBehaviour
 
     private IEnumerator Turn(float direction)
     {
-        Quaternion lookPos = Quaternion.Euler(0, direction, 0);
+        Quaternion lookPos = Quaternion.Euler(0, transform.rotation.y+direction, 0);
         while (!Mathf.Approximately(transform.rotation.y, -lookPos.y))
         {
             transform.rotation = Quaternion.Slerp(

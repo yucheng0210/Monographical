@@ -99,7 +99,7 @@ LightmapSettings:
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: e093296fc15438349afb661a8427762a,
     type: 2}
-  m_LightingSettings: {fileID: 4890085278179872738, guid: 1c2ad2acc1628a64190bcce7d8186c8c,
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 7a95c0a46c905074084de765e110cb9a,
     type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -4147,6 +4147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 1898123468}
   touchButton: {fileID: 0}
+  actionType: 0
   backpackUIManager: {fileID: 576715210}
 --- !u!114 &783888341
 MonoBehaviour:
@@ -4162,7 +4163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 614314078}
   touchButton: {fileID: 1070557096}
-  buttons: []
+  actionType: 0
 --- !u!114 &783888342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4177,6 +4178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 832414969}
   touchButton: {fileID: 0}
+  actionType: 0
+  buttons: []
 --- !u!114 &783888343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4191,6 +4194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 571582604}
   touchButton: {fileID: 0}
+  actionType: 0
   shopDialog: {fileID: 1216185665}
   shopUIManager: {fileID: 576715214}
 --- !u!114 &783888344
@@ -4207,6 +4211,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 805468026}
   touchButton: {fileID: 0}
+  actionType: 0
+  firstButton: {fileID: 0}
+  clueMenu: {fileID: 0}
+  saveButtonManager: {fileID: 0}
 --- !u!114 &783888345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4221,6 +4229,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 14900322}
   touchButton: {fileID: 0}
+  actionType: 0
+  firstButton: {fileID: 0}
 --- !u!114 &783888346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4235,6 +4245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 264262340}
   touchButton: {fileID: 0}
+  actionType: 0
   questUIManager: {fileID: 576715215}
 --- !u!114 &783888347
 MonoBehaviour:
@@ -4250,6 +4261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openMenu: {fileID: 1606797692}
   touchButton: {fileID: 0}
+  actionType: 0
 --- !u!1001 &805100470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26928,7 +26940,7 @@ PrefabInstance:
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.014164836
+      value: 0.014164835
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
@@ -26938,7 +26950,7 @@ PrefabInstance:
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0077295816
+      value: -0.0077295806
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352122322179, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
