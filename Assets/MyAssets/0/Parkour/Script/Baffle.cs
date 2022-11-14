@@ -13,7 +13,8 @@ public class Baffle : MonoBehaviour, IObserver
         Left,
         TurnRight,
         TurnLeft,
-        Trap
+        Trap,
+        Climb
     }
 
     [SerializeField]

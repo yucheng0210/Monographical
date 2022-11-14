@@ -5,17 +5,19 @@ using UnityEngine.UI;
 
 public class Trap : MonoBehaviour, IObserver
 {
-    private GameObject trap;
-    private Rigidbody trapBody;
+    private List<GameObject> traps;
 
     [SerializeField]
-    private float force;
+    private float moveSpeed;
 
     private void Start()
     {
+        traps = new List<GameObject>(transform.childCount);
         GameManager.Instance.AddObservers(this);
-        trap = transform.parent.gameObject.transform.GetChild(1).gameObject;
-        trapBody = trap.gameObject.GetComponent<Rigidbody>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            traps.Add(transform.GetChild(i).gameObject);
+        }
     }
 
     private void OnDisable()
@@ -26,13 +28,14 @@ public class Trap : MonoBehaviour, IObserver
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-            trapBody.velocity = transform.forward * force;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        /* if (other.CompareTag("Player"))
-            clueCanvas.SetActive(false);*/
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Rigidbody trapBody = traps[i].GetComponent<Rigidbody>();
+                ;
+                trapBody.velocity = transform.forward * moveSpeed;
+            }
+        }
     }
 
     public void EndNotify()

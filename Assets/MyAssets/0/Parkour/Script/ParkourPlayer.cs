@@ -101,7 +101,6 @@ public class ParkourPlayer : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(myBody.velocity);
         OnGrounded();
         SwitchStateValue();
         SwitchBaffleType();
@@ -149,7 +148,6 @@ public class ParkourPlayer : MonoBehaviour
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeL");
                         myBody.AddForce(-transform.right * dodgeForce, ForceMode.Impulse);
-                        //Debug.Log(myBody.velocity);
                         accumulatedTime = 0;
                         slowTimeBool = false;
                     }
@@ -160,7 +158,6 @@ public class ParkourPlayer : MonoBehaviour
                         Time.timeScale = 1;
                         animator.SetTrigger("isDodgeR");
                         myBody.AddForce(transform.right * dodgeForce, ForceMode.Impulse);
-                        //Debug.Log(myBody.velocity);
                         accumulatedTime = 0;
                         slowTimeBool = false;
                     }
@@ -170,7 +167,6 @@ public class ParkourPlayer : MonoBehaviour
                     {
                         Time.timeScale = 1;
                         animator.SetTrigger("isRoll");
-                        //Debug.Log(myBody.velocity);
                         accumulatedTime = 0;
                         slowTimeBool = false;
                     }
@@ -185,10 +181,19 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     break;
                 case Baffle.BaffleType.TurnLeft:
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
+                    if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
                     {
                         Time.timeScale = 1;
                         StartCoroutine(Turn(-90));
+                        accumulatedTime = 0;
+                        slowTimeBool = false;
+                    }
+                    break;
+                case Baffle.BaffleType.Climb:
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space))
+                    {
+                        Time.timeScale = 1;
+                        animator.SetTrigger("isRoll");
                         accumulatedTime = 0;
                         slowTimeBool = false;
                     }
@@ -287,7 +292,7 @@ public class ParkourPlayer : MonoBehaviour
 
     private IEnumerator Turn(float direction)
     {
-        Quaternion lookPos = Quaternion.Euler(0, transform.rotation.y+direction, 0);
+        Quaternion lookPos = Quaternion.Euler(0, transform.rotation.y + direction, 0);
         while (!Mathf.Approximately(transform.rotation.y, -lookPos.y))
         {
             transform.rotation = Quaternion.Slerp(

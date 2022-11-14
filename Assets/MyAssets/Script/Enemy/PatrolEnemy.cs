@@ -222,7 +222,10 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             unityInputManager.enabled = true;
         }
         if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+        {
             ani.SetInteger(attack, 0);
+            lockMove = true;
+        }
 
 
     }
@@ -386,13 +389,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             characterState.TakeDamage(attackerCharacterState, characterState);
             if (shutDown)
                 return;
-            if (characterState.CurrentPoise > 0)
-            {
-                ani.SetTrigger(isHited);
-                currentState = EnemyState.BeakBack;
-            }
+            /* if (characterState.CurrentPoise > 0)
+            {*/
+            ani.SetTrigger(isHited);
+            currentState = EnemyState.BeakBack;
+            /* }
             else
-                LosePoise();
+                LosePoise();*/
             HitEffect();
         }
     }
