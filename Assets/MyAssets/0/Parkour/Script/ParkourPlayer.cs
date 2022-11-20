@@ -48,6 +48,9 @@ public class ParkourPlayer : MonoBehaviour
     private bool isDead;
 
     [SerializeField]
+    private bool isClimb;
+
+    [SerializeField]
     private bool canMove;
 
     [SerializeField]
@@ -120,93 +123,95 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchBaffleType()
     {
-        if (slowTimeBool)
+        if (!slowTimeBool)
+            return;
+        accumulatedTime += Time.unscaledDeltaTime;
+        baffle.RingImage.fillAmount = (slowTime - accumulatedTime) / slowTime;
+        switch (baffle.baffleType)
         {
-            accumulatedTime += Time.unscaledDeltaTime;
-            baffle.RingImage.fillAmount = (slowTime - accumulatedTime) / slowTime;
-            switch (baffle.baffleType)
-            {
-                case Baffle.BaffleType.Up:
-                    if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space))
+            case Baffle.BaffleType.Up:
+                if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space))
+                {
+                    Time.timeScale = 1;
+                    myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                    if (!upTheAir)
+                        animator.SetTrigger("isJump");
+                    else
                     {
-                        Time.timeScale = 1;
-                        myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-                        if (!upTheAir)
-                            animator.SetTrigger("isJump");
-                        else
-                        {
-                            animator.SetTrigger("isDoubleJump");
-                            runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
-                        }
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
+                        animator.SetTrigger("isDoubleJump");
+                        runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
                     }
-                    break;
-                case Baffle.BaffleType.Left:
-                    if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q))
-                    {
-                        Time.timeScale = 1;
-                        animator.SetTrigger("isDodgeL");
-                        myBody.AddForce(-transform.right * dodgeForce, ForceMode.Impulse);
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
-                    }
-                    break;
-                case Baffle.BaffleType.Right:
-                    if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
-                    {
-                        Time.timeScale = 1;
-                        animator.SetTrigger("isDodgeR");
-                        myBody.AddForce(transform.right * dodgeForce, ForceMode.Impulse);
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
-                    }
-                    break;
-                case Baffle.BaffleType.Down:
-                    if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S))
-                    {
-                        Time.timeScale = 1;
-                        animator.SetTrigger("isRoll");
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
-                    }
-                    break;
-                case Baffle.BaffleType.TurnRight:
-                    if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
-                    {
-                        Time.timeScale = 1;
-                        StartCoroutine(Turn(90));
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
-                    }
-                    break;
-                case Baffle.BaffleType.TurnLeft:
-                    if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
-                    {
-                        Time.timeScale = 1;
-                        StartCoroutine(Turn(-90));
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
-                    }
-                    break;
-                case Baffle.BaffleType.Climb:
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space))
-                    {
-                        Time.timeScale = 1;
-                        animator.SetTrigger("isRoll");
-                        accumulatedTime = 0;
-                        slowTimeBool = false;
-                    }
+                    accumulatedTime = 0;
+                    slowTimeBool = false;
+                }
                 break;
-            }
-            if (accumulatedTime >= slowTime)
-            {
-                capsuleCollider.isTrigger = false;
-                Time.timeScale = 1;
-                accumulatedTime = 0;
-                slowTimeBool = false;
-                outOfTime = true;
-            }
+            case Baffle.BaffleType.Left:
+                if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q))
+                {
+                    Time.timeScale = 1;
+                    animator.SetTrigger("isDodgeL");
+                    myBody.AddForce(-transform.right * dodgeForce, ForceMode.Impulse);
+                    accumulatedTime = 0;
+                    slowTimeBool = false;
+                }
+                break;
+            case Baffle.BaffleType.Right:
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
+                {
+                    Time.timeScale = 1;
+                    animator.SetTrigger("isDodgeR");
+                    myBody.AddForce(transform.right * dodgeForce, ForceMode.Impulse);
+                    accumulatedTime = 0;
+                    slowTimeBool = false;
+                }
+                break;
+            case Baffle.BaffleType.Down:
+                if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S))
+                {
+                    Time.timeScale = 1;
+                    animator.SetTrigger("isRoll");
+                    accumulatedTime = 0;
+                    slowTimeBool = false;
+                }
+                break;
+            case Baffle.BaffleType.TurnRight:
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
+                {
+                    Time.timeScale = 1;
+                    StartCoroutine(Turn(90));
+                    accumulatedTime = 0;
+                    slowTimeBool = false;
+                }
+                break;
+            case Baffle.BaffleType.TurnLeft:
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
+                {
+                    Time.timeScale = 1;
+                    StartCoroutine(Turn(-90));
+                    accumulatedTime = 0;
+                    slowTimeBool = false;
+                }
+                break;
+            case Baffle.BaffleType.Climb:
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space))
+                {
+                    Time.timeScale = 1;
+                    canMove = false;
+                    myBody.velocity = Vector3.zero;
+                    accumulatedTime = 0;
+                    capsuleCollider.isTrigger = false;
+                    slowTimeBool = false;
+                    StartCoroutine(ClimbingLadder());
+                }
+                break;
+        }
+        if (accumulatedTime >= slowTime)
+        {
+            capsuleCollider.isTrigger = false;
+            Time.timeScale = 1;
+            accumulatedTime = 0;
+            slowTimeBool = false;
+            outOfTime = true;
         }
     }
 
@@ -224,6 +229,43 @@ public class ParkourPlayer : MonoBehaviour
             (1 << intLayer)
         );
         isOnGrounded = colliders.Length != 0 ? true : false;
+    }
+
+    private IEnumerator ClimbingLadder()
+    {
+        float animationCount = 0;
+        float animationProgress = 0;
+        isClimb = true;
+        animator.SetBool("isClimb", isClimb);
+        while (animator.GetBool("isClimb"))
+        {
+            animationProgress = animatorStateInfo.normalizedTime - animationCount;
+            if (animationProgress >= 1 && animatorStateInfo.IsName("Climb"))
+            {
+                animator.speed = 0;
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space))
+                {
+                    animator.speed = 1;
+                    animationCount++;
+                }
+            }
+            if (animator.speed == 1)
+                myBody.velocity = transform.up;
+            else
+            {
+                myBody.useGravity = false;
+                myBody.velocity = Vector3.zero;
+            }
+            animator.SetBool("isClimb", isClimb);
+            yield return null;
+        }
+        while (animatorStateInfo.IsTag("Climb"))
+        {
+            myBody.velocity = (transform.up + transform.forward) * 3;
+            yield return null;
+        }
+        canMove = true;
+        myBody.useGravity = true;
     }
 
 #region "沒使用事件管理器的開頭"
@@ -316,6 +358,8 @@ public class ParkourPlayer : MonoBehaviour
             Time.timeScale = baffleTimeScale;
             slowTimeBool = true;
         }
+        if (other.CompareTag("BaffleEnd"))
+            isClimb = false;
     }
 
     private void OnTriggerStay(Collider other)
