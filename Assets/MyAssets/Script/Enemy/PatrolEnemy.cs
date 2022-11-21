@@ -63,6 +63,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [Header("其他")]
     [SerializeField]
+    private GameObject hitSpark;
+
+    [SerializeField]
     private GameObject collision;
 
     [SerializeField]
@@ -427,7 +430,14 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
-
+        Destroy(
+            Instantiate(
+                hitSpark,
+                transform.position + new Vector3(0, 1f, 0),
+                Quaternion.identity
+            ),
+            10
+        );
         gameObject.GetComponent<HitStop>().StopTime();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
