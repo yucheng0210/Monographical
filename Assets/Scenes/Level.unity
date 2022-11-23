@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 198844337}
-  m_IndirectSpecularColor: {r: 4268.299, g: 2184.1372, b: 911.5654, a: 1}
+  m_IndirectSpecularColor: {r: 3863.9797, g: 1866.1863, b: 667.2811, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1478,19 +1478,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 261929370}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 783888339}
-        m_TargetAssemblyTypeName: GameExit, Assembly-CSharp
-        m_MethodName: Exit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &261929370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4072,7 +4060,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &783888335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4220,7 +4208,9 @@ MonoBehaviour:
   openMenu: {fileID: 832414969}
   touchButton: {fileID: 0}
   actionType: 0
-  buttons: []
+  buttons:
+  - {fileID: 1973691243}
+  - {fileID: 261929369}
 --- !u!114 &783888343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6002,6 +5992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 966999013}
   - component: {fileID: 966999014}
+  - component: {fileID: 966999015}
   m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
@@ -6055,6 +6046,18 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 25}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &966999015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966999012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c380166ae1f3ac34d991f0071c0bee53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &967435020
 GameObject:
   m_ObjectHideFlags: 0
@@ -10564,6 +10567,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1642869498}
   - component: {fileID: 1642869499}
+  - component: {fileID: 1642869500}
   m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
@@ -10615,6 +10619,18 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 25}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &1642869500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642869497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c380166ae1f3ac34d991f0071c0bee53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1645303324
 GameObject:
   m_ObjectHideFlags: 0
@@ -26904,7 +26920,7 @@ PrefabInstance:
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.014164831
+      value: 0.014164835
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
@@ -26914,7 +26930,7 @@ PrefabInstance:
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.007729577
+      value: -0.0077295806
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352122322179, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
@@ -26969,17 +26985,17 @@ PrefabInstance:
     - target: {fileID: 6300215352353113876, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.029959613
+      value: -0.029959612
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352353113876, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1.1092263e-16
+      value: 0.0000000018618092
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352353113876, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 2.8652347e-19
+      value: 5.580413e-11
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352457027433, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}

@@ -21,8 +21,13 @@ public class MainMenu : Menu
         base.Update();
         if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("+")) && !OpenBool)
-            Open();
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("+")))
+        {
+            if (!OpenBool)
+                Open();
+            else
+                Close();
+        }
     }
 
     private void BackToStartMenu()
