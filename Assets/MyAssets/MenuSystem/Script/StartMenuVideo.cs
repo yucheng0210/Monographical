@@ -12,9 +12,6 @@ public class StartMenuVideo : MonoBehaviour
     private VideoClip menuClip;
     private RawImage rawImage;
 
-    [SerializeField]
-    private float fadeSpeed = 1f;
-
     private void Awake()
     {
         videoPlayer = GetComponent<VideoPlayer>();

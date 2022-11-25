@@ -19,9 +19,6 @@ public class Enemy : MonoBehaviour, IObserver
     [SerializeField]
     private float gravity = 20;
 
-    [SerializeField]
-    private float beakBackForce = 15;
-
     [Header("AI巡邏半徑參數")]
     [SerializeField]
     private float wanderRadius = 15;
