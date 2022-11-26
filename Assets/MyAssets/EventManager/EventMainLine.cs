@@ -11,7 +11,6 @@ public class EventMainLine : MonoBehaviour
     private void Start()
     {
         mainLineID = gameObject.transform.GetSiblingIndex();
-        //if (mainLineID == 0)
         EventManager.Instance.AddEventRegister(
             EventDefinition.eventNextMainLine,
             HandleNextMainLine

@@ -330,6 +330,7 @@ public class ParkourPlayer : MonoBehaviour
         }
         followTargetTrans.rotation = lookPos;
         EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
+        
     }
 
     private IEnumerator Turn(float direction)
@@ -391,7 +392,7 @@ public class ParkourPlayer : MonoBehaviour
 
     private void HandleMainLine(params object[] args)
     {
-        switch ((int)args[0])
+       switch ((int)args[0])
         {
             case 1:
                 StartCoroutine(LookBack());

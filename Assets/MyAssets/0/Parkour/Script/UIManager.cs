@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour, IObserver
 
     public void SceneLoadingNotify(bool loadingBool)
     {
-        //        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     private void HandleMainLine(params object[] args)

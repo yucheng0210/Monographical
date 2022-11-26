@@ -132,7 +132,7 @@ Shader "Hidden/RadialBlur"
 	{
 		// No culling or depth
 		Cull Off ZWrite Off ZTest Always
-
+		Tags {"RenderPipeline" = "Hight Definition RP"}
 		Pass
 		{
 			CGPROGRAM
