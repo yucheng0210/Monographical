@@ -394,10 +394,15 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             {*/
             ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;
+            Vector3 hitPoint = new Vector3(
+                transform.position.x,
+                other.ClosestPoint(transform.position).y,
+                transform.position.z
+            );
+            HitEffect(hitPoint);
             /* }
             else
                 LosePoise();*/
-            HitEffect();
         }
     }
 
@@ -424,7 +429,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             : AnimatorUpdateMode.AnimatePhysics;
     }
 
-    private void HitEffect()
+    private void HitEffect(Vector3 hitPoint)
     {
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
@@ -435,7 +440,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         gameObject.GetComponent<HitStop>().StopTime();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
-        gameObject.GetComponent<BloodEffect>().SpurtingBlood();
+        gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
     }
 
     public void EndNotify()
