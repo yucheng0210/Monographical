@@ -193,18 +193,19 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.Climb:
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space))
-                {
-                    Time.timeScale = 1;
-                    canMove = false;
-                    myBody.velocity = Vector3.zero;
-                    accumulatedTime = 0;
-                    capsuleCollider.isTrigger = false;
-                    slowTimeBool = false;
-                    StartCoroutine(ClimbingLadder());
-                }
+                Time.timeScale = 1;
+                canMove = false;
+                slowTimeBool = false;
+                myBody.velocity = Vector3.zero;
+                capsuleCollider.isTrigger = false;
+                StartCoroutine(ClimbingLadder());
                 break;
         }
+        OutOfTime();
+    }
+
+    private void OutOfTime()
+    {
         if (accumulatedTime >= slowTime)
         {
             capsuleCollider.isTrigger = false;
@@ -212,6 +213,7 @@ public class ParkourPlayer : MonoBehaviour
             accumulatedTime = 0;
             slowTimeBool = false;
             outOfTime = true;
+            baffle.ClueCanvas.SetActive(false);
         }
     }
 
@@ -239,6 +241,8 @@ public class ParkourPlayer : MonoBehaviour
         animator.SetBool("isClimb", isClimb);
         while (animator.GetBool("isClimb"))
         {
+            accumulatedTime += Time.unscaledDeltaTime;
+            baffle.RingImage.fillAmount = (slowTime - accumulatedTime) / slowTime;
             animationProgress = animatorStateInfo.normalizedTime - animationCount;
             if (animationProgress >= 1 && animatorStateInfo.IsName("Climb"))
             {
@@ -257,10 +261,12 @@ public class ParkourPlayer : MonoBehaviour
                 myBody.velocity = Vector3.zero;
             }
             animator.SetBool("isClimb", isClimb);
+            OutOfTime();
             yield return null;
         }
         while (animatorStateInfo.IsTag("Climb"))
         {
+            animator.speed = 1;
             myBody.velocity = (transform.up + transform.forward) * 3;
             yield return null;
         }
@@ -330,7 +336,6 @@ public class ParkourPlayer : MonoBehaviour
         }
         followTargetTrans.rotation = lookPos;
         EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
-        
     }
 
     private IEnumerator Turn(float direction)
@@ -360,7 +365,10 @@ public class ParkourPlayer : MonoBehaviour
             slowTimeBool = true;
         }
         if (other.CompareTag("BaffleEnd"))
+        {
             isClimb = false;
+            accumulatedTime = 0;
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -392,8 +400,11 @@ public class ParkourPlayer : MonoBehaviour
 
     private void HandleMainLine(params object[] args)
     {
-       switch ((int)args[0])
+        switch ((int)args[0])
         {
+            case 0:
+
+                break;
             case 1:
                 StartCoroutine(LookBack());
                 break;

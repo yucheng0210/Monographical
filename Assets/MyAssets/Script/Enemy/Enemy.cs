@@ -285,7 +285,7 @@ public class Enemy : MonoBehaviour, IObserver
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
         Ray ray = new Ray(transform.position, transform.up * 2);
-        gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
+        //gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
     }
 
     public void EndNotify()

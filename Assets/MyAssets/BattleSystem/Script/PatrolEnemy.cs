@@ -148,9 +148,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             AnimationRealTime(false);
             return;
         }
-        //        Debug.Log(angle < 60);
         OnGrounded();
-        //Debug.Log(isOnGrounded);
         if (isOnGrounded)
         {
             accumulateTime = 0;
@@ -431,18 +429,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
         Destroy(
-            Instantiate(
-                hitSpark,
-                transform.position + new Vector3(0, 1f, 0),
-                Quaternion.identity
-            ),
-            10
+            Instantiate(hitSpark, transform.position + new Vector3(0, 1f, 0), Quaternion.identity),
+            2
         );
         gameObject.GetComponent<HitStop>().StopTime();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
-        Ray ray = new Ray(transform.position, transform.up * 2);
-        gameObject.GetComponent<BloodEffect>().SpurtingBlood(ray, transform.position);
+        gameObject.GetComponent<BloodEffect>().SpurtingBlood();
     }
 
     public void EndNotify()

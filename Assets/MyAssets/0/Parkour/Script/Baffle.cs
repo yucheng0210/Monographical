@@ -25,6 +25,11 @@ public class Baffle : MonoBehaviour, IObserver
 
     [SerializeField]
     private Image ringImage;
+    public GameObject ClueCanvas
+    {
+        get { return clueCanvas; }
+        set { clueCanvas = value; }
+    }
     public Image RingImage
     {
         get { return ringImage; }
@@ -52,12 +57,6 @@ public class Baffle : MonoBehaviour, IObserver
             clueCanvas.SetActive(true);
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            clueCanvas.SetActive(false);
-    }
-
     public void EndNotify()
     {
         clueCanvas.SetActive(false);
@@ -65,6 +64,6 @@ public class Baffle : MonoBehaviour, IObserver
 
     public void SceneLoadingNotify(bool loadingBool)
     {
-        //        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }
