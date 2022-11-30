@@ -314,6 +314,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         //BeakBack();
         ani.SetBool("isDead", true);
+        myBody.velocity=Vector3.zero;
         shutDown = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
@@ -437,6 +438,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             Instantiate(hitSpark, transform.position + new Vector3(0, 1f, 0), Quaternion.identity),
             2
         );
+        VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
         gameObject.GetComponent<HitStop>().StopTime();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
