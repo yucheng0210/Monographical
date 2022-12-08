@@ -62,6 +62,9 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private bool outOfTime;
 
+    [SerializeField]
+    private float playerDirection;
+
     [Header("其他")]
     [SerializeField]
     private Transform followTargetTrans;
@@ -112,9 +115,11 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchStateValue()
     {
+//        Debug.Log(transform.rotation);
+
         x = Input.GetAxis("Horizontal");
         movement = (transform.forward + new Vector3(x, 0, 0)) * moveSpeed;
-        if (myBody.velocity.y < -0.5f)
+        if (myBody.velocity.y < -2f)
             animator.SetBool("isFall", true);
         else
             animator.SetBool("isFall", false);
@@ -133,13 +138,16 @@ public class ParkourPlayer : MonoBehaviour
                 if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space))
                 {
                     Time.timeScale = 1;
-                    myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
                     if (!upTheAir)
+                    {
                         animator.SetTrigger("isJump");
+                        myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                    }
                     else
                     {
                         animator.SetTrigger("isDoubleJump");
-                        runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
+                        myBody.AddForce(transform.up * jumpForce * 0.75f, ForceMode.Impulse);
+                        runImpulse.GenerateImpulse(new Vector3(20, 10, 0));
                     }
                     accumulatedTime = 0;
                     slowTimeBool = false;
@@ -340,14 +348,11 @@ public class ParkourPlayer : MonoBehaviour
 
     private IEnumerator Turn(float direction)
     {
-        Quaternion lookPos = Quaternion.Euler(0, transform.rotation.y + direction, 0);
-        while (!Mathf.Approximately(transform.rotation.y, -lookPos.y))
+        playerDirection += direction;
+        Quaternion lookPos = Quaternion.Euler(0, playerDirection, 0);
+        while (Mathf.Abs(transform.rotation.y - lookPos.y) > 0.01f)
         {
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                lookPos,
-                Time.deltaTime * turnSpeed * 2
-            );
+            transform.Rotate(0, direction * Time.deltaTime * turnSpeed, 0);
             yield return null;
         }
         transform.rotation = lookPos;
