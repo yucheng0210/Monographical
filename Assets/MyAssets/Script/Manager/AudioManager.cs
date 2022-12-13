@@ -21,6 +21,9 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField]
     private AudioClip swordSlashClip_2;
 
+    [SerializeField]
+    private AudioClip impact;
+
     [Header("Menu音效")]
     [SerializeField]
     private AudioClip menuEnterClip;
@@ -42,7 +45,7 @@ public class AudioManager : Singleton<AudioManager>
     protected override void Awake()
     {
         base.Awake();
-       // DontDestroyOnLoad(this);
+        // DontDestroyOnLoad(this);
         menuSource = gameObject.AddComponent<AudioSource>();
         fxSource = gameObject.AddComponent<AudioSource>();
         playerSource = gameObject.AddComponent<AudioSource>();
@@ -91,6 +94,12 @@ public class AudioManager : Singleton<AudioManager>
         Instance.mainSource.clip = Instance.battleClip;
         Instance.mainSource.loop = true;
         Instance.mainSource.Play();
+    }
+
+    public void Impact()
+    {
+        Instance.fxSource.clip = Instance.impact;
+        Instance.fxSource.Play();
     }
 
     public void SlashAudio(int count)

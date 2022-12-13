@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 198844337}
-  m_IndirectSpecularColor: {r: 4140.2637, g: 2056.1372, b: 784.0493, a: 1}
+  m_IndirectSpecularColor: {r: 4255.2153, g: 2175.341, b: 904.9828, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1349,7 +1349,7 @@ GameObject:
   - component: {fileID: 261929367}
   - component: {fileID: 261929366}
   m_Layer: 5
-  m_Name: Exit
+  m_Name: StartMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1391,19 +1391,7 @@ MonoBehaviour:
   - eventID: 0
     callback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 783888342}
-          m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-          m_MethodName: TouchAudio
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
 --- !u!114 &261929367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4495,7 +4483,6 @@ GameObject:
   m_Component:
   - component: {fileID: 813282621}
   - component: {fileID: 813282620}
-  - component: {fileID: 813282622}
   m_Layer: 0
   m_Name: Sky and Fog Volume
   m_TagString: Untagged
@@ -4519,7 +4506,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 84df82fe10deb984aab5836195b05555, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 2f1f3cf93b83a674ea93dc3171ecd1c8, type: 2}
 --- !u!4 &813282621
 Transform:
   m_ObjectHideFlags: 0
@@ -4534,18 +4521,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 31
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &813282622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 813282619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efef8ea8424b73448bbc3d2f6d2b8b8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &818816023
 GameObject:
   m_ObjectHideFlags: 0
@@ -6323,19 +6298,7 @@ MonoBehaviour:
   - eventID: 0
     callback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 783888342}
-          m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-          m_MethodName: TouchAudio
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
 --- !u!114 &1070557094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11645,6 +11608,7 @@ MonoBehaviour:
   buttonTouchClip: {fileID: 8300000, guid: ae46e87a1569d1b45bad01b7cc1de3d3, type: 3}
   swordSlashClip_1: {fileID: 8300000, guid: 13182107f288fdc47a11f9216c8f062b, type: 3}
   swordSlashClip_2: {fileID: 8300000, guid: 7053294e066eb1945baa4d9cc9194f15, type: 3}
+  impact: {fileID: 8300000, guid: d64e91cef03af304fa237225b23c5707, type: 3}
   menuEnterClip: {fileID: 8300000, guid: dca3084cb66e8824bab682c584bec504, type: 3}
   menuExitClip: {fileID: 8300000, guid: d4007067d30a702478f8de23ab74795f, type: 3}
   hurt: {fileID: 8300000, guid: 8f6a3fcf53f0718418d4341566f98e8d, type: 3}
@@ -12833,19 +12797,7 @@ MonoBehaviour:
   - eventID: 0
     callback:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 783888342}
-          m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-          m_MethodName: TouchAudio
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
 --- !u!114 &1973691241
 MonoBehaviour:
   m_ObjectHideFlags: 0

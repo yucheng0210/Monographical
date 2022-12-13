@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Baffle : MonoBehaviour, IObserver
+public class Baffle : MonoBehaviour
 {
     public enum BaffleType
     {
@@ -41,29 +41,9 @@ public class Baffle : MonoBehaviour, IObserver
     }
     public BaffleType baffleType;
 
-    private void Start()
-    {
-        GameManager.Instance.AddObservers(this);
-    }
-
-    private void OnDisable()
-    {
-        GameManager.Instance.RemoveObservers(this);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
             clueCanvas.SetActive(true);
-    }
-
-    public void EndNotify()
-    {
-        clueCanvas.SetActive(false);
-    }
-
-    public void SceneLoadingNotify(bool loadingBool)
-    {
-        //throw new System.NotImplementedException();
     }
 }

@@ -32,7 +32,7 @@ public class MainMenu : Menu
 
     private void BackToStartMenu()
     {
-        SaveLoadManager.Instance.AutoSave();
+        //SaveLoadManager.Instance.AutoSave();
         StartCoroutine(SceneController.Instance.Transition("StartMenu"));
         Time.timeScale = 1;
     }

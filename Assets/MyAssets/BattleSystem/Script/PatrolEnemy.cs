@@ -314,7 +314,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         //BeakBack();
         ani.SetBool("isDead", true);
-        myBody.velocity=Vector3.zero;
+        myBody.velocity = Vector3.zero;
         shutDown = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
@@ -434,12 +434,10 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
-        Destroy(
-            Instantiate(hitSpark, transform.position + new Vector3(0, 1f, 0), Quaternion.identity),
-            2
-        );
-        VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
+        Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
+//        VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
         gameObject.GetComponent<HitStop>().StopTime();
+        AudioManager.Instance.Impact();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
         gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);

@@ -26,6 +26,13 @@ public class ButtonAudio : MonoBehaviour
                     AudioManager.Instance.ButtonTouchAudio();
                 }
             );
+            entry.eventID = EventTriggerType.PointerEnter;
+            entry.callback.AddListener(
+                (functionIWant) =>
+                {
+                    AudioManager.Instance.ButtonTouchAudio();
+                }
+            );
             eventTrigger.triggers.Add(entry);
         }
     }

@@ -72,6 +72,7 @@ public class ParkourPlayer : MonoBehaviour
     /* [SerializeField]
     private DialogSystem[] dialogSystem;*/
     private Baffle baffle;
+    private SliderFollow sliderFollow;
     private Vector3 movement;
     private LookAtIK lookAtIK;
     private Cinemachine.CinemachineImpulseSource runImpulse;
@@ -115,7 +116,7 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchStateValue()
     {
-//        Debug.Log(transform.rotation);
+        //        Debug.Log(transform.rotation);
 
         x = Input.GetAxis("Horizontal");
         movement = (transform.forward + new Vector3(x, 0, 0)) * moveSpeed;
@@ -137,7 +138,7 @@ public class ParkourPlayer : MonoBehaviour
             case Baffle.BaffleType.Up:
                 if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space))
                 {
-                    Time.timeScale = 1;
+                    SuccessfullyDodge();
                     if (!upTheAir)
                     {
                         animator.SetTrigger("isJump");
@@ -147,57 +148,45 @@ public class ParkourPlayer : MonoBehaviour
                     {
                         animator.SetTrigger("isDoubleJump");
                         myBody.AddForce(transform.up * jumpForce * 0.75f, ForceMode.Impulse);
-                        runImpulse.GenerateImpulse(new Vector3(20, 10, 0));
+                        runImpulse.GenerateImpulse(new Vector3(35, 25, 0));
                     }
-                    accumulatedTime = 0;
-                    slowTimeBool = false;
                 }
                 break;
             case Baffle.BaffleType.Left:
                 if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q))
                 {
-                    Time.timeScale = 1;
+                    SuccessfullyDodge();
                     animator.SetTrigger("isDodgeL");
                     myBody.AddForce(-transform.right * dodgeForce, ForceMode.Impulse);
-                    accumulatedTime = 0;
-                    slowTimeBool = false;
                 }
                 break;
             case Baffle.BaffleType.Right:
                 if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
                 {
-                    Time.timeScale = 1;
+                    SuccessfullyDodge();
                     animator.SetTrigger("isDodgeR");
                     myBody.AddForce(transform.right * dodgeForce, ForceMode.Impulse);
-                    accumulatedTime = 0;
-                    slowTimeBool = false;
                 }
                 break;
             case Baffle.BaffleType.Down:
                 if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S))
                 {
-                    Time.timeScale = 1;
+                    SuccessfullyDodge();
                     animator.SetTrigger("isRoll");
-                    accumulatedTime = 0;
-                    slowTimeBool = false;
                 }
                 break;
             case Baffle.BaffleType.TurnRight:
                 if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
                 {
-                    Time.timeScale = 1;
+                    SuccessfullyDodge();
                     StartCoroutine(Turn(90));
-                    accumulatedTime = 0;
-                    slowTimeBool = false;
                 }
                 break;
             case Baffle.BaffleType.TurnLeft:
                 if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
                 {
-                    Time.timeScale = 1;
+                    SuccessfullyDodge();
                     StartCoroutine(Turn(-90));
-                    accumulatedTime = 0;
-                    slowTimeBool = false;
                 }
                 break;
             case Baffle.BaffleType.Climb:
@@ -210,6 +199,14 @@ public class ParkourPlayer : MonoBehaviour
                 break;
         }
         OutOfTime();
+    }
+
+    private void SuccessfullyDodge()
+    {
+        Time.timeScale = 1;
+        accumulatedTime = 0;
+        slowTimeBool = false;
+        baffle.ClueCanvas.SetActive(false);
     }
 
     private void OutOfTime()
@@ -259,6 +256,7 @@ public class ParkourPlayer : MonoBehaviour
                 {
                     animator.speed = 1;
                     animationCount++;
+                    sliderFollow.Height += 0.8f;
                 }
             }
             if (animator.speed == 1)
@@ -272,6 +270,7 @@ public class ParkourPlayer : MonoBehaviour
             OutOfTime();
             yield return null;
         }
+        baffle.ClueCanvas.SetActive(false);
         while (animatorStateInfo.IsTag("Climb"))
         {
             animator.speed = 1;
@@ -368,6 +367,7 @@ public class ParkourPlayer : MonoBehaviour
             capsuleCollider.isTrigger = true;
             Time.timeScale = baffleTimeScale;
             slowTimeBool = true;
+            sliderFollow = baffle.ClueCanvas.GetComponentInChildren<SliderFollow>();
         }
         if (other.CompareTag("BaffleEnd"))
         {

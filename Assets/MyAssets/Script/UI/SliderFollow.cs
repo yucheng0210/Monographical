@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,15 +9,23 @@ public class SliderFollow : MonoBehaviour
     private GameObject role;
 
     [SerializeField]
-    private float h;
+    private float height;
+    private float currentHeight;
+    public float Height
+    {
+        get { return height; }
+        set { height = value; }
+    }
 
     private void Awake()
     {
-        transform.position = role.transform.position + new Vector3(0, h, 0);
+        currentHeight = height;
+        transform.position = role.transform.position + new Vector3(0, currentHeight, 0);
     }
 
     private void Update()
     {
-        transform.position = role.transform.position + new Vector3(0, h, 0);
+        currentHeight = Mathf.Lerp(currentHeight, height, Time.deltaTime * 5);
+        transform.position = role.transform.position + new Vector3(0, currentHeight, 0);
     }
 }
