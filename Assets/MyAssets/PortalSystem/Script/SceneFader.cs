@@ -21,7 +21,7 @@ public class SceneFader : MonoBehaviour
     {
         while (canvasGroup.alpha < 1)
         {
-            canvasGroup.alpha += Time.deltaTime / fadeTime;
+            canvasGroup.alpha += Time.unscaledDeltaTime / fadeTime;
             yield return null;
         }
     }
@@ -30,7 +30,7 @@ public class SceneFader : MonoBehaviour
     {
         while (canvasGroup.alpha != 0)
         {
-            canvasGroup.alpha -= Time.deltaTime / fadeTime;
+            canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
             yield return null;
         }
         Destroy(gameObject);

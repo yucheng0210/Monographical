@@ -33,7 +33,8 @@ public class MainMenu : Menu
     private void BackToStartMenu()
     {
         //SaveLoadManager.Instance.AutoSave();
-        StartCoroutine(SceneController.Instance.Transition("StartMenu"));
         Time.timeScale = 1;
+        StartCoroutine(SceneController.Instance.Transition("StartMenu"));
+        SaveLoadManager.Instance.AutoSave();
     }
 }

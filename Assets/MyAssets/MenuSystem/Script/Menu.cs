@@ -43,7 +43,7 @@ public abstract class Menu : MonoBehaviour, IObserver
 
     protected virtual void Update()
     {
-        if (Input.GetButtonDown("B") && OpenBool)
+        if ((Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.Escape)) && OpenBool)
             Close();
     }
 
@@ -96,6 +96,7 @@ public abstract class Menu : MonoBehaviour, IObserver
 
     public virtual void SceneLoadingNotify(bool loadingBool)
     {
+        Menu.menuIsOpen = false;
         shutDown = loadingBool ? true : false;
         openMenu.SetActive(false);
         //        gameObject.SetActive(false);

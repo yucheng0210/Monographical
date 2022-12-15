@@ -148,7 +148,7 @@ public class ParkourPlayer : MonoBehaviour
                     {
                         animator.SetTrigger("isDoubleJump");
                         myBody.AddForce(transform.up * jumpForce * 0.75f, ForceMode.Impulse);
-                        runImpulse.GenerateImpulse(new Vector3(35, 25, 0));
+                        runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
                     }
                 }
                 break;
@@ -393,9 +393,12 @@ public class ParkourPlayer : MonoBehaviour
         isDead = true;
         animator.SetTrigger("isDead");
         Time.timeScale = 0.5f;
-        runImpulse.GenerateImpulse(new Vector3(15, 5, 0));
+        runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
         GameManager.Instance.EndNotifyObservers();
         myBody.AddForce(beakBackForce, ForceMode.Impulse);
+        gameObject
+            .GetComponent<BloodEffect>()
+            .SpurtingBlood(transform.position + new Vector3(0, 1.75f, 0));
         yield return new WaitForSecondsRealtime(2);
         Time.timeScale = 1;
         yield return new WaitForSecondsRealtime(5);

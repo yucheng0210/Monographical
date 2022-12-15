@@ -36,12 +36,12 @@ public class SceneController : Singleton<SceneController>, ISavable
         savable.AddSavableRegister();
         AddSceneName();
     }
-
     private void AddSceneName()
     {
         sceneNameDic.Add(0, "0");
         sceneNameDic.Add(1, "序章：下雨中的市集");
         sceneNameDic.Add(2, "序章：宋江廟");
+        sceneNameDic.Add(3, "第一章：宋江陣根據地");
     }
 
     public void TransitionToDestination(TransitionPoint transitionPoint)
