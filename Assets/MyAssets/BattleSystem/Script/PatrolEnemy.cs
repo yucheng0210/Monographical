@@ -160,13 +160,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             if (lockMove)
                 movement = Vector3.zero;
         }
-
-        /*  else
-        {
-            accumulateTime += Time.deltaTime;
-            movement.y -= gravity * 0.5f * Mathf.Pow(accumulateTime, 2);
-        }*/
-
     }
 
     private void FixedUpdate()
@@ -227,8 +220,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             ani.SetInteger(attack, 0);
             lockMove = true;
         }
-
-
     }
 
     private void OnGrounded()
@@ -343,6 +334,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         ani.SetTrigger(isLosePoise);
         rImage.SetActive(true);
         characterState.CurrentPoise = characterState.MaxPoise;
+        collision.SetActive(false);
     }
 
     private void Look(Vector3 target)
@@ -391,19 +383,19 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             characterState.TakeDamage(attackerCharacterState, characterState);
             if (shutDown)
                 return;
-            /* if (characterState.CurrentPoise > 0)
-            {*/
-            ani.SetTrigger(isHited);
-            currentState = EnemyState.BeakBack;
-            Vector3 hitPoint = new Vector3(
-                transform.position.x,
-                other.ClosestPoint(transform.position).y,
-                transform.position.z
-            );
-            HitEffect(hitPoint);
-            /* }
+            if (characterState.CurrentPoise > 0)
+            {
+                ani.SetTrigger(isHited);
+                currentState = EnemyState.BeakBack;
+                Vector3 hitPoint = new Vector3(
+                    transform.position.x,
+                    other.ClosestPoint(transform.position).y,
+                    transform.position.z
+                );
+                HitEffect(hitPoint);
+            }
             else
-                LosePoise();*/
+                LosePoise();
         }
     }
 
@@ -435,7 +427,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
-//        VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
+        //        VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
         gameObject.GetComponent<HitStop>().StopTime();
         AudioManager.Instance.Impact();
         AudioManager.Instance.PlayerHurted();

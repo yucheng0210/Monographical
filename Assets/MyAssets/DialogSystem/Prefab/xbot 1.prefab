@@ -1903,7 +1903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   role: {fileID: 8772651273260962368}
-  h: 2
+  height: 0
 --- !u!1 &6132261613472797980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1966,6 +1966,65 @@ Transform:
   m_Father: {fileID: 3405771200787823314}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6283743496246691164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4522192154229759587}
+  - component: {fileID: 7588987768584483876}
+  - component: {fileID: 1621869220278760844}
+  m_Layer: 0
+  m_Name: DialogDistance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4522192154229759587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6283743496246691164}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8283640846585776378}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7588987768584483876
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6283743496246691164}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 20, z: 10}
+  m_Center: {x: 0, y: 9, z: 5}
+--- !u!114 &1621869220278760844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6283743496246691164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c226e6f1d98de264ba3502b8ec2313b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3046140694488668763}
+  talkUI: {fileID: 0}
 --- !u!1 &6392958119966171002
 GameObject:
   m_ObjectHideFlags: 0
@@ -2573,9 +2632,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8283640846585776378}
   - component: {fileID: 2600067521697845888}
-  - component: {fileID: 6866021661410387512}
   - component: {fileID: 7636424042264157560}
-  - component: {fileID: 919132148879418957}
   m_Layer: 0
   m_Name: xbot 1
   m_TagString: Untagged
@@ -2599,6 +2656,7 @@ Transform:
   - {fileID: 4514073277180094574}
   - {fileID: 8397464446056192476}
   - {fileID: 3974283768664030334}
+  - {fileID: 4522192154229759587}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2621,20 +2679,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6866021661410387512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8772651273260962368}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c226e6f1d98de264ba3502b8ec2313b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 3046140694488668763}
-  talkUI: {fileID: 0}
 --- !u!143 &7636424042264157560
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2647,25 +2691,11 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 20
-  m_Radius: 2
+  m_Radius: 3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 10, z: 0}
---- !u!136 &919132148879418957
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8772651273260962368}
-  m_Material: {fileID: 13400000, guid: 87e10f15b64ccf44cb0683d8fed75875, type: 2}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 10
-  m_Height: 20
-  m_Direction: 1
   m_Center: {x: 0, y: 10, z: 0}
 --- !u!1 &8825611163623026971
 GameObject:

@@ -14446,6 +14446,65 @@ Transform:
   m_Father: {fileID: 6315466769400289432}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1717236877127419645
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5012452457090556764}
+  - component: {fileID: 8739314100555730238}
+  - component: {fileID: 6950690017405218504}
+  m_Layer: 0
+  m_Name: DialogDistance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5012452457090556764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717236877127419645}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2059255848090535876}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8739314100555730238
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717236877127419645}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 20, z: 10}
+  m_Center: {x: 0, y: 9, z: 5}
+--- !u!114 &6950690017405218504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717236877127419645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c226e6f1d98de264ba3502b8ec2313b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1952674607274068081}
+  talkUI: {fileID: 0}
 --- !u!1 &1718006396283510135
 GameObject:
   m_ObjectHideFlags: 0
@@ -14487,9 +14546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2059255848090535876}
   - component: {fileID: 5364876342899301822}
-  - component: {fileID: 1952674608124493254}
   - component: {fileID: 1952674608124493257}
-  - component: {fileID: 1952674608124493255}
   - component: {fileID: 919132149581052720}
   - component: {fileID: 919132149581052726}
   m_Layer: 0
@@ -14516,6 +14573,7 @@ Transform:
   - {fileID: 8832561573597417975}
   - {fileID: 1952674607274068085}
   - {fileID: 1952674608069239655}
+  - {fileID: 5012452457090556764}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14538,20 +14596,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!136 &1952674608124493254
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718161620852891006}
-  m_Material: {fileID: 13400000, guid: 87e10f15b64ccf44cb0683d8fed75875, type: 2}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 10
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 10, z: 0}
 --- !u!143 &1952674608124493257
 CharacterController:
   m_ObjectHideFlags: 0
@@ -14570,20 +14614,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 10, z: 0}
---- !u!114 &1952674608124493255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1718161620852891006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c226e6f1d98de264ba3502b8ec2313b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 1952674607274068081}
-  talkUI: {fileID: 0}
 --- !u!54 &919132149581052720
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16273,7 +16303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   role: {fileID: 1718161620852891006}
-  h: 2.2
+  height: 0
 --- !u!1 &1952674607274068081
 GameObject:
   m_ObjectHideFlags: 0

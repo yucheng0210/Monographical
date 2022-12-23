@@ -16,7 +16,10 @@ public class TalkButton : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             button.SetActive(false);
+            talkUI.SetActive(false);
+        }
     }
 
     private void Update()
