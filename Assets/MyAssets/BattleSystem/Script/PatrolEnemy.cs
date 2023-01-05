@@ -15,7 +15,16 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [Header("移動參數")]
     [SerializeField]
-    private float moveSpeed = 0.1f;
+    private float walkSpeed = 50f;
+
+    [SerializeField]
+    private float runSpeed = 100;
+
+    [SerializeField]
+    private float strafeSpeed = 25;
+
+    [SerializeField]
+    private float dashForce = 5;
 
     [SerializeField]
     private float turnSpeed = 10;
@@ -25,19 +34,24 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [Header("AI巡邏半徑參數")]
     [SerializeField]
-    private float wanderRadius = 15;
+    private float wanderRadius = 12;
 
     [SerializeField]
-    private float alertRadius = 12;
+    private float chaseRadius = 10;
 
     [SerializeField]
-    private float chaseRadius = 5;
+    private float strafeRadius = 5;
 
     [SerializeField]
     private float attackRadius = 1.2f;
 
     [SerializeField]
-    private float turnBackRadius = 15;
+    private float turnBackRadius = 12;
+
+    [Header("冷卻")]
+    [SerializeField]
+    private float maxCoolDown = 3;
+    private float currentCoolDown;
 
     [Header("狀態")]
     [SerializeField]
@@ -99,8 +113,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     enum EnemyState
     {
         Wander,
-        Alert,
         Chase,
+        Strafe,
         Attack,
         TurnBack,
         BeakBack,
@@ -174,6 +188,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         characterState.CurrentDefence = characterState.BaseDefence;
         characterState.CurrentPoise = characterState.MaxPoise;
         lookAtIK.solver.target = player.transform.GetChild(0).transform;
+        currentCoolDown = maxCoolDown;
     }
 
     private void UpdateValue()
@@ -193,22 +208,14 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             currentState = EnemyState.BeakBack;
         else if (warning && distance <= attackRadius && angle < 60)
             currentState = EnemyState.Attack;
-        else if (warning && distance <= chaseRadius)
+        else if (warning && distance <= strafeRadius)
+            currentState = EnemyState.Strafe;
+        else if (distance <= chaseRadius && angle < 60)
             currentState = EnemyState.Chase;
-        else if (distance <= alertRadius && angle < 120 * 0.5f && !warning)
-            currentState = EnemyState.Alert;
         if (warning && distance > turnBackRadius)
             currentState = EnemyState.TurnBack;
-        /*if (
-            animatorStateInfo.tagHash == Animator.StringToHash("Attack")
-            || animatorStateInfo.tagHash == Animator.StringToHash("isHited")
-        )
-        {
-            ani.SetInteger(attack, 0);
-            lockMove = true;
-        }
-        else
-            lockMove = false;*/
+        if (currentCoolDown >= 0)
+            currentCoolDown -= Time.deltaTime;
         if (animatorStateInfo.IsName("Grounded"))
         {
             rImage.SetActive(false);
@@ -218,7 +225,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
         {
             ani.SetInteger(attack, 0);
-            lockMove = true;
+            movement = transform.forward * dashForce;
         }
     }
 
@@ -246,39 +253,40 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 if (wanderDistance >= wanderRadius)
                     Look(startPos);
                 ani.SetFloat(forward, 1);
-                movement = transform.forward * moveSpeed;
-                break;
-            case EnemyState.Alert:
-                if (!warning)
-                {
-                    GazeSwitch(true);
-                    AudioManager.Instance.BattleAudio();
-                }
-                ani.SetFloat(forward, 0);
-                movement = Vector3.zero;
-                //Look(player.transform.position);
-                warning = true;
+                movement = transform.forward * walkSpeed;
                 break;
             case EnemyState.Chase:
                 AnimationRealTime(false);
-                GazeSwitch(false);
                 Look(player.transform.position);
+                if (!warning)
+                {
+                    AudioManager.Instance.BattleAudio();
+                    warning = true;
+                }
                 if (turnBool)
                     return;
                 ani.SetFloat(forward, 2);
-                movement = transform.forward * moveSpeed * 3;
+                movement = transform.forward * runSpeed;
+                break;
+            case EnemyState.Strafe:
+                AnimationRealTime(false);
+                Look(player.transform.position);
+                ani.SetFloat(forward, -1);
+                movement = (transform.forward * 0.5f + transform.right) * strafeSpeed;
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
-                GazeSwitch(false);
-                lockMove = true;
                 ani.SetFloat(forward, 0);
-                ani.SetInteger(attack, 1);
+                if (currentCoolDown < 0)
+                {
+                    ani.SetInteger(attack, 1);
+                    currentCoolDown = maxCoolDown;
+                }
                 break;
             case EnemyState.TurnBack:
                 if (warning)
                 {
-                    GazeSwitch(false);
+                    //GazeSwitch(false);
                     AudioManager.Instance.MainAudio();
                 }
                 warning = false;
@@ -290,7 +298,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     if (turnBool)
                         return;
                     ani.SetFloat(forward, 2);
-                    movement = transform.forward * moveSpeed * 3;
+                    movement = transform.forward * walkSpeed;
                 }
                 break;
             case EnemyState.BeakBack:
@@ -321,11 +329,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         Vector3 beakBackDirection = (transform.position - player.transform.position).normalized;
         lockMove = true;
         warning = true;
-        /*if (characterState.CurrentPoise <= 0)
-            LosePoise();
-        else*/
         myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
-        //movement = Vector3.zero;
     }
 
     private void LosePoise()
@@ -353,10 +357,10 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         );
         if (targetAngle > 60)
         {
-            ani.SetFloat(forward, -1);
+            ani.SetFloat(forward, -2);
             turnBool = true;
         }
-        else
+        else if (targetAngle > 10)
             turnBool = false;
     }
 
@@ -394,21 +398,24 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 );
                 HitEffect(hitPoint);
             }
-            else
-                LosePoise();
+            /*else
+                LosePoise();*/
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && rImage.activeSelf && Input.GetKeyDown(KeyCode.E))
-        {
-            Animator playerAni = player.GetComponent<Animator>();
-            player.gameObject.transform.LookAt(gameObject.transform);
-            unityInputManager.enabled = false;
-            playerAni.SetTrigger("isExecution");
-            ani.SetTrigger("isExecuted");
-        }
+            Execution();
+    }
+
+    private void Execution()
+    {
+        Animator playerAni = player.GetComponent<Animator>();
+        player.gameObject.transform.LookAt(gameObject.transform);
+        unityInputManager.enabled = false;
+        playerAni.SetTrigger("isExecution");
+        ani.SetTrigger("isExecuted");
     }
 
     private void AnimationRealTime(bool realTimeBool)
