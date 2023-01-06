@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using RootMotion.FinalIK;
+
+//using RootMotion.FinalIK;
 
 public class PatrolEnemy : MonoBehaviour, IObserver
 {
@@ -11,7 +13,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private Rigidbody myBody;
     private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
-    private LookAtIK lookAtIK;
+
+    //private LookAtIK lookAtIK;
 
     [Header("移動參數")]
     [SerializeField]
@@ -24,7 +27,13 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private float strafeSpeed = 25;
 
     [SerializeField]
-    private float dashForce = 5;
+    private float jumpForce = 10;
+
+    [SerializeField]
+    private float jumpDashSpeed = 100;
+
+    [SerializeField]
+    private float meleeDashSpeed = 50;
 
     [SerializeField]
     private float turnSpeed = 10;
@@ -46,12 +55,23 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private float attackRadius = 1.2f;
 
     [SerializeField]
+    private float meleeAttackRadius = 1.5f;
+
+    [SerializeField]
+    private float backWalkRadius = 1.5f;
+
+    [SerializeField]
     private float turnBackRadius = 12;
 
     [Header("冷卻")]
     [SerializeField]
-    private float maxCoolDown = 3;
-    private float currentCoolDown;
+    private float maxCoolDown = 5.0f;
+
+    [SerializeField]
+    private float minCoolDown = 2.5f;
+
+    [SerializeField]
+    private float currentCoolDown = 0.0f;
 
     [Header("狀態")]
     [SerializeField]
@@ -68,6 +88,12 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private bool lockMove;
+
+    [SerializeField]
+    private bool isMeleeAttack;
+
+    [SerializeField]
+    private bool isBack;
 
     [SerializeField]
     private float distance;
@@ -99,8 +125,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private GameObject player;
     private float angle;
     private DiasGames.ThirdPersonSystem.UnityInputManager unityInputManager;
-    private int direction = Animator.StringToHash("Direction");
-    private int forward = Animator.StringToHash("Forward");
     private int attack = Animator.StringToHash("AttackMode");
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
@@ -108,7 +132,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private CharacterState characterState,
         attackerCharacterState;
     private int playerAttackLayer;
-    private float accumulateTime = 0;
+    private float direction;
+    private float forward;
 
     enum EnemyState
     {
@@ -116,6 +141,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         Chase,
         Strafe,
         Attack,
+        BackWalk,
         TurnBack,
         BeakBack,
     }
@@ -138,7 +164,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         characterState = GetComponent<CharacterState>();
         attackerCharacterState = player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
-        lookAtIK = GetComponent<LookAtIK>();
+        //lookAtIK = GetComponent<LookAtIK>();
         unityInputManager = player.GetComponent<DiasGames.ThirdPersonSystem.UnityInputManager>();
         InitialState();
     }
@@ -165,7 +191,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         OnGrounded();
         if (isOnGrounded)
         {
-            accumulateTime = 0;
             if (shutDown)
                 return;
             StateSwitch();
@@ -187,8 +212,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         characterState.CurrentHealth = characterState.MaxHealth;
         characterState.CurrentDefence = characterState.BaseDefence;
         characterState.CurrentPoise = characterState.MaxPoise;
-        lookAtIK.solver.target = player.transform.GetChild(0).transform;
-        currentCoolDown = maxCoolDown;
+        //lookAtIK.solver.target = player.transform.GetChild(0).transform;
+        currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
 
     private void UpdateValue()
@@ -206,7 +231,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             StartCoroutine(Death());
         if (gameObject.GetComponent<HitStop>().IsHitStop)
             currentState = EnemyState.BeakBack;
-        else if (warning && distance <= attackRadius && angle < 60)
+        else if ((warning && distance <= backWalkRadius) || isBack)
+            currentState = EnemyState.BackWalk;
+        else if (warning && distance <= attackRadius && currentCoolDown <= 0)
             currentState = EnemyState.Attack;
         else if (warning && distance <= strafeRadius)
             currentState = EnemyState.Strafe;
@@ -214,8 +241,15 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             currentState = EnemyState.Chase;
         if (warning && distance > turnBackRadius)
             currentState = EnemyState.TurnBack;
-        if (currentCoolDown >= 0)
-            currentCoolDown -= Time.deltaTime;
+        if (distance <= meleeAttackRadius)
+            isMeleeAttack = true;
+        else if (isMeleeAttack)
+            isMeleeAttack = false;
+        ani.SetFloat(
+            "Direction",
+            Mathf.Lerp(ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
+        );
+        ani.SetFloat("Forward", Mathf.Lerp(ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
         if (animatorStateInfo.IsName("Grounded"))
         {
             rImage.SetActive(false);
@@ -224,9 +258,16 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         }
         if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
         {
-            ani.SetInteger(attack, 0);
-            movement = transform.forward * dashForce;
+            if (animatorStateInfo.normalizedTime < 0.55f)
+            {
+                ani.SetInteger(attack, 0);
+                movement = isMeleeAttack
+                    ? transform.forward * meleeDashSpeed
+                    : transform.forward * jumpDashSpeed;
+            }
         }
+        else if (currentCoolDown >= 0)
+            currentCoolDown -= Time.deltaTime;
     }
 
     private void OnGrounded()
@@ -252,7 +293,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Wander:
                 if (wanderDistance >= wanderRadius)
                     Look(startPos);
-                ani.SetFloat(forward, 1);
+                direction = 0;
+                forward = 1;
                 movement = transform.forward * walkSpeed;
                 break;
             case EnemyState.Chase:
@@ -265,23 +307,35 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 }
                 if (turnBool)
                     return;
-                ani.SetFloat(forward, 2);
+                direction = 0;
+                forward = 2;
                 movement = transform.forward * runSpeed;
                 break;
             case EnemyState.Strafe:
                 AnimationRealTime(false);
                 Look(player.transform.position);
-                ani.SetFloat(forward, -1);
+                direction = 0.5f;
+                forward = 0.5f;
                 movement = (transform.forward * 0.5f + transform.right) * strafeSpeed;
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
-                ani.SetFloat(forward, 0);
-                if (currentCoolDown < 0)
-                {
+                //Look(player.transform.position);
+                if (isMeleeAttack)
                     ani.SetInteger(attack, 1);
-                    currentCoolDown = maxCoolDown;
-                }
+                else
+                    ani.SetInteger(attack, 2);
+                currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+                break;
+            case EnemyState.BackWalk:
+                AnimationRealTime(false);
+                direction = 0;
+                forward = -1;
+                movement = -transform.forward * walkSpeed;
+                if (!isBack)
+                    isBack = true;
+                else if (distance >= meleeAttackRadius)
+                    isBack = false;
                 break;
             case EnemyState.TurnBack:
                 if (warning)
@@ -297,7 +351,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     Look(startPos);
                     if (turnBool)
                         return;
-                    ani.SetFloat(forward, 2);
+                    direction = 0;
+                    forward = 2;
                     movement = transform.forward * walkSpeed;
                 }
                 break;
@@ -346,7 +401,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         if (lockMove)
             return;
         movement = Vector3.zero;
-        float targetAngle = Vector3.Angle(transform.forward, target - transform.position);
+        //float targetAngle = Vector3.Angle(transform.forward, target - transform.position);
         targetRotation = Quaternion.LookRotation(
             new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z)
         );
@@ -355,22 +410,23 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             targetRotation,
             turnSpeed * Time.deltaTime
         );
-        if (targetAngle > 60)
-        {
-            ani.SetFloat(forward, -2);
-            turnBool = true;
-        }
-        else if (targetAngle > 10)
-            turnBool = false;
+        /* if (targetAngle > 60)
+         {
+             direction = 0.5f;
+             forward = 0;
+             turnBool = true;
+         }
+         else if (targetAngle > 10)
+             turnBool = false;*/
     }
 
-    private void GazeSwitch(bool gazeSwitch)
+    /*private void GazeSwitch(bool gazeSwitch)
     {
         if (gazeSwitch)
             lookAtIK.solver.SetIKPositionWeight(1);
         else
             lookAtIK.solver.SetIKPositionWeight(0);
-    }
+    }*/
 
     public void ColliderSwitch(int switchCount)
     {
@@ -444,8 +500,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     public void EndNotify()
     {
-        ani.SetFloat(forward, 0);
-        ani.SetInteger(attack, 0);
+        direction = 0;
+        forward = 0;
         movement = Vector3.zero;
         shutDown = true;
     }
@@ -454,7 +510,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (loadingBool)
         {
-            ani.SetFloat(forward, 0);
+            direction = 0;
+            forward = 0;
             ani.SetInteger(attack, 0);
             movement = Vector3.zero;
             shutDown = true;
