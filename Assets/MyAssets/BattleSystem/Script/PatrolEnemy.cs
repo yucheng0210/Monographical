@@ -84,9 +84,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private bool warning = false;
 
     [SerializeField]
-    private bool turnBool;
-
-    [SerializeField]
     private bool lockMove;
 
     [SerializeField]
@@ -142,6 +139,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         Strafe,
         Attack,
         BackWalk,
+        Turn,
         TurnBack,
         BeakBack,
     }
@@ -203,6 +201,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     private void FixedUpdate()
     {
+        if (shutDown)
+            return;
         if (isOnGrounded)
             myBody.velocity = movement * Time.fixedDeltaTime;
     }
@@ -229,18 +229,23 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (characterState.CurrentHealth <= 0)
             StartCoroutine(Death());
-        if (gameObject.GetComponent<HitStop>().IsHitStop)
+        else if (gameObject.GetComponent<HitStop>().IsHitStop)
             currentState = EnemyState.BeakBack;
-        else if ((warning && distance <= backWalkRadius) || isBack)
-            currentState = EnemyState.BackWalk;
-        else if (warning && distance <= attackRadius && currentCoolDown <= 0)
-            currentState = EnemyState.Attack;
-        else if (warning && distance <= strafeRadius)
-            currentState = EnemyState.Strafe;
+        else if (warning)
+        {
+            if (distance > turnBackRadius)
+                currentState = EnemyState.TurnBack;
+            else if (angle > 60)
+                currentState = EnemyState.Turn;
+            else if (distance <= attackRadius && currentCoolDown <= 0)
+                currentState = EnemyState.Attack;
+            else if ((distance <= backWalkRadius) || isBack)
+                currentState = EnemyState.BackWalk;
+            else if (warning && distance <= strafeRadius)
+                currentState = EnemyState.Strafe;
+        }
         else if (distance <= chaseRadius && angle < 60)
             currentState = EnemyState.Chase;
-        if (warning && distance > turnBackRadius)
-            currentState = EnemyState.TurnBack;
         if (distance <= meleeAttackRadius)
             isMeleeAttack = true;
         else if (isMeleeAttack)
@@ -260,10 +265,14 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         {
             if (animatorStateInfo.normalizedTime < 0.55f)
             {
-                ani.SetInteger(attack, 0);
                 movement = isMeleeAttack
                     ? transform.forward * meleeDashSpeed
                     : transform.forward * jumpDashSpeed;
+            }
+            if (animatorStateInfo.normalizedTime > 0.9f)
+            {
+                ani.SetInteger(attack, 0);
+                currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
             }
         }
         else if (currentCoolDown >= 0)
@@ -305,8 +314,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     AudioManager.Instance.BattleAudio();
                     warning = true;
                 }
-                if (turnBool)
-                    return;
                 direction = 0;
                 forward = 2;
                 movement = transform.forward * runSpeed;
@@ -325,7 +332,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     ani.SetInteger(attack, 1);
                 else
                     ani.SetInteger(attack, 2);
-                currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
                 break;
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
@@ -336,6 +342,21 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     isBack = true;
                 else if (distance >= meleeAttackRadius)
                     isBack = false;
+                break;
+            case EnemyState.Turn:
+                Look(player.transform.position);
+                Vector3 dir = player.transform.position - transform.position;
+                Vector3 cross = Vector3.Cross(transform.forward, dir);
+                if (cross.y >= 0)
+                {
+                    direction = 1;
+                    forward = 0;
+                }
+                else
+                {
+                    direction = -1;
+                    forward = 0;
+                }
                 break;
             case EnemyState.TurnBack:
                 if (warning)
@@ -349,8 +370,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 else
                 {
                     Look(startPos);
-                    if (turnBool)
-                        return;
                     direction = 0;
                     forward = 2;
                     movement = transform.forward * walkSpeed;
@@ -364,7 +383,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         }
     }
 
-    IEnumerator Death()
+    private IEnumerator Death()
     {
         //BeakBack();
         ani.SetBool("isDead", true);
@@ -401,7 +420,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
         if (lockMove)
             return;
         movement = Vector3.zero;
-        //float targetAngle = Vector3.Angle(transform.forward, target - transform.position);
         targetRotation = Quaternion.LookRotation(
             new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z)
         );
@@ -410,14 +428,6 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             targetRotation,
             turnSpeed * Time.deltaTime
         );
-        /* if (targetAngle > 60)
-         {
-             direction = 0.5f;
-             forward = 0;
-             turnBool = true;
-         }
-         else if (targetAngle > 10)
-             turnBool = false;*/
     }
 
     /*private void GazeSwitch(bool gazeSwitch)
@@ -443,8 +453,8 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             characterState.TakeDamage(attackerCharacterState, characterState);
             if (shutDown)
                 return;
-            if (characterState.CurrentPoise > 0)
-            {
+            /*if (characterState.CurrentPoise > 0)
+            {*/
                 ani.SetTrigger(isHited);
                 currentState = EnemyState.BeakBack;
                 Vector3 hitPoint = new Vector3(
@@ -453,7 +463,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     transform.position.z
                 );
                 HitEffect(hitPoint);
-            }
+            //}
             /*else
                 LosePoise();*/
         }
