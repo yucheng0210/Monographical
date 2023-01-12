@@ -24,6 +24,9 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField]
     private AudioClip impact;
 
+    [SerializeField]
+    private List<AudioClip> heavyAttackClips;
+
     [Header("Menu音效")]
     [SerializeField]
     private AudioClip menuEnterClip;
@@ -67,6 +70,12 @@ public class AudioManager : Singleton<AudioManager>
     public void ButtonTouchAudio()
     {
         Instance.fxSource.clip = Instance.buttonTouchClip;
+        Instance.fxSource.Play();
+    }
+
+    public void HeavyAttackAudio(int id)
+    {
+        Instance.fxSource.clip = Instance.heavyAttackClips[id];
         Instance.fxSource.Play();
     }
 

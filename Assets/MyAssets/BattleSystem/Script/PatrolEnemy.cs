@@ -100,6 +100,9 @@ public class PatrolEnemy : MonoBehaviour, IObserver
 
     [Header("其他")]
     [SerializeField]
+    private GameObject rockBreak;
+
+    [SerializeField]
     private GameObject hitSpark;
 
     [SerializeField]
@@ -446,6 +449,14 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             collision.SetActive(false);
     }
 
+    public void HeavyAttackEffect()
+    {
+        Vector3 start = collision.transform.GetChild(0).transform.position;
+        GameObject rock = Instantiate(rockBreak, start, Quaternion.identity);
+        AudioManager.Instance.HeavyAttackAudio(0);
+        Destroy(rock, 4);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == playerAttackLayer)
@@ -455,14 +466,14 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 return;
             /*if (characterState.CurrentPoise > 0)
             {*/
-                ani.SetTrigger(isHited);
-                currentState = EnemyState.BeakBack;
-                Vector3 hitPoint = new Vector3(
-                    transform.position.x,
-                    other.ClosestPoint(transform.position).y,
-                    transform.position.z
-                );
-                HitEffect(hitPoint);
+            ani.SetTrigger(isHited);
+            currentState = EnemyState.BeakBack;
+            Vector3 hitPoint = new Vector3(
+                transform.position.x,
+                other.ClosestPoint(transform.position).y,
+                transform.position.z
+            );
+            HitEffect(hitPoint);
             //}
             /*else
                 LosePoise();*/
