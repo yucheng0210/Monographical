@@ -60,6 +60,9 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private float recover;
+
+        [SerializeField]
+        private GameObject hitSpark;
         public float attack;
         private Animator ani;
         private CharacterState characterState,
@@ -111,16 +114,25 @@ namespace DiasGames.ThirdPersonSystem
             {
                 attackerCharacterState = other.gameObject.GetComponentInParent<CharacterState>();
                 characterState.TakeDamage(attackerCharacterState, characterState);
-                HitEffect();
+                Vector3 hitPoint = new Vector3(
+                    transform.position.x,
+                    other.ClosestPoint(transform.position).y,
+                    transform.position.z
+                );
+                HitEffect(hitPoint);
                 if (characterState.CurrentHealth <= 0)
                     Die();
             }
         }
 
-        private void HitEffect()
+        private void HitEffect(Vector3 hitPoint)
         {
             gameObject.GetComponent<HitStop>().StopTime();
             myImpulse.GenerateImpulse();
+            Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
+            AudioManager.Instance.Impact();
+            AudioManager.Instance.PlayerHurted();
+            gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
             //AudioManager.Instance.PlayerHurted();
         }
 
