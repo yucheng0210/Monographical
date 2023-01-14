@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 //using RootMotion.FinalIK;
 
-public class PatrolEnemy : MonoBehaviour, IObserver
+public class Knight : MonoBehaviour, IObserver
 {
     private Animator ani;
     private AnimatorStateInfo animatorStateInfo;
@@ -21,44 +21,44 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private float walkSpeed = 50f;
 
     [SerializeField]
-    private float runSpeed = 100;
+    private float runSpeed = 200;
 
     [SerializeField]
-    private float strafeSpeed = 25;
+    private float strafeSpeed = 30;
 
     [SerializeField]
-    private float jumpForce = 10;
+    private float jumpForce = 15;
 
     [SerializeField]
-    private float jumpDashSpeed = 100;
+    private float jumpDashSpeed = 300;
 
     [SerializeField]
-    private float meleeDashSpeed = 50;
+    private float meleeDashSpeed = 80;
 
     [SerializeField]
-    private float turnSpeed = 10;
+    private float turnSpeed = 3;
 
     [SerializeField]
-    private float beakBackForce = 15;
+    private float beakBackForce = 2;
 
     [Header("AI巡邏半徑參數")]
     [SerializeField]
-    private float wanderRadius = 12;
+    private float wanderRadius = 15;
 
     [SerializeField]
-    private float chaseRadius = 10;
+    private float chaseRadius = 12;
 
     [SerializeField]
-    private float strafeRadius = 5;
+    private float strafeRadius = 7;
 
     [SerializeField]
-    private float attackRadius = 1.2f;
+    private float attackRadius = 4f;
 
     [SerializeField]
-    private float meleeAttackRadius = 1.5f;
+    private float meleeAttackRadius = 2.5f;
 
     [SerializeField]
-    private float backWalkRadius = 1.5f;
+    private float backWalkRadius = 1;
 
     [SerializeField]
     private float turnBackRadius = 12;
@@ -68,7 +68,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
     private float maxCoolDown = 5.0f;
 
     [SerializeField]
-    private float minCoolDown = 2.5f;
+    private float minCoolDown = 3f;
 
     [SerializeField]
     private float currentCoolDown = 0.0f;
@@ -236,7 +236,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
             currentState = EnemyState.BeakBack;
         else if (warning)
         {
-            if (distance > turnBackRadius)
+            if (distance >= turnBackRadius)
                 currentState = EnemyState.TurnBack;
             else if (angle > 60)
                 currentState = EnemyState.Turn;
@@ -244,8 +244,10 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                 currentState = EnemyState.Attack;
             else if ((distance <= backWalkRadius) || isBack)
                 currentState = EnemyState.BackWalk;
-            else if (warning && distance <= strafeRadius)
+            else if (distance <= strafeRadius)
                 currentState = EnemyState.Strafe;
+            else if (distance <= chaseRadius)
+                currentState = EnemyState.Chase;
         }
         else if (distance <= chaseRadius && angle < 60)
             currentState = EnemyState.Chase;
@@ -375,7 +377,7 @@ public class PatrolEnemy : MonoBehaviour, IObserver
                     Look(startPos);
                     direction = 0;
                     forward = 2;
-                    movement = transform.forward * walkSpeed;
+                    movement = transform.forward * runSpeed;
                 }
                 break;
             case EnemyState.BeakBack:

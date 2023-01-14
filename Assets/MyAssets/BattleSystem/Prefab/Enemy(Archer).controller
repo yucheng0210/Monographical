@@ -219,7 +219,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Enemy
+  m_Name: Enemy(Archer)
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Forward
@@ -397,7 +397,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpAttack
+  m_Name: Shoot
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -412,7 +412,8 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: fd35cc4cf9f6c5945bea8758b9966500, type: 2}
+  m_Motion: {fileID: -203655887218126122, guid: 52281f11148a0804b9575d841ab601f6,
+    type: 3}
   m_Tag: Attack
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -714,7 +715,7 @@ BlendTree:
     m_DirectBlendParameter: Forward
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: b0b8d6acd5fc3594b9a586f8401a7a30,
+    m_Motion: {fileID: -203655887218126122, guid: 4897587f4e715f94098c7d63ac64d551,
       type: 3}
     m_Threshold: 2
     m_Position: {x: 0.5, y: 0.5}
@@ -741,7 +742,8 @@ BlendTree:
     m_DirectBlendParameter: Forward
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: e99d34433cb511c40bbe3b126bf5220e, type: 2}
+    m_Motion: {fileID: -203655887218126122, guid: d7baa65010f996b44a0c184b88a8c937,
+      type: 3}
     m_Threshold: 5
     m_Position: {x: 0, y: -1}
     m_TimeScale: 1
@@ -769,7 +771,7 @@ AnimatorStateMachine:
     m_Position: {x: 170, y: -110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6729777822242659740}
-    m_Position: {x: 420, y: -110, z: 0}
+    m_Position: {x: 410, y: -110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2900663712123628205}
     m_Position: {x: 740, y: -90, z: 0}
@@ -784,10 +786,10 @@ AnimatorStateMachine:
     m_Position: {x: 430, y: -370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -772494371945544037}
-    m_Position: {x: 420, y: -280, z: 0}
+    m_Position: {x: 410, y: -240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 846215109933749230}
-    m_Position: {x: 430, y: -10, z: 0}
+    m_Position: {x: 410, y: -10, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 7035620702770938340}
