@@ -119,7 +119,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private Vector3 movement,
         startPos;
     private Quaternion targetRotation;
-    private GameObject player;
     private float angle;
     private DiasGames.ThirdPersonSystem.UnityInputManager unityInputManager;
     private int attack = Animator.StringToHash("AttackMode");
@@ -131,6 +130,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private int playerAttackLayer;
     private float direction;
     private float forward;
+    public GameObject Player { get; private set; }
+    public GameObject Collision
+    {
+        get { return collision; }
+    }
 
     private enum EnemyState
     {
@@ -147,7 +151,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private EnemyState currentState;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         movement = Vector3.zero;
         ani = GetComponent<Animator>();
@@ -155,25 +159,25 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         capsuleCollider = GetComponent<CapsuleCollider>();
         startPos = transform.position;
         collision.SetActive(false);
-        player = GameManager.Instance.PlayerState.gameObject;
+        Player = GameManager.Instance.PlayerState.gameObject;
         myCamera = GetComponentInChildren<Canvas>();
         myCamera.worldCamera = Camera.main;
         myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
         characterState = GetComponent<CharacterState>();
-        attackerCharacterState = player.GetComponent<CharacterState>();
+        attackerCharacterState = Player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         //lookAtIK = GetComponent<LookAtIK>();
-        unityInputManager = player.GetComponent<DiasGames.ThirdPersonSystem.UnityInputManager>();
+        unityInputManager = Player.GetComponent<DiasGames.ThirdPersonSystem.UnityInputManager>();
         InitialState();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         GameManager.Instance.AddObservers(this);
         AudioManager.Instance.MainAudio();
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         GameManager.Instance.RemoveObservers(this);
     }
@@ -199,7 +203,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (shutDown)
             return;
@@ -212,15 +216,15 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         characterState.CurrentHealth = characterState.MaxHealth;
         characterState.CurrentDefence = characterState.BaseDefence;
         characterState.CurrentPoise = characterState.MaxPoise;
-        //lookAtIK.solver.target = player.transform.GetChild(0).transform;
+        //lookAtIK.solver.target = Player.transform.GetChild(0).transform;
         currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
 
-    private void UpdateValue()
+    protected virtual void UpdateValue()
     {
-        distance = Vector3.Distance(transform.position, player.transform.position);
+        distance = Vector3.Distance(transform.position, Player.transform.position);
         wanderDistance = Vector3.Distance(transform.position, startPos);
-        angle = Vector3.Angle(transform.forward, player.transform.position - transform.position);
+        angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
         healthSlider.value = (characterState.CurrentHealth / characterState.MaxHealth);
         animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
     }
@@ -315,7 +319,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.Chase:
                 AnimationRealTime(false);
-                Look(player.transform.position);
+                Look(Player.transform.position);
                 if (!warning)
                 {
                     AudioManager.Instance.BattleAudio();
@@ -327,14 +331,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.Strafe:
                 AnimationRealTime(false);
-                Look(player.transform.position);
+                Look(Player.transform.position);
                 direction = 0.5f;
                 forward = 0.5f;
-                movement = (transform.forward * 0.5f + transform.right) * strafeSpeed;
+                movement = (transform.forward + transform.right * 0.5f) * strafeSpeed;
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
-                //Look(player.transform.position);
                 if (isMeleeAttack)
                     ani.SetInteger(attack, 1);
                 else
@@ -351,8 +354,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     isBack = false;
                 break;
             case EnemyState.Turn:
-                Look(player.transform.position);
-                Vector3 dir = player.transform.position - transform.position;
+                Look(Player.transform.position);
+                Vector3 dir = Player.transform.position - transform.position;
                 Vector3 cross = Vector3.Cross(transform.forward, dir);
                 if (cross.y >= 0)
                 {
@@ -407,7 +410,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (!warning)
             AudioManager.Instance.BattleAudio();
-        Vector3 beakBackDirection = (transform.position - player.transform.position).normalized;
+        Vector3 beakBackDirection = (transform.position - Player.transform.position).normalized;
         lockMove = true;
         warning = true;
         myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
@@ -492,8 +495,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void Execution()
     {
-        Animator playerAni = player.GetComponent<Animator>();
-        player.gameObject.transform.LookAt(gameObject.transform);
+        Animator playerAni = Player.GetComponent<Animator>();
+        Player.gameObject.transform.LookAt(gameObject.transform);
         unityInputManager.enabled = false;
         playerAni.SetTrigger("isExecution");
         ani.SetTrigger("isExecuted");
@@ -512,7 +515,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void HitEffect(Vector3 hitPoint)
     {
-        //beakBackDirection = (transform.position - player.transform.position).normalized;
+        //beakBackDirection = (transform.position - Player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         //        VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
