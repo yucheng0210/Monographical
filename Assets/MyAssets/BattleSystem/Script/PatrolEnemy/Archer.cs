@@ -18,10 +18,25 @@ public class Archer : PatrolEnemy
     private float min_distance = 0.5f;
 
     [SerializeField]
-    private GameObject arrow;
+    private GameObject arrowPrefab;
+
+    [SerializeField]
+    private Transform arrowTrans;
     private float distanceToTarget;
     private bool move_flag = true;
     private Transform m_trans;
+    private GameObject arrow;
+    private bool canDraw = true;
+
+    protected override void UpdateState()
+    {
+        base.UpdateState();
+        if (Warning && arrowTrans.childCount < 1 && canDraw)
+        {
+            canDraw = false;
+            Ani.SetTrigger("isDraw");
+        }
+    }
 
     private void Shoot()
     {
@@ -32,7 +47,13 @@ public class Archer : PatrolEnemy
         StartCoroutine(Parabola());
     }
 
-    IEnumerator Parabola()
+    public void CreateArrow()
+    {
+        arrow = Instantiate(arrowPrefab, arrowTrans);
+        canDraw = true;
+    }
+
+    private IEnumerator Parabola()
     {
         while (move_flag)
         {

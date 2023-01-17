@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public abstract class PatrolEnemy : MonoBehaviour, IObserver
 {
-    private Animator ani;
+    public Animator Ani { get; set; }
     private AnimatorStateInfo animatorStateInfo;
     private Rigidbody myBody;
     private CapsuleCollider capsuleCollider;
@@ -67,8 +67,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private float minCoolDown = 3f;
 
-    [SerializeField]
-    private float currentCoolDown = 0.0f;
+    public float CurrentCoolDown { get; set; }
 
     [Header("狀態")]
     [SerializeField]
@@ -77,8 +76,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private bool shutDown;
 
-    [SerializeField]
-    private bool warning = false;
+    public bool Warning { get; set; }
 
     [SerializeField]
     private bool lockMove;
@@ -154,7 +152,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     protected virtual void Awake()
     {
         movement = Vector3.zero;
-        ani = GetComponent<Animator>();
+        Ani = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         startPos = transform.position;
@@ -217,7 +215,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         characterState.CurrentDefence = characterState.BaseDefence;
         characterState.CurrentPoise = characterState.MaxPoise;
         //lookAtIK.solver.target = Player.transform.GetChild(0).transform;
-        currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+        CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
 
     protected virtual void UpdateValue()
@@ -226,22 +224,22 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
         healthSlider.value = (characterState.CurrentHealth / characterState.MaxHealth);
-        animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
+        animatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
     }
 
-    private void UpdateState()
+    protected virtual void UpdateState()
     {
         if (characterState.CurrentHealth <= 0)
             StartCoroutine(Death());
         else if (gameObject.GetComponent<HitStop>().IsHitStop)
             currentState = EnemyState.BeakBack;
-        else if (warning)
+        else if (Warning)
         {
             if (distance >= turnBackRadius)
                 currentState = EnemyState.TurnBack;
             else if (angle > 60)
                 currentState = EnemyState.Turn;
-            else if (distance <= attackRadius && currentCoolDown <= 0)
+            else if (distance <= attackRadius && CurrentCoolDown <= 0)
                 currentState = EnemyState.Attack;
             else if ((distance <= backWalkRadius) || isBack)
                 currentState = EnemyState.BackWalk;
@@ -256,11 +254,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             isMeleeAttack = true;
         else if (isMeleeAttack)
             isMeleeAttack = false;
-        ani.SetFloat(
+        Ani.SetFloat(
             "Direction",
-            Mathf.Lerp(ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
+            Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
         );
-        ani.SetFloat("Forward", Mathf.Lerp(ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
+        Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
         if (animatorStateInfo.IsName("Grounded"))
         {
             rImage.SetActive(false);
@@ -269,8 +267,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             UpdateAttackValue();
-        else if (currentCoolDown >= 0)
-            currentCoolDown -= Time.deltaTime;
+        else if (CurrentCoolDown >= 0)
+            CurrentCoolDown -= Time.deltaTime;
     }
 
     protected virtual void UpdateAttackValue()
@@ -285,8 +283,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             movement = Vector3.zero;
         if (animatorStateInfo.normalizedTime > 0.9f)
         {
-            ani.SetInteger(attack, 0);
-            currentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+            Ani.SetInteger(attack, 0);
+            CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         }
     }
 
@@ -320,10 +318,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Chase:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                if (!warning)
+                if (!Warning)
                 {
                     AudioManager.Instance.BattleAudio();
-                    warning = true;
+                    Warning = true;
                 }
                 direction = 0;
                 forward = 2;
@@ -339,9 +337,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Attack:
                 AnimationRealTime(false);
                 if (isMeleeAttack)
-                    ani.SetInteger(attack, 1);
+                    Ani.SetInteger(attack, 1);
                 else
-                    ani.SetInteger(attack, 2);
+                    Ani.SetInteger(attack, 2);
                 break;
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
@@ -369,12 +367,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 }
                 break;
             case EnemyState.TurnBack:
-                if (warning)
+                if (Warning)
                 {
                     //GazeSwitch(false);
                     AudioManager.Instance.MainAudio();
                 }
-                warning = false;
+                Warning = false;
                 if (wanderDistance < wanderRadius)
                     currentState = EnemyState.Wander;
                 else
@@ -396,7 +394,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private IEnumerator Death()
     {
         //BeakBack();
-        ani.SetBool("isDead", true);
+        Ani.SetBool("isDead", true);
         myBody.velocity = Vector3.zero;
         shutDown = true;
         AudioManager.Instance.PlayerDied();
@@ -408,18 +406,18 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void BeakBack()
     {
-        if (!warning)
+        if (!Warning)
             AudioManager.Instance.BattleAudio();
         Vector3 beakBackDirection = (transform.position - Player.transform.position).normalized;
         lockMove = true;
-        warning = true;
+        Warning = true;
         myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
     }
 
     private void LosePoise()
     {
         lockMove = true;
-        ani.SetTrigger(isLosePoise);
+        Ani.SetTrigger(isLosePoise);
         rImage.SetActive(true);
         characterState.CurrentPoise = characterState.MaxPoise;
         collision.SetActive(false);
@@ -473,7 +471,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 return;
             /*if (characterState.CurrentPoise > 0)
             {*/
-            ani.SetTrigger(isHited);
+            Ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
@@ -499,16 +497,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Player.gameObject.transform.LookAt(gameObject.transform);
         unityInputManager.enabled = false;
         playerAni.SetTrigger("isExecution");
-        ani.SetTrigger("isExecuted");
+        Ani.SetTrigger("isExecuted");
     }
 
     private void AnimationRealTime(bool realTimeBool)
     {
         /*if (realTimeBool)
-            ani.updateMode = AnimatorUpdateMode.UnscaledTime;
+            Ani.updateMode = AnimatorUpdateMode.UnscaledTime;
         else
-            ani.updateMode = AnimatorUpdateMode.AnimatePhysics;*/
-        ani.updateMode = realTimeBool
+            Ani.updateMode = AnimatorUpdateMode.AnimatePhysics;*/
+        Ani.updateMode = realTimeBool
             ? AnimatorUpdateMode.UnscaledTime
             : AnimatorUpdateMode.AnimatePhysics;
     }
@@ -540,7 +538,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         {
             direction = 0;
             forward = 0;
-            ani.SetInteger(attack, 0);
+            Ani.SetInteger(attack, 0);
             movement = Vector3.zero;
             shutDown = true;
         }
