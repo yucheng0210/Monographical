@@ -8,9 +8,8 @@ public class QuestMenu : Menu
     [SerializeField]
     private QuestUIManager questUIManager;
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
             Close();
     }

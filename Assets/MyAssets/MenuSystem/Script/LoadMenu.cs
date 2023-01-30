@@ -9,9 +9,8 @@ public class LoadMenu : Menu
     [SerializeField]
     private Button firstButton;
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
     }

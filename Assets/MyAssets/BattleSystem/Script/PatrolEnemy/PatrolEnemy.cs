@@ -156,7 +156,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         myBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         startPos = transform.position;
-        collision.SetActive(false);
         Player = GameManager.Instance.PlayerState.gameObject;
         myCamera = GetComponentInChildren<Canvas>();
         myCamera.worldCamera = Camera.main;
@@ -475,7 +474,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
-                other.ClosestPoint(transform.position).y,
+                other.ClosestPointOnBounds(transform.position).y,
                 transform.position.z
             );
             HitEffect(hitPoint);

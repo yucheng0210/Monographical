@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class BookMenu : Menu
 {
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             if (!OpenBool)

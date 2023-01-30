@@ -32,9 +32,8 @@ public class SaveMenu : Menu
         }
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         if (OpenBool && EventSystem.current.currentSelectedGameObject == null && !clueMenu.OpenBool)
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
     }

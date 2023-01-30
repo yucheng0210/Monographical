@@ -116,7 +116,7 @@ namespace DiasGames.ThirdPersonSystem
                 characterState.TakeDamage(attackerCharacterState, characterState);
                 Vector3 hitPoint = new Vector3(
                     transform.position.x,
-                    other.ClosestPoint(transform.position).y,
+                    other.ClosestPointOnBounds(transform.position).y,
                     transform.position.z
                 );
                 HitEffect(hitPoint);

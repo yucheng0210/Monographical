@@ -24,9 +24,8 @@ public class ClueMenu : Menu
         noButton.onClick.AddListener(Close);
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
     }

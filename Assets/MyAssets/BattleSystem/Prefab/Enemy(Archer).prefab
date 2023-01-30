@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 813208877204281139}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.031, y: -0, z: 0.024}
-  m_LocalScale: {x: 1, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5299623784839196337}
   m_RootOrder: 6
@@ -2805,7 +2805,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 50
   runSpeed: 200
-  strafeSpeed: 30
+  strafeSpeed: 0
   dashSpeed: 0
   meleeSpeed: 80
   turnSpeed: 3
@@ -2829,18 +2829,19 @@ MonoBehaviour:
   rockBreak: {fileID: 2430002874503032944, guid: eadfc2ea1d52f8247ba463bbfed6b824,
     type: 3}
   hitSpark: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
-  collision: {fileID: 7197806640580603427}
+  collision: {fileID: 6958374487512677457}
   healthSlider: {fileID: 6898380709392697190}
   dropItem: {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0,
     type: 3}
   capsuleOffset: 0.3
   rImage: {fileID: 2141800299514556139}
   currentState: 0
-  speed: 5
-  min_distance: 0.5
+  speed: 18
+  min_distance: 1
   arrowPrefab: {fileID: 8360026549553698552, guid: dbee67f719a506b4d8e111a336d71fe2,
     type: 3}
   arrowTrans: {fileID: 1440072133289462744}
+  canDraw: 1
 --- !u!1 &5299623784839033597
 GameObject:
   m_ObjectHideFlags: 0
@@ -4657,12 +4658,6 @@ PrefabInstance:
 --- !u!4 &4260992254958596315 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8363793977209494660, guid: dbee67f719a506b4d8e111a336d71fe2,
-    type: 3}
-  m_PrefabInstance: {fileID: 5706130745666366559}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7197806640580603427 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3230066848148079228, guid: dbee67f719a506b4d8e111a336d71fe2,
     type: 3}
   m_PrefabInstance: {fileID: 5706130745666366559}
   m_PrefabAsset: {fileID: 0}

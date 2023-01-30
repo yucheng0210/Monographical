@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class OptionMenu : Menu
 {
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
             Close();
     }

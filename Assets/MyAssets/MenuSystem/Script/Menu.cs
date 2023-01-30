@@ -41,12 +41,6 @@ public abstract class Menu : MonoBehaviour, IObserver
         GameManager.Instance.RemoveObservers(this);
     }
 
-    protected virtual void Update()
-    {
-        if ((Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.Escape)) && OpenBool)
-            Close();
-    }
-
     private void AddOnClickListener()
     {
         switch (actionType)

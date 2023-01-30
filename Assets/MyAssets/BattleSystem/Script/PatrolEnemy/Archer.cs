@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,11 +23,14 @@ public class Archer : PatrolEnemy
 
     [SerializeField]
     private Transform arrowTrans;
+
+    [SerializeField]
+    private bool canDraw = true;
     private float distanceToTarget;
     private bool move_flag = true;
     private Transform m_trans;
     private GameObject arrow;
-    private bool canDraw = true;
+    private Arrow arrowFlag;
 
     protected override void UpdateState()
     {
@@ -41,7 +45,7 @@ public class Archer : PatrolEnemy
     private void Shoot()
     {
         arrow.transform.parent = null;
-        targetPos = Player.transform.position + new Vector3(0, 0.5f, 0);
+        targetPos = Player.transform.position + new Vector3(0, 0f, 0.5F);
         m_trans = arrow.transform;
         distanceToTarget = Vector3.Distance(m_trans.position, targetPos);
         StartCoroutine(Parabola());
@@ -50,40 +54,44 @@ public class Archer : PatrolEnemy
     public void CreateArrow()
     {
         arrow = Instantiate(arrowPrefab, arrowTrans);
+        arrowFlag = arrow.GetComponentInChildren<Arrow>();
         canDraw = true;
     }
 
     private IEnumerator Parabola()
     {
-        while (move_flag)
+        while (!arrowFlag.isHit)
         {
-            // 朝向目标, 以计算运动
-            m_trans.LookAt(targetPos);
-            // 根据距离衰减 角度
-            float angle =
-                Mathf.Min(1, Vector3.Distance(m_trans.position, targetPos) / distanceToTarget) * 45;
-            // 旋转对应的角度（线性插值一定角度，然后每帧绕X轴旋转）
-            m_trans.rotation =
-                m_trans.rotation * Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
-            // 当前距离目标点
-            float currentDist = Vector3.Distance(m_trans.position, targetPos);
-            // 很接近目标了, 准备结束循环
-            if (currentDist < min_distance)
+            Debug.Log(Vector3.Distance(m_trans.position, targetPos));
+            if (Vector3.Distance(m_trans.position, targetPos) <= min_distance)
+                m_trans.Translate(Vector3.forward * speed * Time.deltaTime / 2);
+            else
             {
-                move_flag = false;
+                // 朝向目标, 以计算运动
+                m_trans.LookAt(targetPos);
+                // 根据距离衰减 角度
+                float angle =
+                    Mathf.Min(1, Vector3.Distance(m_trans.position, targetPos) / distanceToTarget)
+                    * 30;
+                // 旋转对应的角度（线性插值一定角度，然后每帧绕X轴旋转）
+                m_trans.rotation =
+                    m_trans.rotation * Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
+                // 当前距离目标点
+                float currentDist = Vector3.Distance(m_trans.position, targetPos);
+                // 很接近目标了, 准备结束循环
+                // 平移 (朝向Z轴移动)
+                m_trans.Translate(Vector3.forward * Mathf.Min(speed * Time.deltaTime, currentDist));
+                // 暂停执行, 等待下一帧再执行while
             }
-            // 平移 (朝向Z轴移动)
-            m_trans.Translate(Vector3.forward * Mathf.Min(speed * Time.deltaTime, currentDist));
-            // 暂停执行, 等待下一帧再执行while
             yield return null;
         }
-        if (move_flag == false)
+        if (arrowFlag.isHit)
         {
             // 使自己的位置, 跟[目标点]重合
-            m_trans.position = targetPos;
+            // m_trans.position = targetPos;
             // [停止]当前协程任务,参数是协程方法名
             StopCoroutine(Parabola());
-            Debug.Log("stop");
+            //Debug.Log("stop");
             // 销毁脚本
             //GameObject.Destroy(this);
         }
