@@ -12,6 +12,6 @@ public class Arrow : MonoBehaviour
         int characterLayer = LayerMask.NameToLayer("Character");
         if (other.gameObject.layer == characterLayer)
             transform.parent.SetParent(other.transform);
-        GameObject.Destroy(this);
+        Destroy(gameObject);
     }
 }

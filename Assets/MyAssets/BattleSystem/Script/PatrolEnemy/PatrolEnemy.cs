@@ -342,6 +342,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
+                Look(Player.transform.position);
                 direction = 0;
                 forward = -1;
                 movement = -transform.forward * walkSpeed;

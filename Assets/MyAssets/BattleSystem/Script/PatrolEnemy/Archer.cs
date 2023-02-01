@@ -26,6 +26,9 @@ public class Archer : PatrolEnemy
 
     [SerializeField]
     private bool canDraw = true;
+
+    [SerializeField]
+    private Vector3 targetOffset;
     private float distanceToTarget;
     private bool move_flag = true;
     private Transform m_trans;
@@ -45,7 +48,8 @@ public class Archer : PatrolEnemy
     private void Shoot()
     {
         arrow.transform.parent = null;
-        targetPos = Player.transform.position + new Vector3(0, 0f, 0.5F);
+        arrowFlag.gameObject.SetActive(true);
+        targetPos = Player.transform.position + targetOffset;
         m_trans = arrow.transform;
         distanceToTarget = Vector3.Distance(m_trans.position, targetPos);
         StartCoroutine(Parabola());
@@ -55,16 +59,19 @@ public class Archer : PatrolEnemy
     {
         arrow = Instantiate(arrowPrefab, arrowTrans);
         arrowFlag = arrow.GetComponentInChildren<Arrow>();
+        arrowFlag.gameObject.SetActive(false);
         canDraw = true;
     }
 
     private IEnumerator Parabola()
     {
+        bool arriveDestination = false;
         while (!arrowFlag.isHit)
         {
-            Debug.Log(Vector3.Distance(m_trans.position, targetPos));
-            if (Vector3.Distance(m_trans.position, targetPos) <= min_distance)
-                m_trans.Translate(Vector3.forward * speed * Time.deltaTime / 2);
+            if (Vector3.Distance(m_trans.position, targetPos) <= min_distance && !arriveDestination)
+                arriveDestination = true;
+            if (arriveDestination)
+                m_trans.Translate(Vector3.forward * speed * Time.deltaTime);
             else
             {
                 // 朝向目标, 以计算运动
@@ -91,7 +98,7 @@ public class Archer : PatrolEnemy
             // m_trans.position = targetPos;
             // [停止]当前协程任务,参数是协程方法名
             StopCoroutine(Parabola());
-            //Debug.Log("stop");
+            Debug.Log("stop");
             // 销毁脚本
             //GameObject.Destroy(this);
         }
