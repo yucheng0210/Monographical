@@ -29,6 +29,12 @@ public class Archer : PatrolEnemy
 
     [SerializeField]
     private Vector3 targetOffset;
+
+    [SerializeField]
+    private Animator bowAni;
+
+    [SerializeField]
+    private bool advancedAI;
     private float distanceToTarget;
     private bool move_flag = true;
     private Transform m_trans;
@@ -43,6 +49,21 @@ public class Archer : PatrolEnemy
             canDraw = false;
             Ani.SetTrigger("isDraw");
         }
+        if (!Warning)
+            BowDrawSwitch(0);
+    }
+
+    public void BowDrawSwitch(int switchCount)
+    {
+        if (switchCount == 1)
+            bowAni.SetBool("isDraw", true);
+        else
+            bowAni.SetBool("isDraw", false);
+    }
+
+    public void BowShoot()
+    {
+        bowAni.SetTrigger("isShoot");
     }
 
     private void Shoot()
@@ -50,6 +71,8 @@ public class Archer : PatrolEnemy
         arrow.transform.parent = null;
         arrowFlag.gameObject.SetActive(true);
         targetPos = Player.transform.position + targetOffset;
+        if (advancedAI)
+            targetPos += Player.GetComponent<Rigidbody>().velocity / (20 / Distance);
         m_trans = arrow.transform;
         distanceToTarget = Vector3.Distance(m_trans.position, targetPos);
         StartCoroutine(Parabola());
@@ -65,9 +88,11 @@ public class Archer : PatrolEnemy
 
     private IEnumerator Parabola()
     {
+        float accumulateTime = 0;
         bool arriveDestination = false;
         while (!arrowFlag.isHit)
         {
+            accumulateTime += Time.deltaTime;
             if (Vector3.Distance(m_trans.position, targetPos) <= min_distance && !arriveDestination)
                 arriveDestination = true;
             if (arriveDestination)
@@ -98,7 +123,7 @@ public class Archer : PatrolEnemy
             // m_trans.position = targetPos;
             // [停止]当前协程任务,参数是协程方法名
             StopCoroutine(Parabola());
-            Debug.Log("stop");
+            Debug.Log(accumulateTime);
             // 销毁脚本
             //GameObject.Destroy(this);
         }

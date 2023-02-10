@@ -8,5 +8,4 @@ using UnityEngine.UI;
 
 public class Knight : PatrolEnemy
 {
-
 }

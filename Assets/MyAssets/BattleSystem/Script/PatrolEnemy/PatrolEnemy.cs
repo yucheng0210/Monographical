@@ -133,6 +133,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         get { return collision; }
     }
+    public float Distance
+    {
+        get{return distance;}
+    }
 
     private enum EnemyState
     {
@@ -394,6 +398,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private IEnumerator Death()
     {
         //BeakBack();
+        Warning = false;
         Ani.SetBool("isDead", true);
         myBody.velocity = Vector3.zero;
         shutDown = true;
