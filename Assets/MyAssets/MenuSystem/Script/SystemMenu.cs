@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class OptionMenu : Menu
+public class SystemMenu :UIBase
 {
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
+        if (Input.GetKeyDown(KeyCode.Escape))
             Close();
     }
 }

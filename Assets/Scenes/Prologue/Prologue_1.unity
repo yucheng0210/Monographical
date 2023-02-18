@@ -3289,8 +3289,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 515422273}
-  m_LocalRotation: {x: -0.00070966926, y: 0.00019776521, z: 0.00009219342, w: 0.99999976}
-  m_LocalPosition: {x: -50.157764, y: 1.3187028, z: -136.68114}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -50.16, y: 1.372, z: -136.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6370,6 +6370,7 @@ MonoBehaviour:
   swordSlashClip_1: {fileID: 0}
   swordSlashClip_2: {fileID: 0}
   impact: {fileID: 0}
+  heavyAttackClips: []
   menuEnterClip: {fileID: 8300000, guid: dca3084cb66e8824bab682c584bec504, type: 3}
   menuExitClip: {fileID: 8300000, guid: d4007067d30a702478f8de23ab74795f, type: 3}
   hurt: {fileID: 8300000, guid: 8f6a3fcf53f0718418d4341566f98e8d, type: 3}
@@ -7768,9 +7769,6 @@ MonoBehaviour:
   openMenu: {fileID: 1121357259}
   touchButton: {fileID: 0}
   actionType: 0
-  buttons:
-  - {fileID: 1874955042}
-  - {fileID: 84240155}
 --- !u!1001 &1303515480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9973,7 +9971,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653644913}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6c3191db91f7ad4eb5da0c5db4e4774, type: 3}
   m_Name: 

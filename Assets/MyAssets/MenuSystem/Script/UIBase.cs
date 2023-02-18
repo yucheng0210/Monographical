@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class Menu : MonoBehaviour, IObserver
+public class UIBase : MonoBehaviour, IObserver
 {
     [SerializeField]
     protected GameObject openMenu;
@@ -54,7 +54,7 @@ public abstract class Menu : MonoBehaviour, IObserver
         }
     }
 
-    public virtual void Open()
+    protected virtual void Open()
     {
         if (shutDown)
             return;
@@ -64,6 +64,7 @@ public abstract class Menu : MonoBehaviour, IObserver
         Time.timeScale = 0;
         openMenu.SetActive(true);
         OpenBool = true;
+        openMenu.transform.SetAsLastSibling();
     }
 
     public virtual void Close()

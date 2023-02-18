@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuestMenu : Menu
+public class QuestMenu : UIBase
 {
     [SerializeField]
     private QuestUIManager questUIManager;
