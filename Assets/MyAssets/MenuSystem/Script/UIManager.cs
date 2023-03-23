@@ -10,6 +10,13 @@ public class UIManager : Singleton<UIManager>, IObserver
 
     [SerializeField]
     private SceneFader wifeDeathImage;
+    public List<UIBase> UIList { get; set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        UIList = new List<UIBase>();
+    }
 
     private void Start()
     {
@@ -20,6 +27,16 @@ public class UIManager : Singleton<UIManager>, IObserver
     private void OnDisable()
     {
         GameManager.Instance.RemoveObservers(this);
+    }
+
+    public UIBase FindUI(string uIName)
+    {
+        for (int i = 0; i < UIList.Count; i++)
+        {
+            if (UIList[i].GetType().Name == uIName)
+                return UIList[i];
+        }
+        return null;
     }
 
     public void EndNotify()

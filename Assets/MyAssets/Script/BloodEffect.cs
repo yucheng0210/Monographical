@@ -5,10 +5,13 @@ using UnityEngine;
 public class BloodEffect : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] BloodFX;
+    private GameObject[] bloodFX;
 
     [SerializeField]
-    private GameObject BloodAttach;
+    private GameObject bloodAttach;
+
+    [SerializeField]
+    private List<Transform> bodyTransList = new List<Transform>();
     private Light dirLight;
     private int effectIdx;
 
@@ -45,10 +48,10 @@ public class BloodEffect : MonoBehaviour
     public void SpurtingBlood(Vector3 hitPoint)
     {
         float angle = Mathf.Atan2(hitPoint.x, hitPoint.z) * Mathf.Rad2Deg + 180;
-        if (effectIdx == BloodFX.Length)
+        if (effectIdx == bloodFX.Length)
             effectIdx = 0;
         var instance = Instantiate(
-            BloodFX[effectIdx],
+            bloodFX[effectIdx],
             hitPoint,
             Quaternion.Euler(0, angle + 90, 0)
         );
@@ -56,6 +59,17 @@ public class BloodEffect : MonoBehaviour
         var settings = instance.GetComponent<BFX_BloodSettings>();
         settings.LightIntensityMultiplier = dirLight.intensity;
         settings.GroundHeight = transform.position.y;
-        Instantiate(BloodAttach, transform.position, Quaternion.identity);
+        Instantiate(bloodAttach, transform.position, Quaternion.identity);
+        float lastDistance = 99;
+        Transform bodyDecalTrans = null;
+        for (int i = 0; i < bodyTransList.Count; i++)
+        {
+            if (Vector3.Distance(bodyTransList[i].position, hitPoint) < lastDistance)
+            {
+                bodyDecalTrans = bodyTransList[i];
+                lastDistance = Vector3.Distance(bodyTransList[i].position, hitPoint);
+            }
+        }
+        Instantiate(bloodAttach, bodyDecalTrans);
     }
 }

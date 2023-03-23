@@ -135,7 +135,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     public float Distance
     {
-        get{return distance;}
+        get { return distance; }
     }
 
     private enum EnemyState
@@ -270,7 +270,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             UpdateAttackValue();
-        else if (CurrentCoolDown >= 0)
+        else if (CurrentCoolDown >= 0 && Warning)
             CurrentCoolDown -= Time.deltaTime;
     }
 
@@ -361,12 +361,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Vector3 cross = Vector3.Cross(transform.forward, dir);
                 if (cross.y >= 0)
                 {
-                    direction = 1;
+                    direction = 2;
                     forward = 0;
                 }
                 else
                 {
-                    direction = -1;
+                    direction = -2;
                     forward = 0;
                 }
                 break;

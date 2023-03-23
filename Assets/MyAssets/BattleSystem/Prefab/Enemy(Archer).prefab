@@ -2099,7 +2099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c476a464e1e6741bd3ad8b9f8db05a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BloodFX:
+  bloodFX:
   - {fileID: 2656253210798625995, guid: a78e9ef18b366424b84e0c7410d2fe72, type: 3}
   - {fileID: 5865290276592450837, guid: 42a28376f729c864a81abf66add7a418, type: 3}
   - {fileID: 764304066602274965, guid: 4a322f29a9e1fa54f90223de8bcf3a28, type: 3}
@@ -2117,8 +2117,15 @@ MonoBehaviour:
   - {fileID: 5936082179827903908, guid: cb58ece77d11ef945aecd072f2e46a8d, type: 3}
   - {fileID: 5494213943435191861, guid: db51fe09adf27d640b4e10018c2d76ba, type: 3}
   - {fileID: 5371219466416337994, guid: f9e099178c81bee439a79eecec91dacb, type: 3}
-  BloodAttach: {fileID: 3136605153214515430, guid: 45eef0a861a8a8946b4c23fb9f4f779a,
+  bloodAttach: {fileID: 3136605153214515430, guid: 45eef0a861a8a8946b4c23fb9f4f779a,
     type: 3}
+  bodyTransList:
+  - {fileID: 5299623784839196383}
+  - {fileID: 5299623784839196351}
+  - {fileID: 5299623784839196357}
+  - {fileID: 5299623784839196377}
+  - {fileID: 5299623784839196501}
+  - {fileID: 5299623784839196315}
 --- !u!114 &772769357636117155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2811,12 +2818,12 @@ MonoBehaviour:
   turnSpeed: 3
   beakBackForce: 2
   wanderRadius: 15
-  chaseRadius: 50
-  strafeRadius: 30
-  attackRadius: 25
+  chaseRadius: 60
+  strafeRadius: 40
+  attackRadius: 30
   meleeAttackRadius: 2.5
   backWalkRadius: 10
-  turnBackRadius: 50
+  turnBackRadius: 60
   maxCoolDown: 5
   minCoolDown: 3
   isOnGrounded: 0

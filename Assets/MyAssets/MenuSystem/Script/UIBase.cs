@@ -32,6 +32,7 @@ public class UIBase : MonoBehaviour, IObserver
     protected virtual void Start()
     {
         GameManager.Instance.AddObservers(this);
+        //UIManager.Instance.UIList.Add(this);
         if (touchButton != null)
             AddOnClickListener();
     }
