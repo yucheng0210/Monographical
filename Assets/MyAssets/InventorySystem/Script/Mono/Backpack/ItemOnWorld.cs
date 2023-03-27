@@ -5,23 +5,18 @@ using UnityEngine;
 public class ItemOnWorld : MonoBehaviour
 {
     [SerializeField]
+    private int itemIndex;
     private Item_SO thisItem;
-
-    private BackpackManager manager;
-
-    private void Awake()
-    {
-        manager = FindObjectOfType<BackpackManager>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
+        thisItem = BackpackManager.Instance.Backpack[itemIndex];
         if (other.CompareTag("Player"))
         {
             if (gameObject.CompareTag("Item"))
-                manager.AddItem(thisItem);
+                BackpackManager.Instance.AddItem(thisItem);
             else if (gameObject.CompareTag("Money"))
-                manager.AddMoney(100);
+                BackpackManager.Instance.AddMoney(100);
             Destroy(gameObject);
         }
     }

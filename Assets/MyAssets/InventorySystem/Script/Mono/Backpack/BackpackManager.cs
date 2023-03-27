@@ -2,25 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackpackManager : InventoryManager
+public class BackpackManager : Singleton<BackpackManager>
 {
     public static int abilityCount;
 
-    private BackpackUIManager UIManager;
-    private QuestUIManager qusetUIManager;
+    private int moneyCount;
+    public Dictionary<int, Item_SO> Backpack { get; set; }
 
-    public override void GetUIManager()
+    protected override void Awake()
     {
-        UIManager = GetComponent<BackpackUIManager>();
+        base.Awake();
+        Backpack = new Dictionary<int, Item_SO>();
     }
 
-    public override void RefreshItem()
+    public void AddItem(Item_SO item)
     {
-        UIManager.RefreshItem(myBag);
+        if (!Backpack.ContainsValue(item))
+        {
+            Backpack.Add(item.ItemIndex, item);
+            item.ItemHeld++;
+        }
+        else
+            item.ItemHeld++;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag);
     }
 
-    public override void UpdateItemInfo(string itemDes)
+    public void RemoveItem(Item_SO item)
     {
-        UIManager.UpdateItemInfo(itemDes);
+        if (item.ItemHeld <= 0)
+            Backpack.Remove(item.ItemIndex);
+        else
+            item.ItemHeld--;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventRemoveItemToBag);
+    }
+
+    /*public void RemoveAllItem()
+    {
+        UpdateItemInfo("");
+        myBag.ItemList.RemoveAll();
+        RefreshItem();
+    }*/
+
+    public void AddMoney(int count)
+    {
+        moneyCount += count;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventReviseMoneyToBag);
+    }
+
+    public void ReduceMoney(int count)
+    {
+        moneyCount -= count;
+        EventManager.Instance.DispatchEvent(EventDefinition.eventReviseMoneyToBag);
+    }
+
+    public int GetMoney()
+    {
+        return moneyCount;
     }
 }

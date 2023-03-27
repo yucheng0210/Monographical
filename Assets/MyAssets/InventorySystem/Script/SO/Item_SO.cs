@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/NewItem")]
+//[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/NewItem")]
 public class Item_SO : ScriptableObject
 {
     public enum ItemAbility
@@ -46,6 +46,7 @@ public class Item_SO : ScriptableObject
     public int ItemIndex
     {
         get { return itemIndex; }
+        set { itemIndex = value; }
     }
     public ItemAbility itemAbility;
     public int ItemAbilityNum
@@ -55,7 +56,9 @@ public class Item_SO : ScriptableObject
     public string ItemName
     {
         get { return itemName; }
+        set { itemName = value; }
     }
+    public string ItemImagePath { get; set; }
     public Sprite ItemImage
     {
         get { return itemImage; }
@@ -73,12 +76,16 @@ public class Item_SO : ScriptableObject
     public string ItemInfo
     {
         get { return itemInfo; }
+        set { itemInfo = value; }
     }
     public bool ItemEquip
     {
         get { return equip; }
         set { equip = value; }
     }
+    public int ItemBuyPrice { get; set; }
+    public int ItemSellPrice { get; set; }
+    public string ItemType { get; set; }
     public int ItemCost
     {
         get { return itemCost; }

@@ -5,22 +5,22 @@ using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>, IObserver
 {
-    [SerializeField]
+    /*[SerializeField]
     private SceneFader deadImage;
 
     [SerializeField]
-    private SceneFader wifeDeathImage;
-    public List<UIBase> UIList { get; set; }
+    private SceneFader wifeDeathImage;*/
+    public Dictionary<string, UIBase> UIDict { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
-        UIList = new List<UIBase>();
+        UIDict = new Dictionary<string, UIBase>();
     }
 
     private void Start()
     {
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
+        //EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
         GameManager.Instance.AddObservers(this);
     }
 
@@ -29,19 +29,16 @@ public class UIManager : Singleton<UIManager>, IObserver
         GameManager.Instance.RemoveObservers(this);
     }
 
-    public UIBase FindUI(string uIName)
+    public UIBase FindUI(string uiName)
     {
-        for (int i = 0; i < UIList.Count; i++)
-        {
-            if (UIList[i].GetType().Name == uIName)
-                return UIList[i];
-        }
+        if (UIDict.ContainsKey(uiName))
+            return UIDict[uiName];
         return null;
     }
 
     public void EndNotify()
     {
-        deadImage.StartCoroutine(deadImage.FadeOutIn(2, 3, false));
+        //  deadImage.StartCoroutine(deadImage.FadeOutIn(2, 3, false));
     }
 
     public void SceneLoadingNotify(bool loadingBool)
@@ -51,7 +48,7 @@ public class UIManager : Singleton<UIManager>, IObserver
 
     private void HandleMainLine(params object[] args)
     {
-        if ((int)args[0] == 3)
-            StartCoroutine(wifeDeathImage.FadeOutIn(0, 5, true));
+        /*if ((int)args[0] == 3)
+            StartCoroutine(wifeDeathImage.FadeOutIn(0, 5, true));*/
     }
 }
