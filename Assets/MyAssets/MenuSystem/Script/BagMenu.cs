@@ -19,7 +19,6 @@ public class BagMenu : UIBase
 
     [SerializeField]
     private Button useButton;
-    private Dictionary<int, Item_SO> myBag;
 
     protected override void Start()
     {
@@ -34,7 +33,7 @@ public class BagMenu : UIBase
             EventReviseMoney
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
-        myBag = BackpackManager.Instance.Backpack;
+        BackpackManager.Instance.AddMoney(0);
     }
 
     private void Update()
@@ -55,7 +54,7 @@ public class BagMenu : UIBase
         itemInfo.text = itemDes;
     }
 
-    private void CreateNewItem(Item_SO item)
+    private void CreateNewItem(Item item)
     {
         BackpackSlot newItem = Instantiate(
             slotPrefab,
@@ -72,17 +71,17 @@ public class BagMenu : UIBase
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
             Destroy(slotGroupTrans.GetChild(i).gameObject);
-        for (int i = 0; i < myBag.Count; i++)
+        for (int i = 0; i < BackpackManager.Instance.Backpack.Count; i++)
         {
-            if (myBag[i].ItemHeld == 0)
+            if (BackpackManager.Instance.Backpack[i].ItemHeld == 0)
             {
-                myBag.Remove(myBag[i].ItemIndex);
+                BackpackManager.Instance.Backpack.Remove(BackpackManager.Instance.Backpack[i]);
                 RefreshItem();
+                break;
             }
             else
-                CreateNewItem(myBag[i]);
+                CreateNewItem(BackpackManager.Instance.Backpack[i]);
         }
-        moneyText.text = myBag.ToString();
     }
 
     public void EventAddItem(params object[] args)
@@ -98,7 +97,7 @@ public class BagMenu : UIBase
 
     public void EventReviseMoney(params object[] args)
     {
-        RefreshItem();
+        moneyText.text = args[0].ToString();
     }
 
     public void EventOnClicked(params object[] args)

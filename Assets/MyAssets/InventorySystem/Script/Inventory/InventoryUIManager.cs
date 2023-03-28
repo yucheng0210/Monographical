@@ -35,7 +35,7 @@ public abstract class InventoryUIManager : MonoBehaviour
         itemInfo.text = itemDes;
     }
 
-    private void CreateNewItem(Item_SO item)
+    private void CreateNewItem(Item item)
     {
         Grid newItem = Instantiate(gridPrefab, gridManager.transform.position, Quaternion.identity);
         newItem.gameObject.transform.SetParent(gridManager.transform, false);
@@ -61,5 +61,5 @@ public abstract class InventoryUIManager : MonoBehaviour
         moneyText.text = backpack.MoneyCount.ToString();
     }
 
-    public abstract void OnUsed(Item_SO item);
+    public abstract void OnUsed(Item item);
 }

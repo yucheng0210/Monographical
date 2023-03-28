@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/NewItem")]
-public class Item_SO : ScriptableObject
+public class Item
 {
     public enum ItemAbility
     {
@@ -40,7 +40,7 @@ public class Item_SO : ScriptableObject
     private bool itemInShop;
 
     [SerializeField]
-    private Item_SO itemInOther;
+    private Item itemInOther;
 
     #region Read from Item_SO
     public int ItemIndex
@@ -100,7 +100,7 @@ public class Item_SO : ScriptableObject
     {
         get { return itemInShop; }
     }
-    public Item_SO ItemInOther
+    public Item ItemInOther
     {
         get { return itemInOther; }
     }

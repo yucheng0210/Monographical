@@ -6,11 +6,18 @@ public class ItemOnWorld : MonoBehaviour
 {
     [SerializeField]
     private int itemIndex;
-    private Item_SO thisItem;
+    private Item thisItem;
+
+    private void Start()
+    {
+        EventManager.Instance.AddEventRegister(
+            EventDefinition.eventLoadDataFinish,
+            EventLoadDataFinish
+        );
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        thisItem = BackpackManager.Instance.Backpack[itemIndex];
         if (other.CompareTag("Player"))
         {
             if (gameObject.CompareTag("Item"))
@@ -19,5 +26,10 @@ public class ItemOnWorld : MonoBehaviour
                 BackpackManager.Instance.AddMoney(100);
             Destroy(gameObject);
         }
+    }
+
+    private void EventLoadDataFinish(params object[] args)
+    {
+        thisItem = BackpackManager.Instance.ItemList[itemIndex];
     }
 }

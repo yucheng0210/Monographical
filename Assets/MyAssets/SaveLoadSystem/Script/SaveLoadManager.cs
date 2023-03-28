@@ -18,14 +18,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         DontDestroyOnLoad(this);
     }
 
-    private void Update()
-    {
-        /*if (Input.GetKeyDown(KeyCode.F6))
-            Save(0); 
-        if (Input.GetKeyDown(KeyCode.F7))
-            Load();*/
-    }
-
     public void AddRegister(ISavable savable)
     {
         savableList.Add(savable);

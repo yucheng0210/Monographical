@@ -6,11 +6,11 @@ using UnityEngine;
 public class Inventory_SO : ScriptableObject
 {
     [SerializeField]
-    private List<Item_SO> itemList = new List<Item_SO>();
+    private List<Item> itemList = new List<Item>();
 
     [SerializeField]
     private int moneyCount;
-    public List<Item_SO> ItemList
+    public List<Item> ItemList
     {
         get { return itemList; }
         set { itemList = value; }

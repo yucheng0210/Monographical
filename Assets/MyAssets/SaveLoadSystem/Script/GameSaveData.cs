@@ -7,4 +7,5 @@ public class GameSaveData
     public string currentScene;
     public string dataName;
     public float gameTime;
+    public List<Item> backpack;
 }

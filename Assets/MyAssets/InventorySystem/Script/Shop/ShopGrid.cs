@@ -11,7 +11,7 @@ public class ShopGrid : Grid
         UIManager = FindObjectOfType<ShopUIManager>();
     }
 
-    public override void OnUsed(Item_SO item)
+    public override void OnUsed(Item item)
     {
         UIManager.OnUsed(item);
     }

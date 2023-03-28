@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public abstract class Grid : MonoBehaviour
 {
-    private Item_SO gridItem;
+    private Item gridItem;
 
     [SerializeField]
     private Image gridImage;
@@ -24,7 +24,7 @@ public abstract class Grid : MonoBehaviour
         get { return gridAmount; }
         set { gridAmount = value; }
     }
-    public Item_SO GridItem
+    public Item GridItem
     {
         get { return gridItem; }
         set { gridItem = value; }
@@ -49,6 +49,6 @@ public abstract class Grid : MonoBehaviour
         );
     }
 
-    public abstract void OnUsed(Item_SO item);
+    public abstract void OnUsed(Item item);
     public abstract void UpdateItemInfo(string itemDes);
 }

@@ -12,14 +12,14 @@ public class BackpackUIManager : InventoryUIManager
         manager = GetComponent<BackpackManager>();
     }
 
-    public override void OnUsed(Item_SO item)
+    public override void OnUsed(Item item)
     {
         switch (item.itemAbility)
         {
-            case Item_SO.ItemAbility.Tonic:
+            case Item.ItemAbility.Tonic:
                 BackpackManager.abilityCount = 1;
                 break;
-            case Item_SO.ItemAbility.AttackUp:
+            case Item.ItemAbility.AttackUp:
                 BackpackManager.abilityCount = 2;
                 break;
         }

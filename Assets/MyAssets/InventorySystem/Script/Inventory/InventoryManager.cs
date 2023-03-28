@@ -13,7 +13,7 @@ public abstract class InventoryManager : MonoBehaviour
 
     public abstract void GetUIManager();
 
-    public void AddItem(Item_SO item)
+    public void AddItem(Item item)
     {
         if (!myBag.ItemList.Contains(item))
         {
@@ -26,7 +26,7 @@ public abstract class InventoryManager : MonoBehaviour
         RefreshItem();
     }
 
-    public void RemoveItem(Item_SO item)
+    public void RemoveItem(Item item)
     {
         UpdateItemInfo("");
         if (item.ItemHeld <= 0)

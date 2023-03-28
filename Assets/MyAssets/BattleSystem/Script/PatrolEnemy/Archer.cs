@@ -36,7 +36,6 @@ public class Archer : PatrolEnemy
     [SerializeField]
     private bool advancedAI;
     private float distanceToTarget;
-    private bool move_flag = true;
     private Transform m_trans;
     private GameObject arrow;
     private Arrow arrowFlag;

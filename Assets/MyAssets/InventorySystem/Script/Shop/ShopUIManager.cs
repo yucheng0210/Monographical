@@ -21,7 +21,7 @@ public class ShopUIManager : InventoryUIManager
         shopManager = GetComponent<ShopManager>();
     }
 
-    public override void OnUsed(Item_SO item)
+    public override void OnUsed(Item item)
     {
         if (!switchBool)
         {

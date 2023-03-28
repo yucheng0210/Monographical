@@ -17,10 +17,10 @@ public class DataManager : MonoBehaviour
     {
         BackpackManager.Instance.Backpack.Clear();
         string[] lineData = File.ReadAllLines(itemDataListPath);
-        for (int i = 1; i < lineData.Length - 1; i++)
+        for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
-            Item_SO item = ScriptableObject.CreateInstance<Item_SO>();
+            Item item = new Item();
             item.ItemName = row[0];
             item.ItemImagePath = row[1];
             item.ItemInfo = row[2];
@@ -28,8 +28,10 @@ public class DataManager : MonoBehaviour
             item.ItemSellPrice = int.Parse(row[4]);
             item.ItemType = row[5];
             item.ItemIndex = int.Parse(row[6]);
-            BackpackManager.Instance.Backpack.Add(item.ItemIndex, item);
+            item.ItemHeld = 0;
+            BackpackManager.Instance.ItemList.Add(item.ItemIndex, item);
+            BackpackManager.Instance.Backpack.Add(item);
         }
-//        EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
     }
 }
