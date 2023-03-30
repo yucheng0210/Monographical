@@ -77,11 +77,14 @@ public class BackpackManager : Singleton<BackpackManager>, ISavable
     {
         GameSaveData gameSaveData = new GameSaveData();
         gameSaveData.backpack = Backpack;
+        gameSaveData.moneyCount = moneyCount;
         return gameSaveData;
     }
 
     public void RestoreGameData(GameSaveData gameSaveData)
     {
+        Debug.Log("restore");
         Backpack = gameSaveData.backpack;
+        moneyCount = gameSaveData.moneyCount;
     }
 }

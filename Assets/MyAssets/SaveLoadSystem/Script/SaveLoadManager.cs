@@ -46,6 +46,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         var jsonData = JsonConvert.DeserializeObject<Dictionary<string, GameSaveData>>(stringData);
         foreach (var savable in savableList)
         {
+           /* if (savable.GetType().Name == "SceneController")
+                continue;*/
             savable.RestoreGameData(jsonData[savable.GetType().Name]);
         }
         currentPathId = id;

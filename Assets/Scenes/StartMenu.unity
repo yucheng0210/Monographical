@@ -1454,6 +1454,7 @@ GameObject:
   - component: {fileID: 463041627}
   - component: {fileID: 463041633}
   - component: {fileID: 463041634}
+  - component: {fileID: 463041635}
   m_Layer: 5
   m_Name: MenuManager
   m_TagString: Untagged
@@ -1476,6 +1477,7 @@ MonoBehaviour:
   openMenu: {fileID: 427469023}
   touchButton: {fileID: 1670387143}
   actionType: 0
+  exitButton: {fileID: 2010389019}
 --- !u!114 &463041627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1625,6 +1627,18 @@ MonoBehaviour:
   firstButton: {fileID: 2070460317}
   yesButton: {fileID: 888440125}
   noButton: {fileID: 2070460317}
+--- !u!114 &463041635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463041625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c3191db91f7ad4eb5da0c5db4e4774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &472034268 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3951482421736779139, guid: a3cda5621c87cae4eb4a26e37f20cc51,
@@ -2128,7 +2142,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuClip: {fileID: 32900000, guid: 8bdfefd3957232a4f909f0a370a5f9a9, type: 3}
-  fadeSpeed: 1
 --- !u!328 &661862582
 VideoPlayer:
   m_ObjectHideFlags: 0
@@ -2391,6 +2404,8 @@ MonoBehaviour:
   buttonTouchClip: {fileID: 8300000, guid: ae46e87a1569d1b45bad01b7cc1de3d3, type: 3}
   swordSlashClip_1: {fileID: 0}
   swordSlashClip_2: {fileID: 0}
+  impact: {fileID: 0}
+  heavyAttackClips: []
   menuEnterClip: {fileID: 8300000, guid: dca3084cb66e8824bab682c584bec504, type: 3}
   menuExitClip: {fileID: 8300000, guid: d4007067d30a702478f8de23ab74795f, type: 3}
   hurt: {fileID: 8300000, guid: 8f6a3fcf53f0718418d4341566f98e8d, type: 3}

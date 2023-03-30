@@ -36,6 +36,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         savable.AddSavableRegister();
         AddSceneName();
     }
+
     private void AddSceneName()
     {
         sceneNameDic.Add(0, "0");
@@ -177,6 +178,4 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         StartCoroutine(Transition(gameSaveData.currentScene));
     }
-
-
 }

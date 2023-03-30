@@ -14,3 +14,4 @@ public class EventDefinition
     public const string eventOnClickedToBag = "EVENT_ONCLICKED_TO_BAG";
     public const string eventOnUsedToBag = "EVENT_ONUSED_TO_BAG";
 }
+

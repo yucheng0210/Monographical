@@ -8,4 +8,5 @@ public class GameSaveData
     public string dataName;
     public float gameTime;
     public List<Item> backpack;
+    public int moneyCount;
 }
