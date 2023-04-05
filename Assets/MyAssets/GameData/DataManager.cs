@@ -3,19 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class DataManager : MonoBehaviour
+public class DataManager : Singleton<DataManager>, ISavable
 {
     private string itemDataListPath =
         "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/ITEMDATALIST.csv";
+    public List<Item> Backpack { get; set; }
+    public Dictionary<int, Item> ItemList { get; set; }
+    public int MoneyCount { get; set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        Backpack = new List<Item>();
+        ItemList = new Dictionary<int, Item>();
+        MoneyCount = 0;
+        LoadData();
+    }
 
     private void Start()
     {
-        LoadData();
+        ISavable savable = this;
+        savable.AddSavableRegister();
     }
 
     private void LoadData()
     {
-        BackpackManager.Instance.Backpack.Clear();
+        Backpack.Clear();
+        ItemList.Clear();
         string[] lineData = File.ReadAllLines(itemDataListPath);
         for (int i = 1; i < lineData.Length; i++)
         {
@@ -29,9 +43,29 @@ public class DataManager : MonoBehaviour
             item.ItemType = row[5];
             item.ItemIndex = int.Parse(row[6]);
             item.ItemHeld = 0;
-            BackpackManager.Instance.ItemList.Add(item.ItemIndex, item);
-            BackpackManager.Instance.Backpack.Add(item);
+            ItemList.Add(item.ItemIndex, item);
+            Backpack.Add(item);
         }
-        EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
+        //EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
+    }
+
+    public void AddSavableRegister()
+    {
+        SaveLoadManager.Instance.AddRegister(this);
+    }
+
+    public GameSaveData GenerateGameData()
+    {
+        GameSaveData gameSaveData = new GameSaveData();
+        gameSaveData.backpack = Backpack;
+        gameSaveData.moneyCount = MoneyCount;
+        return gameSaveData;
+    }
+
+    public void RestoreGameData(GameSaveData gameSaveData)
+    {
+        Debug.Log("restore");
+        Backpack = gameSaveData.backpack;
+        MoneyCount = gameSaveData.moneyCount;
     }
 }

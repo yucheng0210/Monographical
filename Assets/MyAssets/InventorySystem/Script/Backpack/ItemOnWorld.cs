@@ -10,10 +10,7 @@ public class ItemOnWorld : MonoBehaviour
 
     private void Start()
     {
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventLoadDataFinish,
-            EventLoadDataFinish
-        );
+        thisItem = DataManager.Instance.ItemList[itemIndex];
     }
 
     private void OnTriggerEnter(Collider other)
@@ -26,10 +23,5 @@ public class ItemOnWorld : MonoBehaviour
                 BackpackManager.Instance.AddMoney(100);
             Destroy(gameObject);
         }
-    }
-
-    private void EventLoadDataFinish(params object[] args)
-    {
-        thisItem = BackpackManager.Instance.ItemList[itemIndex];
     }
 }

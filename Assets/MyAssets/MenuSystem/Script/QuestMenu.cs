@@ -8,12 +8,6 @@ public class QuestMenu : UIBase
     [SerializeField]
     private QuestUIManager questUIManager;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
-            Close();
-    }
-
     public void QuestInitialize()
     {
         questUIManager.Initialize();

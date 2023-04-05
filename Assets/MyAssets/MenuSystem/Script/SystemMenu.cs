@@ -15,12 +15,6 @@ public class SystemMenu : UIBase
         exitButton.onClick.AddListener(ExitGame);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Close();
-    }
-
     private void ExitGame()
     {
         UnityEditor.EditorApplication.isPlaying = false;

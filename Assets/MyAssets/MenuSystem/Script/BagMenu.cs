@@ -33,18 +33,11 @@ public class BagMenu : UIBase
             EventReviseMoney
         );
         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
-        BackpackManager.Instance.AddMoney(0);
     }
 
-    private void Update()
+    public override void Show()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && OpenBool)
-            openMenu.SetActive(false);
-    }
-
-    protected override void Open()
-    {
-        base.Open();
+        base.Show();
         RefreshItem();
         UpdateItemInfo("");
     }
@@ -71,16 +64,16 @@ public class BagMenu : UIBase
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
             Destroy(slotGroupTrans.GetChild(i).gameObject);
-        for (int i = 0; i < BackpackManager.Instance.Backpack.Count; i++)
+        for (int i = 0; i < DataManager.Instance.Backpack.Count; i++)
         {
-            if (BackpackManager.Instance.Backpack[i].ItemHeld == 0)
+            if (DataManager.Instance.Backpack[i].ItemHeld == 0)
             {
-                BackpackManager.Instance.Backpack.Remove(BackpackManager.Instance.Backpack[i]);
+                DataManager.Instance.Backpack.Remove(DataManager.Instance.Backpack[i]);
                 RefreshItem();
                 break;
             }
             else
-                CreateNewItem(BackpackManager.Instance.Backpack[i]);
+                CreateNewItem(DataManager.Instance.Backpack[i]);
         }
     }
 

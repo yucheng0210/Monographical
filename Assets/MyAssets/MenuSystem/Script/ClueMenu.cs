@@ -24,12 +24,6 @@ public class ClueMenu : Menu
         noButton.onClick.AddListener(Close);
     }
 
-    private void Update()
-    {
-        if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
-            EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
-    }
-
     private void SaveData()
     {
         SaveLoadManager.Instance.Save(currentSaveID);

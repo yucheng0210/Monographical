@@ -280,6 +280,14 @@ namespace DiasGames.ThirdPersonSystem
             action01.Update();
             action02.Update();
             action03.Update();
+            //Revise
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!UIManager.Instance.MenuIsOpen)
+                    UIManager.Instance.ShowUI("MainMenu");
+                else
+                    UIManager.Instance.HideAllUI();
+            }
         }
 
         private void HandleCursorVisibility()

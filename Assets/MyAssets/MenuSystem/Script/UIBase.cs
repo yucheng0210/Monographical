@@ -13,7 +13,6 @@ public class UIBase : MonoBehaviour, IObserver
     protected Button touchButton;
 
     public bool OpenBool { get; set; }
-    public static bool menuIsOpen;
     private bool shutDown;
 
     public enum ActionType
@@ -47,20 +46,20 @@ public class UIBase : MonoBehaviour, IObserver
         switch (actionType)
         {
             case ActionType.Open:
-                touchButton.onClick.AddListener(Open);
+                touchButton.onClick.AddListener(Show);
                 break;
             case ActionType.Close:
-                touchButton.onClick.AddListener(Close);
+                touchButton.onClick.AddListener(Hide);
                 break;
         }
     }
 
-    protected virtual void Open()
+    public virtual void Show()
     {
         if (shutDown)
             return;
+        UIManager.Instance.MenuIsOpen = true;
         EventSystem.current.SetSelectedGameObject(null);
-        menuIsOpen = true;
         AudioManager.Instance.MenuEnterAudio();
         Time.timeScale = 0;
         openMenu.SetActive(true);
@@ -68,11 +67,11 @@ public class UIBase : MonoBehaviour, IObserver
         openMenu.transform.SetAsLastSibling();
     }
 
-    public virtual void Close()
+    public virtual void Hide()
     {
         if (shutDown)
             return;
-        menuIsOpen = false;
+        UIManager.Instance.MenuIsOpen = false;
         AudioManager.Instance.MenuExitAudio();
         Time.timeScale = 1;
         openMenu.SetActive(false);

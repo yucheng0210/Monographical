@@ -11,11 +11,13 @@ public class UIManager : Singleton<UIManager>, IObserver
     [SerializeField]
     private SceneFader wifeDeathImage;*/
     public Dictionary<string, UIBase> UIDict { get; set; }
+    public bool MenuIsOpen { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
         UIDict = new Dictionary<string, UIBase>();
+        MenuIsOpen = false;
     }
 
     private void Start()
@@ -29,11 +31,22 @@ public class UIManager : Singleton<UIManager>, IObserver
         GameManager.Instance.RemoveObservers(this);
     }
 
-    public UIBase FindUI(string uiName)
+    public void ShowUI(string uiName)
     {
-        if (UIDict.ContainsKey(uiName))
-            return UIDict[uiName];
-        return null;
+        UIDict[uiName].Show();
+    }
+
+    public void HideUI(string uiName)
+    {
+        UIDict[uiName].Hide();
+    }
+
+    public void HideAllUI()
+    {
+        foreach (var i in UIDict)
+        {
+            HideUI(i.Key);
+        }
     }
 
     public void EndNotify()
