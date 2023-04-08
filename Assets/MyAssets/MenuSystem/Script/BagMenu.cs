@@ -77,6 +77,12 @@ public class BagMenu : UIBase
         }
     }
 
+    public void Apply(Item item)
+    {
+        item.Use();
+        RefreshItem();
+    }
+
     public void EventAddItem(params object[] args)
     {
         RefreshItem();
@@ -99,7 +105,7 @@ public class BagMenu : UIBase
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(() =>
         {
-            EventManager.Instance.DispatchEvent(EventDefinition.eventOnUsedToBag);
+            Apply((Item)args[1]);
         });
     }
 }

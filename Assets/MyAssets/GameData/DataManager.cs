@@ -7,8 +7,11 @@ public class DataManager : Singleton<DataManager>, ISavable
 {
     private string itemDataListPath =
         "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/ITEMDATALIST.csv";
+    private string effectDataListPath =
+        "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/EFFECTDATALIST.csv";
     public List<Item> Backpack { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
+    public Dictionary<string, Effect> EffectList { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -16,6 +19,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         base.Awake();
         Backpack = new List<Item>();
         ItemList = new Dictionary<int, Item>();
+        EffectList = new Dictionary<string, Effect>();
         MoneyCount = 0;
         LoadData();
     }
@@ -30,6 +34,8 @@ public class DataManager : Singleton<DataManager>, ISavable
     {
         Backpack.Clear();
         ItemList.Clear();
+        EffectList.Clear();
+        #region 背包
         string[] lineData = File.ReadAllLines(itemDataListPath);
         for (int i = 1; i < lineData.Length; i++)
         {
@@ -46,6 +52,18 @@ public class DataManager : Singleton<DataManager>, ISavable
             ItemList.Add(item.ItemIndex, item);
             Backpack.Add(item);
         }
+        #endregion
+       /* #region 物品效果
+        lineData = File.ReadAllLines(effectDataListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Effect effect = new Effect();
+            effect.EffectName = row[0];
+            effect.EffectValue = int.Parse(row[1]);
+            EffectList.Add(effect.EffectName, effect);
+        }
+        #endregion*/
         //EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
     }
 

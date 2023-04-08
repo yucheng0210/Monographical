@@ -13,7 +13,6 @@ public class BackpackSlot : MonoBehaviour
     [SerializeField]
     private Text slotCount;
 
-    private Button useButton;
     public Image SlotImage
     {
         get { return slotImage; }
@@ -32,11 +31,10 @@ public class BackpackSlot : MonoBehaviour
 
     public void OnClicked()
     {
-        EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToBag, slotItem.ItemInfo);
-    }
-
-    public void OnUsed(Item item)
-    {
-        //UIManager.OnUsed(item);
+        EventManager.Instance.DispatchEvent(
+            EventDefinition.eventOnClickedToBag,
+            slotItem.ItemInfo,
+            slotItem
+        );
     }
 }

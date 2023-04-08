@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BackpackManager : Singleton<BackpackManager>
 {
-    public static int abilityCount;
-
     public void AddItem(Item item)
     {
         if (!DataManager.Instance.Backpack.Contains(item))

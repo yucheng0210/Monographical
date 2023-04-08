@@ -5,17 +5,8 @@ using UnityEngine;
 //[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/NewItem")]
 public class Item
 {
-    public enum ItemAbility
-    {
-        Tonic,
-        AttackUp
-    }
-
     [SerializeField]
     private int itemIndex;
-
-    [SerializeField]
-    private int itemAbilityNum;
 
     [SerializeField]
     private string itemName;
@@ -48,11 +39,7 @@ public class Item
         get { return itemIndex; }
         set { itemIndex = value; }
     }
-    public ItemAbility itemAbility;
-    public int ItemAbilityNum
-    {
-        get { return itemAbilityNum; }
-    }
+
     public string ItemName
     {
         get { return itemName; }
@@ -105,4 +92,9 @@ public class Item
         get { return itemInOther; }
     }
     #endregion
+    public void Use()
+    {
+        itemHeld--;
+        
+    }
 }

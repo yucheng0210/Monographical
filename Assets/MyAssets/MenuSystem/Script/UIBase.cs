@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIBase : MonoBehaviour, IObserver
+public abstract class UIBase : MonoBehaviour, IObserver
 {
     [SerializeField]
     protected GameObject openMenu;
