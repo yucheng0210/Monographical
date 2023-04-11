@@ -45,10 +45,10 @@ public class Item
         get { return itemName; }
         set { itemName = value; }
     }
-    public string ItemImagePath { get; set; }
     public Sprite ItemImage
     {
         get { return itemImage; }
+        set { itemImage = value; }
     }
     public int ItemHeld
     {
@@ -72,7 +72,8 @@ public class Item
     }
     public int ItemBuyPrice { get; set; }
     public int ItemSellPrice { get; set; }
-    public string ItemType { get; set; }
+    public string ItemEffectType { get; set; }
+    public string ItemEffectName { get; set; }
     public int ItemCost
     {
         get { return itemCost; }
@@ -92,9 +93,4 @@ public class Item
         get { return itemInOther; }
     }
     #endregion
-    public void Use()
-    {
-        itemHeld--;
-        
-    }
 }

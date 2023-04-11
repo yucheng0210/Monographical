@@ -90,12 +90,12 @@ namespace DiasGames.ThirdPersonSystem
         private void Start()
         {
             GameManager.Instance.RegisterPlayer(characterState);
+            DataManager.Instance.AddCharacterRegister(characterState);
         }
 
         private void Update()
         {
             healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
-           
         }
 
         private void InitialState()

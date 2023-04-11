@@ -13,6 +13,13 @@ public class CharacterState : MonoBehaviour
     [SerializeField]
     private AttackData_SO attackData;
 
+    [SerializeField]
+    private string characterName;
+    public string CharacterName
+    {
+        get { return characterName; }
+    }
+
     //[HideInInspector]
     private bool isCritical;
     private float poiseRecoverTime;
@@ -232,6 +239,13 @@ public class CharacterState : MonoBehaviour
         int damage = (int)Mathf.Max(attacker.CurrentAttack() - defender.CurrentDefence, 0);
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
         CurrentPoise = Mathf.Max(defender.CurrentPoise - attacker.PoiseAttack, 0);
+    }
+
+    public void TakeDamage(CharacterState character, int damage)
+    {
+        poiseRecoverTime = 0;
+        poiseRecoverBool = true;
+        CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
     }
 
     private int CurrentAttack()

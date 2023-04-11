@@ -4,6 +4,23 @@ using UnityEngine;
 
 public class BackpackManager : Singleton<BackpackManager>
 {
+    private IEffectFactory effectFactory;
+
+    public void RegisterFactory(IEffectFactory effectFactory)
+    {
+        this.effectFactory = effectFactory;
+    }
+
+    public void UseItem(Item item)
+    {
+        ReduceItem(item);
+        IEffect effect = effectFactory.CreateEffect(item.ItemEffectType);
+        effect.ApplyEffect(
+            DataManager.Instance.EffectList[item.ItemEffectName].EffectTarget,
+            DataManager.Instance.EffectList[item.ItemEffectName].EffectValue
+        );
+    }
+
     public void AddItem(Item item)
     {
         if (!DataManager.Instance.Backpack.Contains(item))
@@ -16,7 +33,7 @@ public class BackpackManager : Singleton<BackpackManager>
         EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag);
     }
 
-    public void RemoveItem(Item item)
+    public void ReduceItem(Item item)
     {
         if (item.ItemHeld <= 0)
             DataManager.Instance.Backpack.Remove(item);

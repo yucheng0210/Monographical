@@ -22,6 +22,8 @@ public class GameManager : Singleton<GameManager>, ISavable
     {
         ISavable savable = this;
         savable.AddSavableRegister();
+        IEffectFactory effectFactory = new EffectFactory();
+        BackpackManager.Instance.RegisterFactory(effectFactory);
     }
 
     private void Update()

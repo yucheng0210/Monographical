@@ -12,6 +12,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     public List<Item> Backpack { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<string, Effect> EffectList { get; set; }
+    public Dictionary<string, CharacterState> CharacterList { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -20,6 +21,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         Backpack = new List<Item>();
         ItemList = new Dictionary<int, Item>();
         EffectList = new Dictionary<string, Effect>();
+        CharacterList = new Dictionary<string, CharacterState>();
         MoneyCount = 0;
         LoadData();
     }
@@ -42,18 +44,19 @@ public class DataManager : Singleton<DataManager>, ISavable
             string[] row = lineData[i].Split(',');
             Item item = new Item();
             item.ItemName = row[0];
-            item.ItemImagePath = row[1];
+            item.ItemImage = Resources.Load<Sprite>(row[1]);
             item.ItemInfo = row[2];
             item.ItemBuyPrice = int.Parse(row[3]);
             item.ItemSellPrice = int.Parse(row[4]);
-            item.ItemType = row[5];
+            item.ItemEffectType = row[5];
             item.ItemIndex = int.Parse(row[6]);
+            item.ItemEffectName = row[7];
             item.ItemHeld = 0;
             ItemList.Add(item.ItemIndex, item);
             Backpack.Add(item);
         }
         #endregion
-       /* #region 物品效果
+        #region 物品效果
         lineData = File.ReadAllLines(effectDataListPath);
         for (int i = 1; i < lineData.Length; i++)
         {
@@ -61,10 +64,17 @@ public class DataManager : Singleton<DataManager>, ISavable
             Effect effect = new Effect();
             effect.EffectName = row[0];
             effect.EffectValue = int.Parse(row[1]);
+            effect.EffectTarget = row[2];
             EffectList.Add(effect.EffectName, effect);
         }
-        #endregion*/
+        #endregion
+
         //EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
+    }
+
+    public void AddCharacterRegister(CharacterState character)
+    {
+        CharacterList.Add(character.CharacterName, character);
     }
 
     public void AddSavableRegister()
