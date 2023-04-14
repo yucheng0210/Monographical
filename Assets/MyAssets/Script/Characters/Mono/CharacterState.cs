@@ -15,6 +15,7 @@ public class CharacterState : MonoBehaviour
 
     [SerializeField]
     private string characterName;
+    public int AdditionalAttack { get; set; }
     public string CharacterName
     {
         get { return characterName; }
@@ -237,6 +238,7 @@ public class CharacterState : MonoBehaviour
         poiseRecoverTime = 0;
         poiseRecoverBool = true;
         int damage = (int)Mathf.Max(attacker.CurrentAttack() - defender.CurrentDefence, 0);
+        damage += AdditionalAttack;
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
         CurrentPoise = Mathf.Max(defender.CurrentPoise - attacker.PoiseAttack, 0);
     }
@@ -245,6 +247,7 @@ public class CharacterState : MonoBehaviour
     {
         poiseRecoverTime = 0;
         poiseRecoverBool = true;
+        damage += AdditionalAttack;
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
     }
 

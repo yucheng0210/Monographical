@@ -31,10 +31,6 @@ public class BackpackSlot : MonoBehaviour
 
     public void OnClicked()
     {
-        EventManager.Instance.DispatchEvent(
-            EventDefinition.eventOnClickedToBag,
-            slotItem.ItemInfo,
-            slotItem
-        );
+        EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToBag, slotItem);
     }
 }

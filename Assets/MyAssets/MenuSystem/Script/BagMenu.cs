@@ -15,6 +15,9 @@ public class BagMenu : UIBase
     private Text moneyText;
 
     [SerializeField]
+    private Text itemNameText;
+
+    [SerializeField]
     private Text itemInfo;
 
     [SerializeField]
@@ -38,54 +41,25 @@ public class BagMenu : UIBase
     public override void Show()
     {
         base.Show();
-        RefreshItem();
-        UpdateItemInfo("");
+        UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.Backpack);
+        UpdateItemInfo("", "");
     }
 
-    public void UpdateItemInfo(string itemDes)
+    public void UpdateItemInfo(string itemDes, string itemName)
     {
         itemInfo.text = itemDes;
-    }
-
-    private void CreateNewItem(Item item)
-    {
-        BackpackSlot newItem = Instantiate(
-            slotPrefab,
-            slotGroupTrans.position,
-            Quaternion.identity
-        );
-        newItem.gameObject.transform.SetParent(slotGroupTrans, false);
-        newItem.SlotItem = item;
-        newItem.SlotImage.sprite = item.ItemImage;
-        newItem.SlotCount.text = item.ItemHeld.ToString();
-    }
-
-    public void RefreshItem()
-    {
-        for (int i = 0; i < slotGroupTrans.childCount; i++)
-            Destroy(slotGroupTrans.GetChild(i).gameObject);
-        for (int i = 0; i < DataManager.Instance.Backpack.Count; i++)
-        {
-            if (DataManager.Instance.Backpack[i].ItemHeld == 0)
-            {
-                DataManager.Instance.Backpack.Remove(DataManager.Instance.Backpack[i]);
-                RefreshItem();
-                break;
-            }
-            else
-                CreateNewItem(DataManager.Instance.Backpack[i]);
-        }
+        itemNameText.text = itemName;
     }
 
     public void EventAddItem(params object[] args)
     {
-        RefreshItem();
+        UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.Backpack);
     }
 
     public void EventRemoveItem(params object[] args)
     {
-        UpdateItemInfo("");
-        RefreshItem();
+        UpdateItemInfo("", "");
+        UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.Backpack);
     }
 
     public void EventReviseMoney(params object[] args)
@@ -95,11 +69,11 @@ public class BagMenu : UIBase
 
     public void EventOnClicked(params object[] args)
     {
-        UpdateItemInfo(args[0].ToString());
+        UpdateItemInfo(((Item)args[0]).ItemInfo.ToString(), ((Item)args[0]).ItemName.ToString());
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(() =>
         {
-            BackpackManager.Instance.UseItem((Item)args[1]);
+            BackpackManager.Instance.UseItem((Item)args[0]);
         });
     }
 }

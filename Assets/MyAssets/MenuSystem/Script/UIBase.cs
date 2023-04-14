@@ -23,11 +23,6 @@ public abstract class UIBase : MonoBehaviour, IObserver
 
     public ActionType actionType;
 
-    private void Awake()
-    {
-        openMenu.SetActive(false);
-    }
-
     protected virtual void Start()
     {
         UIManager.Instance.UIDict.Add(this.GetType().Name, this);

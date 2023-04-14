@@ -49,6 +49,36 @@ public class UIManager : Singleton<UIManager>, IObserver
         }
     }
 
+    private void CreateNewItem(Item item, BackpackSlot slotPrefab, Transform slotGroupTrans)
+    {
+        BackpackSlot newItem = Instantiate(
+            slotPrefab,
+            slotGroupTrans.position,
+            Quaternion.identity
+        );
+        newItem.gameObject.transform.SetParent(slotGroupTrans, false);
+        newItem.SlotItem = item;
+        newItem.SlotImage.sprite = item.ItemImage;
+        newItem.SlotCount.text = item.ItemHeld.ToString();
+    }
+
+    public void RefreshItem(BackpackSlot slotPrefab, Transform slotGroupTrans, List<Item> inventory)
+    {
+        for (int i = 0; i < slotGroupTrans.childCount; i++)
+            Destroy(slotGroupTrans.GetChild(i).gameObject);
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].ItemHeld == 0)
+            {
+                inventory.Remove(inventory[i]);
+                RefreshItem(slotPrefab, slotGroupTrans, inventory);
+                break;
+            }
+            else
+                CreateNewItem(inventory[i], slotPrefab, slotGroupTrans);
+        }
+    }
+
     public void EndNotify()
     {
         //  deadImage.StartCoroutine(deadImage.FadeOutIn(2, 3, false));

@@ -107,7 +107,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private Slider healthSlider;
 
     [SerializeField]
-    private GameObject dropItem;
+    private List<GameObject> dropItemList;
 
     [SerializeField]
     private float capsuleOffset = 0.3f;
@@ -405,7 +405,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
         yield return new WaitForSeconds(4);
-        Instantiate(dropItem, transform.position, Quaternion.identity);
+        int randomIndex = UnityEngine.Random.Range(0, dropItemList.Count);
+        Instantiate(dropItemList[randomIndex], transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 

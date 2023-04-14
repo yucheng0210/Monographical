@@ -13,6 +13,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<string, Effect> EffectList { get; set; }
     public Dictionary<string, CharacterState> CharacterList { get; set; }
+    public List<Item> ShortcutBar { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -22,6 +23,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         ItemList = new Dictionary<int, Item>();
         EffectList = new Dictionary<string, Effect>();
         CharacterList = new Dictionary<string, CharacterState>();
+        ShortcutBar = new List<Item>();
         MoneyCount = 0;
         LoadData();
     }

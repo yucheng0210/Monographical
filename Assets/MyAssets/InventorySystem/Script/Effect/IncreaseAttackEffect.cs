@@ -6,7 +6,6 @@ public class IncreaseAttackEffect : IEffect
 {
     public void ApplyEffect(string target, int value)
     {
-        DataManager.Instance.CharacterList[target].MinAttack += value;
-        DataManager.Instance.CharacterList[target].MaxAttack += value;
+        DataManager.Instance.CharacterList[target].AdditionalAttack += value;
     }
 }

@@ -42,6 +42,12 @@ public class BackpackManager : Singleton<BackpackManager>
         EventManager.Instance.DispatchEvent(EventDefinition.eventRemoveItemToBag);
     }
 
+    public void SetShortcutBar(Item item)
+    {
+        if (!DataManager.Instance.ShortcutBar.Contains(item))
+            DataManager.Instance.ShortcutBar.Add(item);
+    }
+
     /*public void RemoveAllItem()
     {
         UpdateItemInfo("");
