@@ -162,7 +162,10 @@ public class DialogSystem : MonoBehaviour
                 questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
                 backpackManager.AddMoney(rewardMoney);
                 if (rewardItem.InBackpackItem != null)
-                    backpackManager.AddItem(rewardItem.InBackpackItem);
+                    backpackManager.AddItem(
+                        rewardItem.InBackpackItem.ItemIndex,
+                        DataManager.Instance.Backpack
+                    );
             }
         }
     }
@@ -279,12 +282,10 @@ public class DialogSystem : MonoBehaviour
         choice.GetComponentInChildren<Text>().text = dialogList.DialogList[index].Content;
         choice
             .GetComponent<Button>()
-            .onClick.AddListener(
-                () =>
-                {
-                    GetBranchID(buttonBranchID);
-                }
-            );
+            .onClick.AddListener(() =>
+            {
+                GetBranchID(buttonBranchID);
+            });
         index++;
         //foreach (GameObject choice in choiceList) { }
     }

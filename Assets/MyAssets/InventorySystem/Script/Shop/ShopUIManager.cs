@@ -28,7 +28,7 @@ public class ShopUIManager : InventoryUIManager
             if (backpackManager.GetMoney() >= item.ItemCost && item.ItemInShop)
             {
                 backpackManager.ReduceMoney(item.ItemCost);
-                backpackManager.AddItem(item.ItemInOther);
+               // backpackManager.AddItem(item.ItemInOther);
                 item.ItemHeld--;
                 RefreshItem(myBag);
             }
@@ -47,15 +47,15 @@ public class ShopUIManager : InventoryUIManager
         if (switchBool)
         {
             RefreshItem(myBag);
-            buttonText.text = "Sell";
-            useButtonText.text = "Buy";
+            buttonText.text = "賣";
+            useButtonText.text = "買";
             switchBool = false;
         }
         else
         {
             RefreshItem(backpack);
-            buttonText.text = "Buy";
-            useButtonText.text = "Sell";
+            buttonText.text = "買";
+            useButtonText.text = "賣";
             switchBool = true;
         }
     }

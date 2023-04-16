@@ -28,7 +28,7 @@ public class ItemOnWorld : MonoBehaviour
             if (isPickUp)
             {
                 if (gameObject.CompareTag("Item"))
-                    BackpackManager.Instance.AddItem(DataManager.Instance.ItemList[itemIndex]);
+                    BackpackManager.Instance.AddItem(itemIndex, DataManager.Instance.Backpack);
                 else if (gameObject.CompareTag("Money"))
                     BackpackManager.Instance.AddMoney(100);
                 Destroy(gameObject);

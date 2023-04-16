@@ -11,41 +11,46 @@ public class BackpackManager : Singleton<BackpackManager>
         this.effectFactory = effectFactory;
     }
 
-    public void UseItem(Item item)
+    public void UseItem(int itemIndex)
     {
-        ReduceItem(item);
-        IEffect effect = effectFactory.CreateEffect(item.ItemEffectType);
+        ReduceItem(itemIndex, DataManager.Instance.Backpack);
+        IEffect effect = effectFactory.CreateEffect(
+            DataManager.Instance.ItemList[itemIndex].ItemEffectType
+        );
         effect.ApplyEffect(
-            DataManager.Instance.EffectList[item.ItemEffectName].EffectTarget,
-            DataManager.Instance.EffectList[item.ItemEffectName].EffectValue
+            DataManager.Instance.EffectList[
+                DataManager.Instance.ItemList[itemIndex].ItemEffectName
+            ].EffectTarget,
+            DataManager.Instance.EffectList[
+                DataManager.Instance.ItemList[itemIndex].ItemEffectName
+            ].EffectValue
         );
     }
 
-    public void AddItem(Item item)
+    public void AddItem(int itemIndex, Dictionary<int, Item> inventory)
     {
-        if (!DataManager.Instance.Backpack.Contains(item))
+        if (!inventory.ContainsKey(itemIndex))
         {
-            DataManager.Instance.Backpack.Add(item);
-            item.ItemHeld++;
+            inventory.Add(itemIndex, DataManager.Instance.ItemList[itemIndex]);
+            inventory[itemIndex].ItemHeld++;
         }
         else
-            item.ItemHeld++;
+            inventory[itemIndex].ItemHeld++;
         EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag);
     }
 
-    public void ReduceItem(Item item)
+    public void ReduceItem(int itemIndex, Dictionary<int, Item> inventory)
     {
-        if (item.ItemHeld <= 0)
-            DataManager.Instance.Backpack.Remove(item);
-        else
-            item.ItemHeld--;
+        inventory[itemIndex].ItemHeld--;
+        if (inventory[itemIndex].ItemHeld <= 0)
+            inventory.Remove(itemIndex);
         EventManager.Instance.DispatchEvent(EventDefinition.eventRemoveItemToBag);
     }
 
     public void SetShortcutBar(Item item)
     {
-        if (!DataManager.Instance.ShortcutBar.Contains(item))
-            DataManager.Instance.ShortcutBar.Add(item);
+        if (!DataManager.Instance.ShortcutBar.ContainsKey(item.ItemIndex))
+            DataManager.Instance.ShortcutBar.Add(item.ItemIndex, item);
     }
 
     /*public void RemoveAllItem()

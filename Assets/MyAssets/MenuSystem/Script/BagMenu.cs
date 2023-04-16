@@ -18,7 +18,7 @@ public class BagMenu : UIBase
     private Text itemNameText;
 
     [SerializeField]
-    private Text itemInfo;
+    private Text itemInfoText;
 
     [SerializeField]
     private Button useButton;
@@ -47,7 +47,7 @@ public class BagMenu : UIBase
 
     public void UpdateItemInfo(string itemDes, string itemName)
     {
-        itemInfo.text = itemDes;
+        itemInfoText.text = itemDes;
         itemNameText.text = itemName;
     }
 
@@ -73,7 +73,7 @@ public class BagMenu : UIBase
         useButton.onClick.RemoveAllListeners();
         useButton.onClick.AddListener(() =>
         {
-            BackpackManager.Instance.UseItem((Item)args[0]);
+            BackpackManager.Instance.UseItem(((Item)args[0]).ItemIndex);
         });
     }
 }

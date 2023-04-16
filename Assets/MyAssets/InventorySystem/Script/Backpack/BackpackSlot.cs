@@ -29,6 +29,11 @@ public class BackpackSlot : MonoBehaviour
         set { slotItem = value; }
     }
 
+    private void Start()
+    {
+        gameObject.GetComponent<Button>().onClick.AddListener(OnClicked);
+    }
+
     public void OnClicked()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToBag, slotItem);

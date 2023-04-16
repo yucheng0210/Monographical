@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -76,14 +77,18 @@ public class ShortcutBarMenu : UIBase
             itemCountText.text = "";
             return;
         }
-        itemImage.sprite = DataManager.Instance.ShortcutBar[currentIndex].ItemImage;
-        itemCountText.text = DataManager.Instance.ShortcutBar[currentIndex].ItemHeld.ToString();
+        itemImage.sprite = DataManager.Instance.ShortcutBar.ElementAt(currentIndex).Value.ItemImage;
+        itemCountText.text = DataManager.Instance.ShortcutBar
+            .ElementAt(currentIndex)
+            .Value.ItemHeld.ToString();
     }
 
     private void UseItem()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            BackpackManager.Instance.UseItem(DataManager.Instance.ShortcutBar[currentIndex]);
+            BackpackManager.Instance.UseItem(
+                DataManager.Instance.ShortcutBar.ElementAt(currentIndex).Value.ItemIndex
+            );
     }
 
     public void EventOnClicked(params object[] args)

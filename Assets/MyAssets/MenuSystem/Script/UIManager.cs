@@ -62,20 +62,24 @@ public class UIManager : Singleton<UIManager>, IObserver
         newItem.SlotCount.text = item.ItemHeld.ToString();
     }
 
-    public void RefreshItem(BackpackSlot slotPrefab, Transform slotGroupTrans, List<Item> inventory)
+    public void RefreshItem(
+        BackpackSlot slotPrefab,
+        Transform slotGroupTrans,
+        Dictionary<int, Item> inventory
+    )
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
             Destroy(slotGroupTrans.GetChild(i).gameObject);
-        for (int i = 0; i < inventory.Count; i++)
+        foreach (KeyValuePair<int, Item> i in inventory)
         {
-            if (inventory[i].ItemHeld == 0)
+            if (i.Value.ItemHeld == 0)
             {
-                inventory.Remove(inventory[i]);
+                inventory.Remove(i.Key);
                 RefreshItem(slotPrefab, slotGroupTrans, inventory);
                 break;
             }
             else
-                CreateNewItem(inventory[i], slotPrefab, slotGroupTrans);
+                CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
         }
     }
 
