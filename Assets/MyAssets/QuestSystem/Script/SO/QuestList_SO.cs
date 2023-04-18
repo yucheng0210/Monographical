@@ -5,8 +5,8 @@ using UnityEngine;
 public class QuestList_SO : ScriptableObject
 {
     [SerializeField]
-    private List<Quest_SO> questList = new List<Quest_SO>();
-    public List<Quest_SO> QuestList
+    private List<Quest> questList = new List<Quest>();
+    public List<Quest> QuestList
     {
         get { return questList; }
         set { questList = value; }

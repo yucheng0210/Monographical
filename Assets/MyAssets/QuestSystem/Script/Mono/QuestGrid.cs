@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class QuestGrid : MonoBehaviour
 {
-    private Quest_SO gridItem;
+    private Quest gridItem;
     private Text gridName;
     private Button useButton;
     private QuestUIManager qusetUIManager;
@@ -14,7 +14,7 @@ public class QuestGrid : MonoBehaviour
         get { return gridName; }
         set { gridName = value; }
     }
-    public Quest_SO GridItem
+    public Quest GridItem
     {
         get { return gridItem; }
         set { gridItem = value; }
@@ -28,7 +28,7 @@ public class QuestGrid : MonoBehaviour
 
     public void OnClicked()
     {
-        qusetUIManager.UpdateQuestText(gridItem.Des, gridItem.Rewards);
+        //qusetUIManager.UpdateQuestText(gridItem.Des, gridItem.Rewards);
         qusetUIManager.RefreshObjective(gridItem.ID);
     }
 }

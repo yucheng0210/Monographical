@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 public class DataManager : Singleton<DataManager>, ISavable
 {
@@ -9,11 +10,13 @@ public class DataManager : Singleton<DataManager>, ISavable
         "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/ITEMDATALIST.csv";
     private string effectDataListPath =
         "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/EFFECTDATALIST.csv";
+    private string questDataListPath = "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv";
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<string, Effect> EffectList { get; set; }
     public Dictionary<string, CharacterState> CharacterList { get; set; }
+    public Dictionary<int, Quest> QuestList { get; set; }
     public Dictionary<int, Item> ShortcutBar { get; set; }
     public int MoneyCount { get; set; }
 
@@ -26,6 +29,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         EffectList = new Dictionary<string, Effect>();
         CharacterList = new Dictionary<string, CharacterState>();
         ShortcutBar = new Dictionary<int, Item>();
+        QuestList = new Dictionary<int, Quest>();
         MoneyCount = 1000;
         LoadData();
     }
@@ -89,8 +93,41 @@ public class DataManager : Singleton<DataManager>, ISavable
             EffectList.Add(effect.EffectName, effect);
         }
         #endregion
-
-        //EventManager.Instance.DispatchEvent(EventDefinition.eventLoadDataFinish);
+        #region 任務列表
+        lineData = File.ReadAllLines(questDataListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Quest quest = new Quest();
+            quest.ID = int.Parse(row[0]);
+            quest.TheName = row[1];
+            quest.NPC = row[2];
+            quest.Des = row[3];
+            quest.RewardList = new List<(int, int)>();
+            quest.TargetList = new List<(int, int)>();
+            string[] rewards = row[4].Split(';');
+            for (int j = 0; j < rewards.Length; j++)
+            {
+                string[] reward = rewards[j].Split('=');
+                int id,
+                    count;
+                if (int.TryParse(reward[0], out id) && int.TryParse(reward[1], out count))
+                    quest.RewardList.Add(new ValueTuple<int, int>(id, count));
+            }
+            string[] targets = row[5].Split(';');
+            for (int j = 0; j < targets.Length; j++)
+            {
+                string[] target = targets[j].Split('=');
+                int id,
+                    count;
+                if (int.TryParse(target[0], out id) && int.TryParse(target[1], out count))
+                    quest.TargetList.Add(new ValueTuple<int, int>(id, count));
+            }
+            quest.Parent = int.Parse(row[6]);
+            quest.Status = Quest.QuestState.Inactive;
+            QuestList.Add(quest.ID, quest);
+        }
+        #endregion
     }
 
     public void AddCharacterRegister(CharacterState character)

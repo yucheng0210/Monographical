@@ -6,7 +6,7 @@ using System.IO;
 
 public class QuestCSVToSO
 {
-    private static string path = "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv";
+   /* private static string path = "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv";
     private static QuestList_SO questList = new QuestList_SO();
 
     [MenuItem("CSVToSO/CreateQuestSO")]
@@ -20,7 +20,7 @@ public class QuestCSVToSO
                 continue;
             if (row.Length != 8)
                 break;
-            Quest_SO quest = ScriptableObject.CreateInstance<Quest_SO>();
+            Quest quest = ScriptableObject.CreateInstance<Quest>();
             quest.ID = int.Parse(row[0]);
             quest.TheName = row[1];
             quest.NPC = row[2];
@@ -41,5 +41,5 @@ public class QuestCSVToSO
             "Assets/MyAssets/QuestSystem/QuestData/QuestList/QuestList.asset"
         );
         AssetDatabase.SaveAssets();
-    }
+    }*/
 }

@@ -46,7 +46,7 @@ public class QuestUIManager : MonoBehaviour
         questRewards.text = reward;
     }
 
-    private void CreateNewItem(Quest_SO quest)
+    private void CreateNewItem(Quest quest)
     {
         QuestGrid newQuest = Instantiate(
             gridPrefab,
@@ -88,8 +88,8 @@ public class QuestUIManager : MonoBehaviour
             Destroy(gridManager.transform.GetChild(i).gameObject);
         for (int i = 0; i < questManager.questList.QuestList.Count; i++)
         {
-            if (questManager.questList.QuestList[i].Status == 1)
-                CreateNewItem(questManager.questList.QuestList[i]);
+           /* if (questManager.questList.QuestList[i].Status == 1)
+                CreateNewItem(questManager.questList.QuestList[i]);*/
         }
     }
 

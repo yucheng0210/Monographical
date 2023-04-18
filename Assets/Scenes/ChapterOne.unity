@@ -4334,8 +4334,6 @@ GameObject:
   m_Component:
   - component: {fileID: 576715211}
   - component: {fileID: 576715212}
-  - component: {fileID: 576715214}
-  - component: {fileID: 576715213}
   - component: {fileID: 576715216}
   - component: {fileID: 576715215}
   m_Layer: 0
@@ -4371,40 +4369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c084b565221aa94fb9fa40b8653e709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &576715213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576715209}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87516fc741d3f0548b047982fc1f1de9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myBag: {fileID: 11400000, guid: b272f67681b8ff2459bbf2f9933a4828, type: 2}
---- !u!114 &576715214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576715209}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82b8db269732ac142bc7ec86ac1a3c63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridManager: {fileID: 270671944}
-  gridPrefab: {fileID: 5231469797318770053, guid: 076c800699f53b5498f077edb483a193,
-    type: 3}
-  itemInfo: {fileID: 1325638408}
-  myBag: {fileID: 11400000, guid: b272f67681b8ff2459bbf2f9933a4828, type: 2}
-  backpack: {fileID: 11400000, guid: 2702c195e7c4eac4f9f5b8b712493713, type: 2}
-  moneyText: {fileID: 1645523790}
-  buttonText: {fileID: 208959192}
-  useButtonText: {fileID: 2071317050}
 --- !u!114 &576715215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4438,7 +4402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questList: {fileID: 11400000, guid: 37e4c5e719f876d4582fdddf47469b0b, type: 2}
-  backpack: {fileID: 11400000, guid: 2702c195e7c4eac4f9f5b8b712493713, type: 2}
+  backpack: {fileID: 0}
   questItemList:
   - {fileID: 11400000, guid: c94f26b421143244f98f4a5fb4386691, type: 2}
 --- !u!1 &595933133
@@ -5737,6 +5701,12 @@ MonoBehaviour:
   touchButton: {fileID: 2142757156}
   actionType: 0
   questUIManager: {fileID: 576715215}
+  questInfo: {fileID: 0}
+  questRewards: {fileID: 0}
+  slotPrefab: {fileID: 0}
+  slotGroupTrans: {fileID: 0}
+  targetGroupTrans: {fileID: 0}
+  targetSlotPrefab: {fileID: 0}
 --- !u!114 &783888347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7178,7 +7148,7 @@ GameObject:
   - component: {fileID: 958223011}
   - component: {fileID: 958223010}
   m_Layer: 5
-  m_Name: Reward
+  m_Name: RewardGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8558,7 +8528,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -616.4086, y: 206.0766}
-  m_SizeDelta: {x: 982.0681, y: 451.3711}
+  m_SizeDelta: {x: 927.3629, y: 451.3711}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1103905691
 MonoBehaviour:
@@ -8797,7 +8767,7 @@ PrefabInstance:
     - target: {fileID: 3282578172536631830, guid: 23d1c63537e723e40b2f251d33054c33,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8192202391787200713, guid: 23d1c63537e723e40b2f251d33054c33,
         type: 3}
@@ -12641,7 +12611,7 @@ GameObject:
   - component: {fileID: 1522988511}
   - component: {fileID: 1522988510}
   m_Layer: 5
-  m_Name: ObjectiveManager
+  m_Name: TargetGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13424,7 +13394,7 @@ PrefabInstance:
     - target: {fileID: 3282578172536631830, guid: 23d1c63537e723e40b2f251d33054c33,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8192202391787200713, guid: 23d1c63537e723e40b2f251d33054c33,
         type: 3}
@@ -16271,7 +16241,7 @@ GameObject:
   - component: {fileID: 2049944277}
   - component: {fileID: 2049944278}
   m_Layer: 5
-  m_Name: Slot
+  m_Name: SlotGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30021,7 +29991,7 @@ PrefabInstance:
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.01594255
+      value: 0.015942555
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
@@ -30031,7 +30001,7 @@ PrefabInstance:
     - target: {fileID: 6300215352053573098, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.006172843
+      value: -0.0061728484
       objectReference: {fileID: 0}
     - target: {fileID: 6300215352122322179, guid: 62fcce0dddd1dcc49aaf55617c7789e7,
         type: 3}

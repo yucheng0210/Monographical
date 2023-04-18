@@ -103,7 +103,8 @@ public class DialogSystem : MonoBehaviour
     {
         if (isQuestDialog)
         {
-            bool questInProgress = questManager.questList.QuestList[questID].Status == 1;
+            Quest quest = QuestManager.Instance.GetQuest(questID);
+            /*bool questInProgress = quest.Status == Quest.QuestState.Active;
             if (questInProgress)
             {
                 for (
@@ -123,17 +124,17 @@ public class DialogSystem : MonoBehaviour
                             questManager.questItemList[questID].RewardMoney
                         );
                 }
-            }
-            switch (questManager.questList.QuestList[questID].Status)
+            }*/
+            switch (quest.Status)
             {
-                case 0:
+                case Quest.QuestState.Inactive:
                     dialogList.StartBranch = "DEFAULT";
                     break;
-                case 2:
+                case Quest.QuestState.Completed:
                     dialogList.StartBranch = "COMPLETE";
-                    questManager.questList.QuestList[questID].Status = 3;
+                    questManager.questList.QuestList[questID].Status = Quest.QuestState.Rewarded;
                     break;
-                case 3:
+                case Quest.QuestState.Rewarded:
                     dialogList.StartBranch = "FINAL";
                     break;
             }
@@ -151,18 +152,16 @@ public class DialogSystem : MonoBehaviour
     {
         for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
         {
-            //Debug.Log(objectiveItem.InBackpackItem == questManager.backpack.ItemList[i]);
-            // Debug.Log(objectiveItem.ItemHeld >= questManager.backpack.ItemList[i].ItemHeld);
             if (
                 objectiveItem.InBackpackItem == questManager.backpack.ItemList[i]
                 && objectiveItem.ItemHeld <= questManager.backpack.ItemList[i].ItemHeld
             )
             {
-                questManager.questList.QuestList[questID].Status = 2;
+                questManager.questList.QuestList[questID].Status = Quest.QuestState.Completed;
                 questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
-                backpackManager.AddMoney(rewardMoney);
+                BackpackManager.Instance.AddMoney(rewardMoney);
                 if (rewardItem.InBackpackItem != null)
-                    backpackManager.AddItem(
+                    BackpackManager.Instance.AddItem(
                         rewardItem.InBackpackItem.ItemIndex,
                         DataManager.Instance.Backpack
                     );
@@ -292,6 +291,8 @@ public class DialogSystem : MonoBehaviour
 
     private void GetBranchID(string buttonBranchID)
     {
+        if (buttonBranchID == "Active")
+            QuestManager.Instance.ActivateQuest(questID);
         currentBranchID = buttonBranchID;
         DestroyChoice();
         /* if (index >= dialogList.Count)
