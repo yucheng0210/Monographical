@@ -6,28 +6,37 @@ using UnityEngine.UI;
 public class QuestMenu : UIBase
 {
     [SerializeField]
-    private QuestUIManager questUIManager;
-
-    [SerializeField]
     private Text questInfo;
 
     [SerializeField]
-    private Text questRewards;
-
-    [SerializeField]
-    private QuestGrid slotPrefab;
+    private QuestSlot slotPrefab;
 
     [SerializeField]
     private Transform slotGroupTrans;
 
-    [SerializeField]
-    private Transform targetGroupTrans;
-
-    [SerializeField]
-    private QuestObjectiveGrid targetSlotPrefab;
-
-    public void QuestInitialize()
+    protected override void Start()
     {
-        questUIManager.Initialize();
+        base.Start();
+        EventManager.Instance.AddEventRegister(
+            EventDefinition.eventOnClickedToQuest,
+            EventOnClicked
+        );
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.QuestList);
+        UpdateItemInfo("");
+    }
+
+    public void UpdateItemInfo(string questDes)
+    {
+        questInfo.text = questDes;
+    }
+
+    public void EventOnClicked(params object[] args)
+    {
+        UpdateItemInfo(((Quest)args[0]).Des);
     }
 }

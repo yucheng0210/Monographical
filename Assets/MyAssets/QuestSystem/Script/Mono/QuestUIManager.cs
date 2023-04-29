@@ -11,8 +11,8 @@ public class QuestUIManager : MonoBehaviour
     [SerializeField]
     private Text questRewards;
 
-    [SerializeField]
-    private QuestGrid gridPrefab;
+   /* [SerializeField]
+    private QuestGrid gridPrefab;*/
 
     [SerializeField]
     private GameObject gridManager;
@@ -48,14 +48,14 @@ public class QuestUIManager : MonoBehaviour
 
     private void CreateNewItem(Quest quest)
     {
-        QuestGrid newQuest = Instantiate(
+        /*QuestGrid newQuest = Instantiate(
             gridPrefab,
             gridManager.transform.position,
             Quaternion.identity
         );
         newQuest.gameObject.transform.SetParent(gridManager.transform, false);
         newQuest.GridItem = quest;
-        newQuest.GridName.text = quest.TheName;
+        newQuest.GridName.text = quest.TheName;*/
     }
 
     private void CreateNewObjective(QuestObjective_SO objectiveItem)

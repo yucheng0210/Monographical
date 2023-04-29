@@ -11,5 +11,5 @@ public class EventDefinition
     public const string eventRemoveItemToBag = "EVENT_REMOVE_ITEM_TO_BAG";
     public const string eventReviseMoneyToBag = "EVENT_REVISE_MONEY_TO_BAG";
     public const string eventOnClickedToBag = "EVENT_ONCLICKED_TO_BAG";
+    public const string eventOnClickedToQuest = "EVENT_ONCLICKED_TO_QUEST";
 }
-

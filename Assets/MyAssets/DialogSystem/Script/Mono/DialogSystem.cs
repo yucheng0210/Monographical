@@ -39,7 +39,7 @@ public class DialogSystem : MonoBehaviour
 
     [SerializeField]
     private DialogList_SO dialogList;
-    private Dialog_SO dialog;
+    private Dialog dialog;
 
     [SerializeField]
     private string currentBranchID = "DEFAULT";
@@ -48,9 +48,6 @@ public class DialogSystem : MonoBehaviour
 
     [SerializeField]
     private QuestManager questManager;
-
-    [SerializeField]
-    private QuestUIManager questUIManager;
 
     [SerializeField]
     private BackpackManager backpackManager;
@@ -66,11 +63,6 @@ public class DialogSystem : MonoBehaviour
         set { openMenu = value; }
     }
     public bool BlockContinue { get; set; }
-
-    private void Awake()
-    {
-        GetTextFromFile(textFile);
-    }
 
     private void OnEnable()
     {
@@ -97,13 +89,16 @@ public class DialogSystem : MonoBehaviour
             return;
         SetType();
         ContinueDialog();
+        Debug.Log(dialogList.StartBranch);
     }
 
     private void Initialize()
     {
         if (isQuestDialog)
         {
-            Quest quest = QuestManager.Instance.GetQuest(questID);
+            Quest quest = DataManager.Instance.GetQuest(questID);
+            QuestManager.Instance.CheckQuestProgress(questID);
+            QuestManager.Instance.UpdateActiveQuests();
             /*bool questInProgress = quest.Status == Quest.QuestState.Active;
             if (questInProgress)
             {
@@ -130,12 +125,16 @@ public class DialogSystem : MonoBehaviour
                 case Quest.QuestState.Inactive:
                     dialogList.StartBranch = "DEFAULT";
                     break;
+                case Quest.QuestState.Active:
+                    dialogList.StartBranch = "ACTIVE";
+                    break;
                 case Quest.QuestState.Completed:
-                    dialogList.StartBranch = "COMPLETE";
-                    questManager.questList.QuestList[questID].Status = Quest.QuestState.Rewarded;
+                    dialogList.StartBranch = "COMPLETED";
+                    QuestManager.Instance.FinishQuest(questID);
+                    QuestManager.Instance.GetRewards(questID);
                     break;
                 case Quest.QuestState.Rewarded:
-                    dialogList.StartBranch = "FINAL";
+                    dialogList.StartBranch = "REWARDED";
                     break;
             }
         }
@@ -144,51 +143,32 @@ public class DialogSystem : MonoBehaviour
         currentBranchID = dialogList.StartBranch;
     }
 
-    private void SetQuestComplete(
-        QuestObjective_SO objectiveItem,
-        QuestReward_SO rewardItem,
-        int rewardMoney
-    )
-    {
-        for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
-        {
-            if (
-                objectiveItem.InBackpackItem == questManager.backpack.ItemList[i]
-                && objectiveItem.ItemHeld <= questManager.backpack.ItemList[i].ItemHeld
-            )
-            {
-                questManager.questList.QuestList[questID].Status = Quest.QuestState.Completed;
-                questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
-                BackpackManager.Instance.AddMoney(rewardMoney);
-                if (rewardItem.InBackpackItem != null)
-                    BackpackManager.Instance.AddItem(
-                        rewardItem.InBackpackItem.ItemIndex,
-                        DataManager.Instance.Backpack
-                    );
-            }
-        }
-    }
+    /* private void SetQuestComplete(
+         QuestObjective_SO objectiveItem,
+         QuestReward_SO rewardItem,
+         int rewardMoney
+     )
+     {
+         for (int i = 0; i < questManager.backpack.ItemList.Count; i++)
+         {
+             if (
+                 objectiveItem.InBackpackItem == questManager.backpack.ItemList[i]
+                 && objectiveItem.ItemHeld <= questManager.backpack.ItemList[i].ItemHeld
+             )
+             {
+                 questManager.questList.QuestList[questID].Status = Quest.QuestState.Completed;
+                 questManager.backpack.ItemList[i].ItemHeld -= objectiveItem.ItemHeld;
+                 BackpackManager.Instance.AddMoney(rewardMoney);
+                 if (rewardItem.InBackpackItem != null)
+                     BackpackManager.Instance.AddItem(
+                         rewardItem.InBackpackItem.ItemIndex,
+                         DataManager.Instance.Backpack
+                     );
+             }
+         }
+     }*/
 
-    private void GetTextFromFile(TextAsset file)
-    {
-        dialogList.DialogList.Clear();
-        index = 0;
-        string[] lineData = file.text.Split(new char[] { '\n' });
-        for (int i = 1; i < lineData.Length - 1; i++)
-        {
-            string[] row = lineData[i].Split(new char[] { ',' });
-            if (row[1] == "")
-                break;
-            dialog = ScriptableObject.CreateInstance<Dialog_SO>();
-            dialog.Branch = row[0];
-            dialog.Type = row[1];
-            dialog.TheName = row[2];
-            dialog.Order = row[3];
-            dialog.Content = row[4];
-            dialogList.DialogList.Add(dialog);
-        }
-        dialog.DialogList = dialogList.DialogList;
-    }
+ 
 
     private void SetType()
     {
@@ -232,7 +212,7 @@ public class DialogSystem : MonoBehaviour
                 }
                 break;
             case "QUEST":
-                questManager.SetQuestActive(dialogList, index);
+                QuestManager.Instance.ActivateQuest(questID);
                 index++;
                 break;
             case "CALL":
@@ -286,17 +266,15 @@ public class DialogSystem : MonoBehaviour
                 GetBranchID(buttonBranchID);
             });
         index++;
-        //foreach (GameObject choice in choiceList) { }
     }
 
     private void GetBranchID(string buttonBranchID)
     {
-        if (buttonBranchID == "Active")
+        if (buttonBranchID == "ACTIVATE")
             QuestManager.Instance.ActivateQuest(questID);
         currentBranchID = buttonBranchID;
+        dialogList.StartBranch = buttonBranchID;
         DestroyChoice();
-        /* if (index >= dialogList.Count)
-            gameObject.SetActive(false);*/
         inSelection = false;
         continueBool = true;
     }

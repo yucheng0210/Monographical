@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[CreateAssetMenu(fileName = "New Quest", menuName = "Quest/New Quest")]
 public class Quest
 {
     public enum QuestState

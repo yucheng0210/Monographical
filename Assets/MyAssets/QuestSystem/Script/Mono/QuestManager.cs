@@ -8,28 +8,26 @@ public class QuestManager : Singleton<QuestManager>
 
     public Inventory_SO backpack;
 
-    private QuestUIManager questUIManager;
-
     public List<QuestItemList_SO> questItemList = new List<QuestItemList_SO>();
 
-    public List<int> ActiveQuestList { get; set; }
+    public List<Quest> ActiveQuestList { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
-        questUIManager = GetComponent<QuestUIManager>();
+        ActiveQuestList = new List<Quest>();
     }
 
     public void ActivateQuest(int questID)
     {
         if (!DataManager.Instance.QuestList.ContainsKey(questID))
             return;
-        Quest quest = GetQuest(questID);
+        Quest quest = DataManager.Instance.GetQuest(questID);
         if (quest.Status == Quest.QuestState.Inactive)
         {
             quest.Status = Quest.QuestState.Active;
-            if (!ActiveQuestList.Contains(questID))
-                ActiveQuestList.Add(questID);
+            if (!ActiveQuestList.Contains(quest))
+                ActiveQuestList.Add(quest);
         }
     }
 
@@ -37,39 +35,67 @@ public class QuestManager : Singleton<QuestManager>
     {
         for (int i = 0; i < ActiveQuestList.Count; i++)
         {
-            if (GetQuest(ActiveQuestList[i]).Status == Quest.QuestState.Completed)
-                ActiveQuestList.Remove(i);
+            if (
+                DataManager.Instance.GetQuest(ActiveQuestList[i].ID).Status
+                == Quest.QuestState.Completed
+            )
+                ActiveQuestList.Remove(ActiveQuestList[i]);
         }
     }
 
     public void CheckQuestProgress(int questID)
     {
-        Quest quest = GetQuest(questID);
+        Quest quest = DataManager.Instance.GetQuest(questID);
+        int targetCount = quest.TargetList.Count;
         for (int i = 0; i < quest.TargetList.Count; i++)
         {
-            if (quest.TargetList[i].Item1 == BackpackManager.Instance.GetItem(questID).ItemIndex)
-                quest.TargetList.Remove(quest.TargetList[i]);
+            int targetIndex = quest.TargetList[i].Item1;
+            int targetHeld = quest.TargetList[i].Item2;
+            if (DataManager.Instance.GetItem(questID) == null)
+                break;
+            if (
+                targetIndex == DataManager.Instance.GetItem(questID).ItemIndex
+                && targetHeld <= DataManager.Instance.GetItem(questID).ItemHeld
+            )
+                targetCount--;
         }
-        if (quest.TargetList.Count == 0)
+        if (targetCount == 0)
             quest.Status = Quest.QuestState.Completed;
     }
 
-    public void SetQuestActive(DialogList_SO dialogList, int index)
+    public void FinishQuest(int questID)
+    {
+        Quest quest = DataManager.Instance.GetQuest(questID);
+        for (int i = 0; i < quest.TargetList.Count; i++)
+        {
+            int targetIndex = quest.TargetList[i].Item1;
+            int targetHeld = quest.TargetList[i].Item2;
+            for (int j = targetHeld; j > 0; j--)
+            {
+                BackpackManager.Instance.ReduceItem(targetIndex, DataManager.Instance.Backpack);
+            }
+        }
+    }
+
+    /*public void SetQuestActive(DialogList_SO dialogList, int index)
     {
         DataManager.Instance.QuestList[int.Parse(dialogList.DialogList[index].Order)].Status = Quest
             .QuestState
             .Active;
         questUIManager.RefreshItem();
-    }
+    }*/
 
-    public Quest GetQuest(int questID)
+    public void GetRewards(int questID)
     {
-        if (DataManager.Instance.QuestList.ContainsKey(questID))
-            return DataManager.Instance.QuestList[questID];
-        else
+        Quest quest = DataManager.Instance.GetQuest(questID);
+        for (int i = 0; i < quest.RewardList.Count; i++)
         {
-            Debug.LogWarning("找不到任務 " + questID);
-            return null;
+            int rewardIndex = quest.RewardList[i].Item1;
+            int rewardHeld = quest.RewardList[i].Item2;
+            for (int j = rewardHeld; j > 0; j--)
+            {
+                BackpackManager.Instance.AddItem(rewardIndex, DataManager.Instance.Backpack);
+            }
         }
     }
 }

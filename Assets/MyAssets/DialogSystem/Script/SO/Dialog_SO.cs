@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[CreateAssetMenu(fileName = "NewDialog", menuName = "Dialog/NewDialog")]
-public class Dialog_SO : ScriptableObject
+public class Dialog
 {
     [SerializeField]
     private string branch;
@@ -19,9 +19,6 @@ public class Dialog_SO : ScriptableObject
 
     [SerializeField]
     private string order;
-
-    [SerializeField]
-    private List<Dialog_SO> dialogList = new List<Dialog_SO>();
 
     #region Read from Dialog
 
@@ -49,11 +46,6 @@ public class Dialog_SO : ScriptableObject
     {
         get { return order; }
         set { order = value; }
-    }
-    public List<Dialog_SO> DialogList
-    {
-        get { return dialogList; }
-        set { dialogList = value; }
     }
     #endregion
 }

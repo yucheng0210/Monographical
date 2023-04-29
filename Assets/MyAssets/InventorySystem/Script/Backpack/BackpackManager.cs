@@ -27,17 +27,6 @@ public class BackpackManager : Singleton<BackpackManager>
         );
     }
 
-    public Item GetItem(int itemID)
-    {
-        if (DataManager.Instance.QuestList.ContainsKey(itemID))
-            return DataManager.Instance.Backpack[itemID];
-        else
-        {
-            Debug.LogWarning("找不到物品 " + itemID);
-            return null;
-        }
-    }
-
     public void AddItem(int itemIndex, Dictionary<int, Item> inventory)
     {
         if (!inventory.ContainsKey(itemIndex))

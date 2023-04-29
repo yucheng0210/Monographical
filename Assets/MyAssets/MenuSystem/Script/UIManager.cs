@@ -62,6 +62,15 @@ public class UIManager : Singleton<UIManager>, IObserver
         newItem.SlotCount.text = item.ItemHeld.ToString();
     }
 
+    private void CreateNewItem(Quest quest, QuestSlot slotPrefab, Transform slotGroupTrans)
+    {
+        QuestSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
+        newItem.gameObject.transform.SetParent(slotGroupTrans, false);
+        newItem.MyQuest = quest;
+        newItem.SlotName.text = quest.TheName;
+        newItem.NPCName.text = quest.NPC;
+    }
+
     public void RefreshItem(
         BackpackSlot slotPrefab,
         Transform slotGroupTrans,
@@ -79,6 +88,27 @@ public class UIManager : Singleton<UIManager>, IObserver
                 break;
             }
             else
+                CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
+        }
+    }
+
+    public void RefreshItem(
+        QuestSlot slotPrefab,
+        Transform slotGroupTrans,
+        Dictionary<int, Quest> inventory
+    )
+    {
+        for (int i = 0; i < slotGroupTrans.childCount; i++)
+            Destroy(slotGroupTrans.GetChild(i).gameObject);
+        foreach (KeyValuePair<int, Quest> i in inventory)
+        {
+            if (i.Value.Status == Quest.QuestState.Rewarded)
+            {
+                inventory.Remove(i.Key);
+                RefreshItem(slotPrefab, slotGroupTrans, inventory);
+                break;
+            }
+            else if (i.Value.Status == Quest.QuestState.Active)
                 CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
         }
     }

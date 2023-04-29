@@ -11,6 +11,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     private string effectDataListPath =
         "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/EFFECTDATALIST.csv";
     private string questDataListPath = "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv";
+    private string dialogDataListPath = "Assets/MyAssets/DialogSystem/DialogData";
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
@@ -18,6 +19,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     public Dictionary<string, CharacterState> CharacterList { get; set; }
     public Dictionary<int, Quest> QuestList { get; set; }
     public Dictionary<int, Item> ShortcutBar { get; set; }
+    public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -128,6 +130,42 @@ public class DataManager : Singleton<DataManager>, ISavable
             QuestList.Add(quest.ID, quest);
         }
         #endregion
+        #region 對話列表
+        foreach (string file in Directory.GetFiles(dialogDataListPath))
+        {
+            lineData = File.ReadAllLines(file);
+            List<Dialog> dialogs = new List<Dialog>();
+            for (int i = 1; i < lineData.Length; i++)
+            {
+                string[] row = lineData[i].Split(',');
+                Dialog dialog = new Dialog();
+                dialog = new Dialog();
+                dialog.Branch = row[0];
+                dialog.Type = row[1];
+                dialog.TheName = row[2];
+                dialog.Order = row[3];
+                dialog.Content = row[4];
+                dialogs.Add(dialog);
+            }
+            DialogList.Add(file, dialogs);
+        }
+        #endregion
+    }
+
+    public Quest GetQuest(int questID)
+    {
+        if (QuestList.ContainsKey(questID))
+            return QuestList[questID];
+        else
+            return null;
+    }
+
+    public Item GetItem(int itemID)
+    {
+        if (Backpack.ContainsKey(itemID))
+            return Backpack[itemID];
+        else
+            return null;
     }
 
     public void AddCharacterRegister(CharacterState character)
