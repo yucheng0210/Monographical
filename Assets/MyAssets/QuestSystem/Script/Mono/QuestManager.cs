@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class QuestManager : Singleton<QuestManager>
 {
-    public QuestList_SO questList;
-
-    public Inventory_SO backpack;
-
-    public List<QuestItemList_SO> questItemList = new List<QuestItemList_SO>();
-
     public List<Quest> ActiveQuestList { get; set; }
 
     protected override void Awake()
@@ -46,7 +40,10 @@ public class QuestManager : Singleton<QuestManager>
     public void CheckQuestProgress(int questID)
     {
         Quest quest = DataManager.Instance.GetQuest(questID);
+        if (!ActiveQuestList.Contains(quest))
+            return;
         int targetCount = quest.TargetList.Count;
+        quest.UpdateQuestState();
         for (int i = 0; i < quest.TargetList.Count; i++)
         {
             int targetIndex = quest.TargetList[i].Item1;
@@ -60,7 +57,10 @@ public class QuestManager : Singleton<QuestManager>
                 targetCount--;
         }
         if (targetCount == 0)
+        {
+            FinishQuest(questID);
             quest.Status = Quest.QuestState.Completed;
+        }
     }
 
     public void FinishQuest(int questID)
@@ -76,14 +76,6 @@ public class QuestManager : Singleton<QuestManager>
             }
         }
     }
-
-    /*public void SetQuestActive(DialogList_SO dialogList, int index)
-    {
-        DataManager.Instance.QuestList[int.Parse(dialogList.DialogList[index].Order)].Status = Quest
-            .QuestState
-            .Active;
-        questUIManager.RefreshItem();
-    }*/
 
     public void GetRewards(int questID)
     {

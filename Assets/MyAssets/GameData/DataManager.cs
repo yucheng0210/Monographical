@@ -32,7 +32,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         CharacterList = new Dictionary<string, CharacterState>();
         ShortcutBar = new Dictionary<int, Item>();
         QuestList = new Dictionary<int, Quest>();
-        MoneyCount = 1000;
+        DialogList = new Dictionary<string, List<Dialog>>();
         LoadData();
     }
 
@@ -40,6 +40,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     {
         ISavable savable = this;
         savable.AddSavableRegister();
+        BackpackManager.Instance.AddMoney(1000);
     }
 
     private void LoadData()
@@ -131,7 +132,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         }
         #endregion
         #region 對話列表
-        foreach (string file in Directory.GetFiles(dialogDataListPath))
+        foreach (string file in Directory.GetFiles(dialogDataListPath, "*.csv"))
         {
             lineData = File.ReadAllLines(file);
             List<Dialog> dialogs = new List<Dialog>();
@@ -139,7 +140,6 @@ public class DataManager : Singleton<DataManager>, ISavable
             {
                 string[] row = lineData[i].Split(',');
                 Dialog dialog = new Dialog();
-                dialog = new Dialog();
                 dialog.Branch = row[0];
                 dialog.Type = row[1];
                 dialog.TheName = row[2];
@@ -147,7 +147,8 @@ public class DataManager : Singleton<DataManager>, ISavable
                 dialog.Content = row[4];
                 dialogs.Add(dialog);
             }
-            DialogList.Add(file, dialogs);
+            string fileName = Path.GetFileNameWithoutExtension(file);
+            DialogList.Add(fileName, dialogs);
         }
         #endregion
     }

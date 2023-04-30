@@ -26,11 +26,6 @@ public class UIManager : Singleton<UIManager>, IObserver
         GameManager.Instance.AddObservers(this);
     }
 
-    private void OnDisable()
-    {
-        GameManager.Instance.RemoveObservers(this);
-    }
-
     public void ShowUI(string uiName)
     {
         UIDict[uiName].Show();

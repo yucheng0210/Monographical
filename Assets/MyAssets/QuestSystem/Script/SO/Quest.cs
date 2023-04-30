@@ -13,17 +13,28 @@ public class Quest
         Rewarded // 任务已领奖
     }
 
-    public QuestState Status { get; set; }
+    private QuestState status;
+    public QuestState Status
+    {
+        get { return status; }
+        set
+        {
+            status = value;
+            UpdateQuestState();
+        }
+    }
 
-    public void UpdateQuestState(int stateAmount)
+    public void UpdateQuestState()
     {
         switch (Status)
         {
             case QuestState.Inactive:
                 break;
             case QuestState.Active:
+                EventManager.Instance.DispatchEvent(EventDefinition.eventQuestActivate);
                 break;
             case QuestState.Completed:
+                EventManager.Instance.DispatchEvent(EventDefinition.eventQuestCompleted);
                 break;
             case QuestState.Rewarded:
                 break;

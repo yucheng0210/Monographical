@@ -178,11 +178,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         AudioManager.Instance.MainAudio();
     }
 
-    protected virtual void OnDisable()
-    {
-        GameManager.Instance.RemoveObservers(this);
-    }
-
     private void Update()
     {
         // TODO: 戰鬥模式更改，會緩緩地靠近對手，轉向動畫

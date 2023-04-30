@@ -31,11 +31,6 @@ public abstract class UIBase : MonoBehaviour, IObserver
             AddOnClickListener();
     }
 
-    private void OnDisable()
-    {
-        GameManager.Instance.RemoveObservers(this);
-    }
-
     private void AddOnClickListener()
     {
         switch (actionType)
