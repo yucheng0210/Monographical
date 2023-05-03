@@ -11,6 +11,7 @@ public class SliderFollow : MonoBehaviour
     [SerializeField]
     private float height;
     private float currentHeight;
+    private Canvas myCamera;
     public float Height
     {
         get { return height; }
@@ -21,6 +22,7 @@ public class SliderFollow : MonoBehaviour
     {
         currentHeight = height;
         transform.position = role.transform.position + new Vector3(0, currentHeight, 0);
+        myCamera = GetComponentInParent<Canvas>();
     }
 
     private void Update()

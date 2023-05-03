@@ -108,6 +108,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (other.gameObject.layer == enemyAttackLayer && characterState.CurrentHealth >= 0)
             {
+                Debug.Log("damage");
                 attackerCharacterState = other.gameObject.GetComponentInParent<CharacterState>();
                 characterState.TakeDamage(attackerCharacterState, characterState);
                 Vector3 hitPoint = new Vector3(

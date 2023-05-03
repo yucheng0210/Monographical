@@ -334,6 +334,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
+                Look(Player.transform.position);
                 if (isMeleeAttack)
                     Ani.SetInteger(attack, 1);
                 else
@@ -472,7 +473,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 return;
             /*if (characterState.CurrentPoise > 0)
             {*/
-            Ani.SetTrigger(isHited);
+            if (
+                animatorStateInfo.IsName("Grounded")
+                && animatorStateInfo.tagHash != Animator.StringToHash("Attack")
+            )
+                Ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
