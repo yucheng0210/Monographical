@@ -8,14 +8,11 @@ using UnityEngine.UI;
 
 public class Knight : PatrolEnemy
 {
-    [SerializeField]
-    private GameObject jumpCollision;
-
     public void JumpAttackColliderSwitch(int count)
     {
         if (count == 1)
-            jumpCollision.SetActive(true);
+            RockBreak.GetComponent<BoxCollider>().enabled = true;
         else
-            jumpCollision.SetActive(false);
+            RockBreak.GetComponent<BoxCollider>().enabled = false;
     }
 }
