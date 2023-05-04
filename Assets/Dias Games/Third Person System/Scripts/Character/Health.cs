@@ -119,6 +119,11 @@ namespace DiasGames.ThirdPersonSystem
                 HitEffect(hitPoint);
                 if (characterState.CurrentHealth <= 0)
                     Die();
+                else
+                {
+                    OnReceiveDamage.Invoke();
+                    OnCharacterDamage?.Invoke();
+                }
             }
         }
 

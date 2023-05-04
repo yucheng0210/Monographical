@@ -296,11 +296,10 @@ namespace DiasGames.ThirdPersonSystem
                     TryZoom();
                 else
                     isZomming = false;
-                if (!DialogSystem.isTalking)
-                    AttackState();
-                enduranceSlider.value = currentEndurance / maxEndurance;
             }
-
+            if (!DialogSystem.isTalking)
+                AttackState();
+            enduranceSlider.value = currentEndurance / maxEndurance;
             // ----------------------- ABILITY UPDATE --------------------------- //
 
             if (m_ActiveAbility != null)
@@ -316,6 +315,11 @@ namespace DiasGames.ThirdPersonSystem
             collision.SetActive(false);
             currentEndurance = maxEndurance;
             combo = 0;
+        }
+
+        public void IsHited()
+        {
+            m_Animator.SetTrigger("isHited");
         }
 
         private void AttackState()
@@ -485,8 +489,9 @@ namespace DiasGames.ThirdPersonSystem
         public void RotateByCamera()
         {
             Vector3 velocity = Vector3.zero;
-            Vector3 CamForward =
-                Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+            Vector3 CamForward = Vector3
+                .Scale(Camera.main.transform.forward, new Vector3(1, 0, 1))
+                .normalized;
             transform.forward = Vector3.SmoothDamp(
                 transform.forward,
                 CamForward,
@@ -732,8 +737,11 @@ namespace DiasGames.ThirdPersonSystem
                                                 OnGrounded.Invoke();
 
                                             m_LastGroundPos = m_GroundHit.transform.position;
-                                            m_LastAngle =
-                                                m_GroundHit.transform.rotation.eulerAngles.y;
+                                            m_LastAngle = m_GroundHit
+                                                .transform
+                                                .rotation
+                                                .eulerAngles
+                                                .y;
                                         }
 
                                         IsGrounded = true;

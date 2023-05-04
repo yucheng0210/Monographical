@@ -271,6 +271,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     protected virtual void UpdateAttackValue()
     {
+        Ani.SetInteger(attack, 0);
         if (animatorStateInfo.normalizedTime < 0.55f)
         {
             movement = isMeleeAttack
@@ -281,7 +282,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             movement = Vector3.zero;
         if (animatorStateInfo.normalizedTime > 0.9f)
         {
-            Ani.SetInteger(attack, 0);
+            Ani.ResetTrigger(isHited);
             CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         }
     }
@@ -473,11 +474,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 return;
             /*if (characterState.CurrentPoise > 0)
             {*/
-            if (
-                animatorStateInfo.IsName("Grounded")
-                && animatorStateInfo.tagHash != Animator.StringToHash("Attack")
-            )
-                Ani.SetTrigger(isHited);
+            Ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
