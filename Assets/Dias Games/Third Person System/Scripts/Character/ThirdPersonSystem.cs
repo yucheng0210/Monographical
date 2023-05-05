@@ -276,10 +276,8 @@ namespace DiasGames.ThirdPersonSystem
                 HandleGrounded();
 
             // ----------------------- ABILITY FIXED UPDATE --------------------------- //
-
             if (m_ActiveAbility != null)
                 m_ActiveAbility.FixedUpdateAbility();
-
             // ----------------------------------------------------------------- //
             if (currentEndurance < maxEndurance && m_Animator.GetInteger(attack) == 0 && free)
                 currentEndurance++;
@@ -289,6 +287,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (Time.timeScale == 0 || shutDown)
                 return;
+
             if (!m_IsAICharacter)
             {
                 // Check Camera Zoom
@@ -432,9 +431,7 @@ namespace DiasGames.ThirdPersonSystem
             m_TurnAmount = Mathf.Atan2(FreeMoveDirection.x, FreeMoveDirection.z);
             //Run(修改程式)
             if (InputManager.runButton.WasPressed && FreeMoveDirection.magnitude > 0.1f)
-            {
                 isRunning = true;
-            }
             else if (FreeMoveDirection.magnitude < 0.1f)
                 isRunning = false;
 
@@ -942,6 +939,19 @@ namespace DiasGames.ThirdPersonSystem
         public void FreeFalse()
         {
             free = false;
+        }
+
+        public void IsInvincible(bool invincible)
+        {
+            if (invincible)
+                EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, true);
+            else
+                EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, false);
+        }
+
+        public void ResetIsHited()
+        {
+            m_Animator.ResetTrigger("isHited");
         }
 
         public void EndNotify()

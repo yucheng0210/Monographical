@@ -68,6 +68,9 @@ namespace DiasGames.ThirdPersonSystem
         private CharacterState characterState,
             attackerCharacterState;
 
+        [SerializeField]
+        private bool isInvincible;
+
         private void Awake()
         {
             ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
@@ -91,6 +94,11 @@ namespace DiasGames.ThirdPersonSystem
         {
             GameManager.Instance.RegisterPlayer(characterState);
             DataManager.Instance.AddCharacterRegister(characterState);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
+            EventManager.Instance.AddEventRegister(
+                EventDefinition.eventPlayerInvincible,
+                EventInvincible
+            );
         }
 
         private void Update()
@@ -107,23 +115,29 @@ namespace DiasGames.ThirdPersonSystem
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer == enemyAttackLayer && characterState.CurrentHealth >= 0)
+                IsHited(other);
+        }
+
+        private void IsHited(params object[] other)
+        {
+            if (isInvincible)
+                return;
+            Debug.Log("damage");
+            Collider newOther = (Collider)other[0];
+            attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
+            characterState.TakeDamage(attackerCharacterState, characterState);
+            Vector3 hitPoint = new Vector3(
+                transform.position.x,
+                newOther.ClosestPointOnBounds(transform.position).y,
+                transform.position.z
+            );
+            HitEffect(hitPoint);
+            if (characterState.CurrentHealth <= 0)
+                Die();
+            else
             {
-                Debug.Log("damage");
-                attackerCharacterState = other.gameObject.GetComponentInParent<CharacterState>();
-                characterState.TakeDamage(attackerCharacterState, characterState);
-                Vector3 hitPoint = new Vector3(
-                    transform.position.x,
-                    other.ClosestPointOnBounds(transform.position).y,
-                    transform.position.z
-                );
-                HitEffect(hitPoint);
-                if (characterState.CurrentHealth <= 0)
-                    Die();
-                else
-                {
-                    OnReceiveDamage.Invoke();
-                    OnCharacterDamage?.Invoke();
-                }
+                OnReceiveDamage.Invoke();
+                OnCharacterDamage?.Invoke();
             }
         }
 
@@ -233,6 +247,11 @@ namespace DiasGames.ThirdPersonSystem
 
             for (int i = 1; i < ragdollRigidbodies.Length; i++)
                 ragdollRigidbodies[i].isKinematic = true;
+        }
+
+        private void EventInvincible(params object[] args)
+        {
+            isInvincible = (bool)args[0];
         }
     }
 }

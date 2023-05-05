@@ -32,7 +32,6 @@ namespace DiasGames.ThirdPersonSystem
         public override void FixedUpdateAbility()
         {
             base.FixedUpdateAbility();
-
             m_System.CalculateMoveVars();
             m_System.UpdateMovementAnimator();
             m_System.RotateByCamera();

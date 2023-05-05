@@ -121,12 +121,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
     private Cinemachine.CinemachineImpulseSource myImpulse;
-    private CharacterState characterState,
-        attackerCharacterState;
+    public CharacterState EnemyCharacterState { get; set; }
+    public CharacterState AttackerCharacterState { get; set; }
     private int playerAttackLayer;
     private float direction;
     private float forward;
     public GameObject Player { get; private set; }
+    public Collider MyCollider { get; private set; }
     public GameObject RockBreak
     {
         get { return rockBreak; }
@@ -157,13 +158,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Ani = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        MyCollider = GetComponent<Collider>();
         startPos = transform.position;
         Player = GameManager.Instance.PlayerState.gameObject;
         myCamera = GetComponentInChildren<Canvas>();
         myCamera.worldCamera = Camera.main;
         myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
-        characterState = GetComponent<CharacterState>();
-        attackerCharacterState = Player.GetComponent<CharacterState>();
+        EnemyCharacterState = GetComponent<CharacterState>();
+        AttackerCharacterState = Player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         //lookAtIK = GetComponent<LookAtIK>();
         unityInputManager = Player.GetComponent<DiasGames.ThirdPersonSystem.UnityInputManager>();
@@ -207,9 +209,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void InitialState()
     {
-        characterState.CurrentHealth = characterState.MaxHealth;
-        characterState.CurrentDefence = characterState.BaseDefence;
-        characterState.CurrentPoise = characterState.MaxPoise;
+        EnemyCharacterState.CurrentHealth = EnemyCharacterState.MaxHealth;
+        EnemyCharacterState.CurrentDefence = EnemyCharacterState.BaseDefence;
+        EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
         //lookAtIK.solver.target = Player.transform.GetChild(0).transform;
         CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
@@ -219,13 +221,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         distance = Vector3.Distance(transform.position, Player.transform.position);
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
-        healthSlider.value = (characterState.CurrentHealth / characterState.MaxHealth);
+        healthSlider.value = (EnemyCharacterState.CurrentHealth / EnemyCharacterState.MaxHealth);
         animatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
     }
 
     protected virtual void UpdateState()
     {
-        if (characterState.CurrentHealth <= 0)
+        if (EnemyCharacterState.CurrentHealth <= 0)
             StartCoroutine(Death());
         else if (gameObject.GetComponent<HitStop>().IsHitStop)
             currentState = EnemyState.BeakBack;
@@ -420,7 +422,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         lockMove = true;
         Ani.SetTrigger(isLosePoise);
         rImage.SetActive(true);
-        characterState.CurrentPoise = characterState.MaxPoise;
+        EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
         collision.SetActive(false);
     }
 
@@ -459,6 +461,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         Vector3 start = collision.transform.GetChild(0).transform.position;
         GameObject rock = Instantiate(rockBreak, start, Quaternion.identity);
+        rock.transform.forward = transform.forward;
         AudioManager.Instance.HeavyAttackAudio(0);
         Destroy(rock, 4);
     }
@@ -467,10 +470,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (other.gameObject.layer == playerAttackLayer)
         {
-            characterState.TakeDamage(attackerCharacterState, characterState);
+            EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
             if (shutDown)
                 return;
-            /*if (characterState.CurrentPoise > 0)
+            /*if (EnemyCharacterState.CurrentPoise > 0)
             {*/
             Ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;

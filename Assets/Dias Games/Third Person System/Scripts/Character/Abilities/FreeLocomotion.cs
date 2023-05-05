@@ -22,7 +22,7 @@ namespace DiasGames.ThirdPersonSystem
             base.FixedUpdateAbility();
 
             UpdatePhysicMaterial();
-                       
+                     
             m_System.CalculateMoveVars();
             m_System.UpdateMovementAnimator(0.1f);
             m_System.RotateToDirection();
