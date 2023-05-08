@@ -121,6 +121,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
     private Cinemachine.CinemachineImpulseSource myImpulse;
+    public bool IsAttacking { get; set; }
     public CharacterState EnemyCharacterState { get; set; }
     public CharacterState AttackerCharacterState { get; set; }
     private int playerAttackLayer;
@@ -239,7 +240,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 currentState = EnemyState.Turn;
             else if (distance <= attackRadius && CurrentCoolDown <= 0)
                 currentState = EnemyState.Attack;
-            else if ((distance <= backWalkRadius) || isBack)
+            else if (distance <= backWalkRadius|| isBack)
                 currentState = EnemyState.BackWalk;
             else if (distance <= strafeRadius)
                 currentState = EnemyState.Strafe;
@@ -269,6 +270,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             CurrentCoolDown -= Time.deltaTime;
     }
 
+    protected virtual void AdditionalAttack() { }
+
     protected virtual void UpdateAttackValue()
     {
         Ani.SetInteger(attack, 0);
@@ -280,9 +283,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         else
             movement = Vector3.zero;
-        if (animatorStateInfo.normalizedTime > 0.9f)
+        if (animatorStateInfo.normalizedTime > 0.9f && IsAttacking)
         {
+            IsAttacking = false;
             Ani.ResetTrigger(isHited);
+            Ani.ResetTrigger("isMeleeAttack1");
+            Ani.ResetTrigger("isMeleeAttack2");
             CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         }
     }
@@ -337,7 +343,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 AnimationRealTime(false);
                 Look(Player.transform.position);
                 if (isMeleeAttack)
+                {
                     Ani.SetInteger(attack, 1);
+                    AdditionalAttack();
+                }
                 else
                     Ani.SetInteger(attack, 2);
                 break;

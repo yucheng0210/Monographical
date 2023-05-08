@@ -33,6 +33,20 @@ public class Knight : PatrolEnemy
         }
     }
 
+    protected override void AdditionalAttack()
+    {
+        base.AdditionalAttack();
+        if (!IsAttacking)
+        {
+            IsAttacking = true;
+            int randomIndex = UnityEngine.Random.Range(1, 3);
+            if (randomIndex == 1)
+                Ani.SetTrigger("isMeleeAttack1");
+            if (randomIndex == 2)
+                Ani.SetTrigger("isMeleeAttack2");
+            Ani.SetInteger("AttackMode", 0);
+        }
+    }
     /* private void OnDrawGizmos()
      {
          Vector3 cornerA = transform.position + Vector3.left * jumpAttackSize.x * .5f;
