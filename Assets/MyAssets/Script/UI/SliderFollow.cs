@@ -10,6 +10,9 @@ public class SliderFollow : MonoBehaviour
 
     [SerializeField]
     private float height;
+
+    [SerializeField]
+    private float xOffset;
     private float currentHeight;
     private Canvas myCamera;
     public float Height
@@ -21,13 +24,13 @@ public class SliderFollow : MonoBehaviour
     private void Awake()
     {
         currentHeight = height;
-        transform.position = role.transform.position + new Vector3(0, currentHeight, 0);
+        transform.position = role.transform.position + new Vector3(xOffset, currentHeight, 0);
         myCamera = GetComponentInParent<Canvas>();
     }
 
     private void Update()
     {
         currentHeight = Mathf.Lerp(currentHeight, height, Time.deltaTime * 5);
-        transform.position = role.transform.position + new Vector3(0, currentHeight, 0);
+        transform.position = role.transform.position + new Vector3(xOffset, currentHeight, 0);
     }
 }

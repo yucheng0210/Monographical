@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public abstract class PatrolEnemy : MonoBehaviour, IObserver
 {
     public Animator Ani { get; set; }
-    private AnimatorStateInfo animatorStateInfo;
+    public AnimatorStateInfo MyAnimatorStateInfo { get; set; }
     private Rigidbody myBody;
     private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
@@ -223,7 +223,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
         healthSlider.value = (EnemyCharacterState.CurrentHealth / EnemyCharacterState.MaxHealth);
-        animatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
+        MyAnimatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
     }
 
     protected virtual void UpdateState()
@@ -240,7 +240,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 currentState = EnemyState.Turn;
             else if (distance <= attackRadius && CurrentCoolDown <= 0)
                 currentState = EnemyState.Attack;
-            else if (distance <= backWalkRadius|| isBack)
+            else if (distance <= backWalkRadius || isBack)
                 currentState = EnemyState.BackWalk;
             else if (distance <= strafeRadius)
                 currentState = EnemyState.Strafe;
@@ -258,13 +258,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
         );
         Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
-        if (animatorStateInfo.IsName("Grounded"))
+        if (MyAnimatorStateInfo.IsName("Grounded"))
         {
             rImage.SetActive(false);
             lockMove = false;
             unityInputManager.enabled = true;
         }
-        if (animatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+        if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             UpdateAttackValue();
         else if (CurrentCoolDown >= 0 && Warning)
             CurrentCoolDown -= Time.deltaTime;
@@ -275,7 +275,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     protected virtual void UpdateAttackValue()
     {
         Ani.SetInteger(attack, 0);
-        if (animatorStateInfo.normalizedTime < 0.55f)
+        if (MyAnimatorStateInfo.normalizedTime < 0.55f)
         {
             movement = isMeleeAttack
                 ? transform.forward * meleeSpeed
@@ -283,7 +283,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         else
             movement = Vector3.zero;
-        if (animatorStateInfo.normalizedTime > 0.9f && IsAttacking)
+        if (MyAnimatorStateInfo.normalizedTime > 0.9f && IsAttacking)
         {
             IsAttacking = false;
             Ani.ResetTrigger(isHited);

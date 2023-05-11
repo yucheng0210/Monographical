@@ -9,6 +9,12 @@ public class Knight : PatrolEnemy
     [SerializeField]
     private Vector3 jumpAttackSize;
 
+    [SerializeField]
+    private float minAniSpeed;
+
+    [SerializeField]
+    private float maxAniSpeed;
+
     public void JumpAttackColliderSwitch()
     {
         //攻击者位置指向目标位置的向量
@@ -46,6 +52,15 @@ public class Knight : PatrolEnemy
                 Ani.SetTrigger("isMeleeAttack2");
             Ani.SetInteger("AttackMode", 0);
         }
+    }
+
+    public void ChangeAnimationSpeed(int count)
+    {
+        Ani.speed =
+            count == 0
+                ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f
+                : 1;
+        Debug.Log(Ani.speed);
     }
     /* private void OnDrawGizmos()
      {

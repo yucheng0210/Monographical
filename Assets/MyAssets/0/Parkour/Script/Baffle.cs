@@ -14,7 +14,8 @@ public class Baffle : MonoBehaviour
         TurnRight,
         TurnLeft,
         Trap,
-        Climb
+        Climb,
+        Select
     }
 
     [SerializeField]
@@ -24,13 +25,13 @@ public class Baffle : MonoBehaviour
     private float slowTime = 1.2f;
 
     [SerializeField]
-    private Image ringImage;
+    private List<Image> ringImage;
     public GameObject ClueCanvas
     {
         get { return clueCanvas; }
         set { clueCanvas = value; }
     }
-    public Image RingImage
+    public List<Image> RingImage
     {
         get { return ringImage; }
         set { ringImage = value; }

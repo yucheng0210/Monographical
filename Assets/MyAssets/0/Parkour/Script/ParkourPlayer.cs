@@ -118,8 +118,8 @@ public class ParkourPlayer : MonoBehaviour
     {
         //        Debug.Log(transform.rotation);
 
-        x = Input.GetAxis("Horizontal");
-        movement = (transform.forward + new Vector3(x, 0, 0)) * moveSpeed;
+        //x = Input.GetAxis("Horizontal");
+        movement = transform.forward * moveSpeed;
         if (myBody.velocity.y < -2f)
             animator.SetBool("isFall", true);
         else
@@ -132,7 +132,10 @@ public class ParkourPlayer : MonoBehaviour
         if (!slowTimeBool)
             return;
         accumulatedTime += Time.unscaledDeltaTime;
-        baffle.RingImage.fillAmount = (slowTime - accumulatedTime) / slowTime;
+        for (int i = 0; i < baffle.RingImage.Count; i++)
+        {
+            baffle.RingImage[i].fillAmount = (slowTime - accumulatedTime) / slowTime;
+        }
         switch (baffle.baffleType)
         {
             case Baffle.BaffleType.Up:
@@ -197,6 +200,18 @@ public class ParkourPlayer : MonoBehaviour
                 capsuleCollider.isTrigger = false;
                 StartCoroutine(ClimbingLadder());
                 break;
+            case Baffle.BaffleType.Select:
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    SuccessfullyDodge();
+                    StartCoroutine(Turn(-90));
+                }
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    SuccessfullyDodge();
+                    StartCoroutine(Turn(90));
+                }
+                break;
         }
         OutOfTime();
     }
@@ -242,12 +257,20 @@ public class ParkourPlayer : MonoBehaviour
     {
         float animationCount = 0;
         float animationProgress = 0;
+        transform.position = new Vector3(
+            baffle.transform.position.x,
+            transform.position.y,
+            transform.position.z
+        );
         isClimb = true;
         animator.SetBool("isClimb", isClimb);
         while (animator.GetBool("isClimb"))
         {
             accumulatedTime += Time.unscaledDeltaTime;
-            baffle.RingImage.fillAmount = (slowTime - accumulatedTime) / slowTime;
+            for (int i = 0; i < baffle.RingImage.Count; i++)
+            {
+                baffle.RingImage[i].fillAmount = (slowTime - accumulatedTime) / slowTime;
+            }
             animationProgress = animatorStateInfo.normalizedTime - animationCount;
             if (animationProgress >= 1 && animatorStateInfo.IsName("Climb"))
             {
@@ -274,7 +297,7 @@ public class ParkourPlayer : MonoBehaviour
         while (animatorStateInfo.IsTag("Climb"))
         {
             animator.speed = 1;
-            myBody.velocity = (transform.up + transform.forward) * 3;
+            myBody.velocity = (transform.up + transform.forward) * 2;
             yield return null;
         }
         canMove = true;
@@ -348,6 +371,10 @@ public class ParkourPlayer : MonoBehaviour
     private IEnumerator Turn(float direction)
     {
         playerDirection += direction;
+        if (playerDirection > 0)
+            playerDirection = 0;
+        if (playerDirection < -180)
+            playerDirection = -90;
         Quaternion lookPos = Quaternion.Euler(0, playerDirection, 0);
         while (Mathf.Abs(transform.rotation.y - lookPos.y) > 0.01f)
         {
@@ -363,7 +390,10 @@ public class ParkourPlayer : MonoBehaviour
         {
             baffle = other.GetComponent<Baffle>();
             slowTime = baffle.SlowTime;
-            baffle.RingImage.fillAmount = 1;
+            for (int i = 0; i < baffle.RingImage.Count; i++)
+            {
+                baffle.RingImage[i].fillAmount = 1;
+            }
             capsuleCollider.isTrigger = true;
             Time.timeScale = baffleTimeScale;
             slowTimeBool = true;
