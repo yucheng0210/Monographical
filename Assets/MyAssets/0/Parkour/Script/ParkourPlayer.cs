@@ -65,6 +65,9 @@ public class ParkourPlayer : MonoBehaviour
     [SerializeField]
     private float playerDirection;
 
+    [SerializeField]
+    private bool runTest;
+
     [Header("其他")]
     [SerializeField]
     private Transform followTargetTrans;
@@ -116,9 +119,6 @@ public class ParkourPlayer : MonoBehaviour
 
     private void SwitchStateValue()
     {
-        //        Debug.Log(transform.rotation);
-
-        //x = Input.GetAxis("Horizontal");
         movement = transform.forward * moveSpeed;
         if (myBody.velocity.y < -2f)
             animator.SetBool("isFall", true);
@@ -139,7 +139,7 @@ public class ParkourPlayer : MonoBehaviour
         switch (baffle.baffleType)
         {
             case Baffle.BaffleType.Up:
-                if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space) || runTest)
                 {
                     SuccessfullyDodge();
                     if (!upTheAir)
@@ -150,13 +150,13 @@ public class ParkourPlayer : MonoBehaviour
                     else
                     {
                         animator.SetTrigger("isDoubleJump");
-                        myBody.AddForce(transform.up * jumpForce * 0.75f, ForceMode.Impulse);
+                        myBody.AddForce(transform.up * jumpForce * 0.65f, ForceMode.Impulse);
                         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
                     }
                 }
                 break;
             case Baffle.BaffleType.Left:
-                if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q) || runTest)
                 {
                     SuccessfullyDodge();
                     animator.SetTrigger("isDodgeL");
@@ -164,7 +164,7 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.Right:
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E) || runTest)
                 {
                     SuccessfullyDodge();
                     animator.SetTrigger("isDodgeR");
@@ -172,21 +172,21 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.Down:
-                if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S))
+                if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S) || runTest)
                 {
                     SuccessfullyDodge();
                     animator.SetTrigger("isRoll");
                 }
                 break;
             case Baffle.BaffleType.TurnRight:
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E))
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E) || runTest)
                 {
                     SuccessfullyDodge();
                     StartCoroutine(Turn(90));
                 }
                 break;
             case Baffle.BaffleType.TurnLeft:
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q) || runTest)
                 {
                     SuccessfullyDodge();
                     StartCoroutine(Turn(-90));
@@ -206,7 +206,7 @@ public class ParkourPlayer : MonoBehaviour
                     SuccessfullyDodge();
                     StartCoroutine(Turn(-90));
                 }
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) || runTest)
                 {
                     SuccessfullyDodge();
                     StartCoroutine(Turn(90));
@@ -275,11 +275,11 @@ public class ParkourPlayer : MonoBehaviour
             if (animationProgress >= 1 && animatorStateInfo.IsName("Climb"))
             {
                 animator.speed = 0;
-                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Space) || runTest)
                 {
                     animator.speed = 1;
                     animationCount++;
-                    sliderFollow.Height += 0.8f;
+                    sliderFollow.Height += 0.6f;
                 }
             }
             if (animator.speed == 1)
@@ -297,7 +297,7 @@ public class ParkourPlayer : MonoBehaviour
         while (animatorStateInfo.IsTag("Climb"))
         {
             animator.speed = 1;
-            myBody.velocity = (transform.up + transform.forward) * 2;
+            myBody.velocity = (transform.up + transform.forward) * 2.5f;
             yield return null;
         }
         canMove = true;
