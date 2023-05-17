@@ -386,6 +386,8 @@ public class ParkourPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (isDead)
+            return;
         if (other.CompareTag("Baffle"))
         {
             baffle = other.GetComponent<Baffle>();
@@ -420,11 +422,14 @@ public class ParkourPlayer : MonoBehaviour
 
     private IEnumerator Death()
     {
+        EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
         isDead = true;
         animator.SetTrigger("isDead");
         Time.timeScale = 0.5f;
         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
         GameManager.Instance.EndNotifyObservers();
+        myBody.velocity = Vector3.zero;
+        beakBackForce = transform.TransformDirection(beakBackForce);
         myBody.AddForce(beakBackForce, ForceMode.Impulse);
         gameObject
             .GetComponent<BloodEffect>()

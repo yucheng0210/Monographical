@@ -20,11 +20,6 @@ public class Trap : MonoBehaviour, IObserver
         }
     }
 
-    private void OnDisable()
-    {
-        GameManager.Instance.RemoveObservers(this);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

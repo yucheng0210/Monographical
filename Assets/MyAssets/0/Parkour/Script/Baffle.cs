@@ -42,9 +42,19 @@ public class Baffle : MonoBehaviour
     }
     public BaffleType baffleType;
 
+    private void Start()
+    {
+        EventManager.Instance.AddEventRegister(EventDefinition.eventGameOver, EventGameOver);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
             clueCanvas.SetActive(true);
+    }
+
+    public void EventGameOver(params object[] args)
+    {
+        gameObject.GetComponent<BoxCollider>().enabled = false;
     }
 }

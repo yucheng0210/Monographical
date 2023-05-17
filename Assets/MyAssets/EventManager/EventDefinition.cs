@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EventDefinition
 {
+    public const string eventGameOver = "EVENT_GAME_OVER";
     public const string eventMainLine = "MAIN_LINE";
     public const string eventNextMainLine = "NEXT_MAIN_LINE";
     public const string eventAutoSave = "EVENT_AUTO_SAVE";

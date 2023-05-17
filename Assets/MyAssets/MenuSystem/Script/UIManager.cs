@@ -108,6 +108,50 @@ public class UIManager : Singleton<UIManager>, IObserver
         }
     }
 
+    public IEnumerator FadeOut(CanvasGroup canvasGroup, float fadeTime)
+    {
+        while (canvasGroup.alpha < 1)
+        {
+            canvasGroup.alpha += Time.unscaledDeltaTime / fadeTime;
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeIn(CanvasGroup canvasGroup, float fadeTime)
+    {
+        while (canvasGroup.alpha != 0)
+        {
+            canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
+            yield return null;
+        }
+        Destroy(gameObject);
+    }
+
+    public IEnumerator FadeOutIn(
+        CanvasGroup canvasGroup,
+        float firstWaitTime,
+        float secondWaitTime,
+        bool nextMainLineBool,
+        float fadeTime
+    )
+    {
+        yield return new WaitForSecondsRealtime(firstWaitTime);
+        while (canvasGroup.alpha < 1)
+        {
+            canvasGroup.alpha += Time.deltaTime / fadeTime;
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(secondWaitTime);
+        while (canvasGroup.alpha != 0)
+        {
+            canvasGroup.alpha -= Time.deltaTime / fadeTime;
+            yield return null;
+        }
+        if (nextMainLineBool)
+            EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
+        Destroy(gameObject);
+    }
+
     public void EndNotify()
     {
         //  deadImage.StartCoroutine(deadImage.FadeOutIn(2, 3, false));
