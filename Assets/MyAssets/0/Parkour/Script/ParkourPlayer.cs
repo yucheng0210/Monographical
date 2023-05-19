@@ -144,13 +144,14 @@ public class ParkourPlayer : MonoBehaviour
                     SuccessfullyDodge();
                     if (!upTheAir)
                     {
+                        myBody.velocity = new Vector3(0, 0, myBody.velocity.z);
                         animator.SetTrigger("isJump");
                         myBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
                     }
                     else
                     {
                         animator.SetTrigger("isDoubleJump");
-                        myBody.AddForce(transform.up * jumpForce * 0.65f, ForceMode.Impulse);
+                        myBody.AddForce(transform.up * jumpForce * 0.7f, ForceMode.Impulse);
                         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
                     }
                 }
@@ -279,7 +280,7 @@ public class ParkourPlayer : MonoBehaviour
                 {
                     animator.speed = 1;
                     animationCount++;
-                    sliderFollow.Height += 0.6f;
+                    sliderFollow.Height += 0.8f;
                 }
             }
             if (animator.speed == 1)
@@ -297,7 +298,7 @@ public class ParkourPlayer : MonoBehaviour
         while (animatorStateInfo.IsTag("Climb"))
         {
             animator.speed = 1;
-            myBody.velocity = (transform.up + transform.forward) * 2.5f;
+            myBody.velocity = (transform.up + transform.forward) * 2f;
             yield return null;
         }
         canMove = true;
