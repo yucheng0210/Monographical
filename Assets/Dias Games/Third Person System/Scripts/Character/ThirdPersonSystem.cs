@@ -316,11 +316,6 @@ namespace DiasGames.ThirdPersonSystem
             combo = 0;
         }
 
-        public void IsHited()
-        {
-            m_Animator.SetTrigger("isHited");
-        }
-
         private void AttackState()
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);

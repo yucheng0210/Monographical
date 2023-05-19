@@ -70,6 +70,7 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private bool isInvincible;
+        private AnimatorStateInfo animatorStateInfo;
 
         private void Awake()
         {
@@ -104,6 +105,9 @@ namespace DiasGames.ThirdPersonSystem
         private void Update()
         {
             healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
+            animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
+            if (animatorStateInfo.IsName("BeakBack"))
+                ani.ResetTrigger("isHited");
         }
 
         private void InitialState()
@@ -122,7 +126,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
-            Debug.Log("damage");
+            ani.SetTrigger("isHited");
             Collider newOther = (Collider)other[0];
             attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
             characterState.TakeDamage(attackerCharacterState, characterState);
@@ -132,6 +136,13 @@ namespace DiasGames.ThirdPersonSystem
                 transform.position.z
             );
             HitEffect(hitPoint);
+            if (characterState.CurrentPoise <= 0)
+            {
+                ani.SetFloat("BeakBackMode", 2);
+                characterState.CurrentPoise = characterState.MaxPoise;
+            }
+            else
+                ani.SetFloat("BeakBackMode", 1);
             if (characterState.CurrentHealth <= 0)
                 Die();
             else

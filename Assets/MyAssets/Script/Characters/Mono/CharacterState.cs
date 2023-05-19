@@ -30,9 +30,10 @@ public class CharacterState : MonoBehaviour
     {
         if (templateData != null)
             characterData = Instantiate(templateData);
+        characterData.currentPoise = characterData.maxPoise;
     }
 
-    #region Read from NormalData_SO
+    #region Read from NormalData
     public float MaxHealth
     {
         get
@@ -124,7 +125,7 @@ public class CharacterState : MonoBehaviour
         }
     }
     #endregion
-    #region Read from AttackData_SO
+    #region Read from AttackData
 
     public float CriticalChance
     {
@@ -205,7 +206,7 @@ public class CharacterState : MonoBehaviour
         }
     }
     #endregion
-    #region Read from Transform_SO
+    #region Read from Transform
     public Vector3 Pos
     {
         get { return characterData.currentPos; }
