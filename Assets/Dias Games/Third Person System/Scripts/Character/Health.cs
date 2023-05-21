@@ -70,10 +70,15 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private bool isInvincible;
+
+        [SerializeField]
+        private float fallDownForce;
         private AnimatorStateInfo animatorStateInfo;
+        private Rigidbody rigidbody;
 
         private void Awake()
         {
+            rigidbody = GetComponent<Rigidbody>();
             ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
             allColliders.AddRange(GetComponentsInChildren<Collider>());
             ani = GetComponent<Animator>();
@@ -106,7 +111,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
-            if (animatorStateInfo.IsName("BeakBack"))
+            if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
         }
 
@@ -118,7 +123,11 @@ namespace DiasGames.ThirdPersonSystem
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.layer == enemyAttackLayer && characterState.CurrentHealth >= 0)
+            if (
+                other.gameObject.layer == enemyAttackLayer
+                && characterState.CurrentHealth >= 0
+                && !animatorStateInfo.IsName("BeakBack")
+            )
                 IsHited(other);
         }
 
@@ -136,10 +145,12 @@ namespace DiasGames.ThirdPersonSystem
                 transform.position.z
             );
             HitEffect(hitPoint);
+            Vector3 direction = (transform.position - newOther.transform.position).normalized;
             if (characterState.CurrentPoise <= 0)
             {
                 ani.SetFloat("BeakBackMode", 2);
                 characterState.CurrentPoise = characterState.MaxPoise;
+                rigidbody.AddForce(direction * fallDownForce);
             }
             else
                 ani.SetFloat("BeakBackMode", 1);

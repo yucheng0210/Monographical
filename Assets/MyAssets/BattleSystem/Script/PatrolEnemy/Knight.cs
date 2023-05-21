@@ -14,6 +14,13 @@ public class Knight : PatrolEnemy
 
     [SerializeField]
     private float maxAniSpeed;
+    private float maxPoiseAttack;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        maxPoiseAttack = EnemyCharacterState.PoiseAttack;
+    }
 
     public void JumpAttackColliderSwitch()
     {
@@ -60,7 +67,16 @@ public class Knight : PatrolEnemy
             count == 0
                 ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f
                 : 1;
-        Debug.Log(Ani.speed);
+    }
+
+    protected override void UpdateState()
+    {
+        base.UpdateState();
+
+        if (MyAnimatorStateInfo.IsName("JumpAttack"))
+            EnemyCharacterState.PoiseAttack *= 2;
+        else
+            EnemyCharacterState.PoiseAttack = maxPoiseAttack;
     }
     /* private void OnDrawGizmos()
      {

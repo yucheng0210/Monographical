@@ -482,8 +482,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
             if (shutDown)
                 return;
-            /*if (EnemyCharacterState.CurrentPoise > 0)
-            {*/
             Ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(
@@ -492,9 +490,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 transform.position.z
             );
             HitEffect(hitPoint);
-            //}
-            /*else
-                LosePoise();*/
         }
     }
 
