@@ -126,7 +126,7 @@ namespace DiasGames.ThirdPersonSystem
             if (
                 other.gameObject.layer == enemyAttackLayer
                 && characterState.CurrentHealth >= 0
-                && !animatorStateInfo.IsName("BeakBack")
+                && !animatorStateInfo.IsName("StandUp")
             )
                 IsHited(other);
         }
@@ -145,12 +145,12 @@ namespace DiasGames.ThirdPersonSystem
                 transform.position.z
             );
             HitEffect(hitPoint);
-            Vector3 direction = (transform.position - newOther.transform.position).normalized;
+            Vector3 direction = newOther.transform.forward + newOther.transform.up;
             if (characterState.CurrentPoise <= 0)
             {
                 ani.SetFloat("BeakBackMode", 2);
                 characterState.CurrentPoise = characterState.MaxPoise;
-                rigidbody.AddForce(direction * fallDownForce);
+                rigidbody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
                 ani.SetFloat("BeakBackMode", 1);

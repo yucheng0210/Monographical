@@ -52,8 +52,8 @@ public class GameManager : Singleton<GameManager>, ISavable
 
     public void LoadingNotify(bool loadingBool)
     {
-        foreach (var observer in observerList)
-            observer.SceneLoadingNotify(loadingBool);
+        /*  foreach (var observer in observerList)
+              observer.SceneLoadingNotify(loadingBool);*/
     }
 
     public void RegisterPlayer(CharacterState player)

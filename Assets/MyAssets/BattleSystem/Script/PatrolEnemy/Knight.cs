@@ -42,7 +42,6 @@ public class Knight : PatrolEnemy
         if (Mathf.Abs(rightProject) <= jumpAttackSize.x * 0.5f)
         {
             EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider);
-            Debug.Log("damage");
         }
     }
 
@@ -72,9 +71,8 @@ public class Knight : PatrolEnemy
     protected override void UpdateState()
     {
         base.UpdateState();
-
         if (MyAnimatorStateInfo.IsName("JumpAttack"))
-            EnemyCharacterState.PoiseAttack *= 2;
+            EnemyCharacterState.PoiseAttack = maxPoiseAttack * 2;
         else
             EnemyCharacterState.PoiseAttack = maxPoiseAttack;
     }

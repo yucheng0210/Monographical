@@ -17,7 +17,8 @@ public class SystemMenu : UIBase
 
     private void ExitGame()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
         SaveLoadManager.Instance.AutoSave();
+        //UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
     }
 }

@@ -17,4 +17,5 @@ public class EventDefinition
     public const string eventQuestCompleted = "EVENT_QUEST_COMPLETED";
     public const string eventIsHited = "EVENT_IS_HITED";
     public const string eventPlayerInvincible = "EVENT_PLAYER_INVINCIBLE";
+    public const string eventSceneLoading = "EVENT_SCENE_LOADING";
 }

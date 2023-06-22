@@ -151,7 +151,7 @@ public class ParkourPlayer : MonoBehaviour
                     else
                     {
                         animator.SetTrigger("isDoubleJump");
-                        myBody.AddForce(transform.up * jumpForce * 0.7f, ForceMode.Impulse);
+                        myBody.AddForce(transform.up * jumpForce * 0.8f, ForceMode.Impulse);
                         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
                     }
                 }

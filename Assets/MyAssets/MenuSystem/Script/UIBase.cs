@@ -81,9 +81,8 @@ public abstract class UIBase : MonoBehaviour, IObserver
 
     public virtual void SceneLoadingNotify(bool loadingBool)
     {
-        Menu.menuIsOpen = false;
         shutDown = loadingBool ? true : false;
-        openMenu.SetActive(false);
+        //openMenu.SetActive(false);
         //gameObject.SetActive(false);
     }
 }

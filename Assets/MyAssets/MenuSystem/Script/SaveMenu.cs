@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SaveMenu : Menu
+public class SaveMenu : UIBase
 {
     [SerializeField]
     private Button firstButton;
@@ -23,7 +23,8 @@ public class SaveMenu : Menu
             if (
                 saveButtonManager.transform
                     .GetChild(i)
-                    .gameObject.GetComponentInChildren<Text>().text != "NODATA"
+                    .gameObject.GetComponentInChildren<Text>()
+                    .text != "NODATA"
             )
                 saveButtonManager.transform
                     .GetChild(i)
@@ -40,7 +41,7 @@ public class SaveMenu : Menu
 
     private void OpenClueMenu()
     {
-        clueMenu.Open();
+        clueMenu.Show();
+        gameObject.SetActive(false);
     }
-
 }

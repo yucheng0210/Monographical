@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class ClueMenu : Menu
+public class ClueMenu : UIBase
 {
     [SerializeField]
     private Button firstButton;
@@ -21,7 +21,7 @@ public class ClueMenu : Menu
     {
         base.Start();
         yesButton.onClick.AddListener(SaveData);
-        noButton.onClick.AddListener(Close);
+        noButton.onClick.AddListener(Hide);
     }
 
     private void SaveData()
@@ -30,5 +30,6 @@ public class ClueMenu : Menu
         if (SceneManager.GetActiveScene().name == "StartMenu")
             SaveLoadManager.Instance.Load(currentSaveID);
         Time.timeScale = 1;
+        gameObject.SetActive(false);
     }
 }

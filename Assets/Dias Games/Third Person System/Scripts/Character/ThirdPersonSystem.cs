@@ -198,7 +198,8 @@ namespace DiasGames.ThirdPersonSystem
 
         private MeleeWeaponTrail trail;
 
-        public int combo;
+        [SerializeField]
+        private int combo;
         public static bool canRoll;
         private int attack = Animator.StringToHash("AttackMode");
         private CharacterState characterState;
@@ -206,6 +207,7 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private bool shutDown;
         private AnimatorStateInfo animatorStateInfo;
+        private AnimatorTransitionInfo animatorTransitionInfo;
 
         [SerializeField]
         private bool isRunning;
@@ -279,7 +281,7 @@ namespace DiasGames.ThirdPersonSystem
             if (m_ActiveAbility != null)
                 m_ActiveAbility.FixedUpdateAbility();
             // ----------------------------------------------------------------- //
-            if (currentEndurance < maxEndurance && m_Animator.GetInteger(attack) == 0 && free)
+            if (currentEndurance < maxEndurance && !animatorStateInfo.IsTag("Attack"))
                 currentEndurance++;
         }
 
@@ -319,35 +321,17 @@ namespace DiasGames.ThirdPersonSystem
         private void AttackState()
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+            animatorTransitionInfo = m_Animator.GetAnimatorTransitionInfo(0);
             if (
                 (Input.GetMouseButtonDown(0) || Input.GetButtonDown("R"))
                 && free
                 && currentEndurance >= attackConsume
+                && !m_Animator.GetBool("isAttack")
             )
             {
-                //Debug.Log(combo);
-                if (combo == 0)
-                {
-                    combo = 1;
-                    AttackSwitch();
-                }
-                else if (animatorStateInfo.IsName("NormalAttack1") && combo == 1)
-                    combo = 2;
-                /*else if (animatorStateInfo.IsName("NormalAttack2") && combo == 2)
-                    combo = 3;*/
-            }
-        }
-
-        public void AttackSwitch()
-        {
-            if (m_Animator.GetInteger("AttackMode") == combo && combo != 0)
-            {
-                m_Animator.SetInteger("AttackMode", 0);
-                combo = 0;
-            }
-            m_Animator.SetInteger(attack, combo);
-            if (combo != 0)
+                m_Animator.SetTrigger("isAttack");
                 ReduceEndurance(attackConsume);
+            }
         }
 
         public void ReduceEndurance(float consume)

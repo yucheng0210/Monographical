@@ -127,7 +127,8 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     public IEnumerator Transition(string sceneName)
     {
-        GameManager.Instance.LoadingNotify(true);
+        //        GameManager.Instance.LoadingNotify(true);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         SceneFader fade = Instantiate(sceneFaderPrefab);
         progressSlider.value = 0.0f;
         yield return StartCoroutine(fade.FadeOut());
@@ -149,7 +150,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         yield return new WaitForSeconds(0.5f);
         progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
-        GameManager.Instance.LoadingNotify(false);
+        // GameManager.Instance.LoadingNotify(false);
         yield return StartCoroutine(fade.FadeIn());
     }
 
