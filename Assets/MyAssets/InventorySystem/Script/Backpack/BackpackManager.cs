@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class BackpackManager : Singleton<BackpackManager>
 {
-    private IEffectFactory effectFactory;
+    public IEffectFactory ItemEffectFactory { get; set; }
 
-    public void RegisterFactory(IEffectFactory effectFactory)
+    protected override void Awake()
     {
-        this.effectFactory = effectFactory;
+        base.Awake();
+        ItemEffectFactory = new EffectFactory();
     }
 
     public void UseItem(int itemIndex)
     {
         ReduceItem(itemIndex, DataManager.Instance.Backpack);
-        IEffect effect = effectFactory.CreateEffect(
-            DataManager.Instance.ItemList[itemIndex].ItemEffectType
-        );
-        effect.ApplyEffect(
-            DataManager.Instance.EffectList[
-                DataManager.Instance.ItemList[itemIndex].ItemEffectName
-            ].EffectTarget,
-            DataManager.Instance.EffectList[
-                DataManager.Instance.ItemList[itemIndex].ItemEffectName
-            ].EffectValue
-        );
+        for (int i = 0; i < DataManager.Instance.ItemList[itemIndex].ItemEffectType.Count; i++)
+        {
+            ItemEffectFactory
+                .CreateEffect(
+                    DataManager.Instance.ItemList[itemIndex].ItemEffectType[i].Item1,
+                    DataManager.Instance.ItemList[itemIndex].ItemEffectType[i].Item2
+                )
+                .ApplyEffect();
+        }
     }
 
     public void AddItem(int itemIndex, Dictionary<int, Item> inventory)

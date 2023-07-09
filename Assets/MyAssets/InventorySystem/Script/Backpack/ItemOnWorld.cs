@@ -41,8 +41,6 @@ public class ItemOnWorld : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
-        {
             clue.SetActive(false);
-        }
     }
 }

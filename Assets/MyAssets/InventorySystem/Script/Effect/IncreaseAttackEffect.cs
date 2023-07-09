@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class IncreaseAttackEffect : IEffect
 {
-    public void ApplyEffect(string target, int value)
+    private int value;
+
+    public IncreaseAttackEffect(int value)
     {
-        DataManager.Instance.CharacterList[target].AdditionalAttack += value;
+        this.value = value;
+    }
+
+    public void ApplyEffect()
+    {
+        DataManager.Instance.CharacterList["Player"].AdditionalAttack += value;
     }
 }

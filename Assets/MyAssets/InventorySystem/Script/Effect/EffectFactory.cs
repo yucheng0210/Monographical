@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class EffectFactory : IEffectFactory
 {
-    public IEffect CreateEffect(string effectType)
+    public IEffect CreateEffect(string effectType, int value)
     {
         switch (effectType)
         {
-            case "IncreaseHealth":
-                return new IncreaseHealthEffect();
-            case "IncreaseAttack":
-                return new IncreaseAttackEffect();
+            case "IncreaseHealthEffect":
+                return new IncreaseHealthEffect(value);
+            case "IncreaseAttackEffect":
+                return new IncreaseAttackEffect(value);
             default:
                 return null;
         }

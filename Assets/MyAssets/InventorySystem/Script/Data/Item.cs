@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 //[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/NewItem")]
 public class Item
@@ -26,12 +27,6 @@ public class Item
 
     [SerializeField]
     private int itemCost;
-
-    [SerializeField]
-    private bool itemInShop;
-
-    [SerializeField]
-    private Item itemInOther;
 
     #region Read from Item_SO
     public int ItemIndex
@@ -72,8 +67,7 @@ public class Item
     }
     public int ItemBuyPrice { get; set; }
     public int ItemSellPrice { get; set; }
-    public string ItemEffectType { get; set; }
-    public string ItemEffectName { get; set; }
+    public List<ValueTuple<string, int>> ItemEffectType { get; set; }
     public int ItemCost
     {
         get { return itemCost; }
@@ -83,14 +77,6 @@ public class Item
             if (itemCost < 0)
                 itemCost = 0;
         }
-    }
-    public bool ItemInShop
-    {
-        get { return itemInShop; }
-    }
-    public Item ItemInOther
-    {
-        get { return itemInOther; }
     }
     #endregion
 }

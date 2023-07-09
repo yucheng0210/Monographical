@@ -59,9 +59,21 @@ public class DataManager : Singleton<DataManager>, ISavable
             item.ItemInfo = row[2];
             item.ItemBuyPrice = int.Parse(row[3]);
             item.ItemSellPrice = int.Parse(row[4]);
-            item.ItemEffectType = row[5];
+            item.ItemEffectType = new List<(string, int)>();
+            if (row[5] != "")
+            {
+                string[] effects = row[5].Split(';');
+                for (int j = 0; j < effects.Length; j++)
+                {
+                    string[] effect = effects[j].Split('=');
+                    string id;
+                    int count;
+                    id = effect[0];
+                    if (int.TryParse(effect[1], out count))
+                        item.ItemEffectType.Add(new ValueTuple<string, int>(id, count));
+                }
+            }
             item.ItemIndex = int.Parse(row[6]);
-            item.ItemEffectName = row[7];
             item.ItemHeld = 0;
             ItemList.Add(item.ItemIndex, item);
         }
@@ -77,9 +89,21 @@ public class DataManager : Singleton<DataManager>, ISavable
             item.ItemInfo = row[2];
             item.ItemBuyPrice = int.Parse(row[3]);
             item.ItemSellPrice = int.Parse(row[4]);
-            item.ItemEffectType = row[5];
+            item.ItemEffectType = new List<(string, int)>();
+            if (row[5] != "")
+            {
+                string[] effects = row[5].Split(';');
+                for (int j = 0; j < effects.Length; j++)
+                {
+                    string[] effect = effects[j].Split('=');
+                    string id;
+                    int count;
+                    id = effect[0];
+                    if (int.TryParse(effect[1], out count))
+                        item.ItemEffectType.Add(new ValueTuple<string, int>(id, count));
+                }
+            }
             item.ItemIndex = int.Parse(row[6]);
-            item.ItemEffectName = row[7];
             item.ItemHeld = 5;
             ShopBag.Add(item.ItemIndex, item);
         }

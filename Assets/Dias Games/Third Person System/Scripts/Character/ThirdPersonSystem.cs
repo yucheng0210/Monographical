@@ -196,6 +196,8 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private float rollConsume;
 
+        [SerializeField]
+        private List<GameObject> slashEffectList = new List<GameObject>();
         private MeleeWeaponTrail trail;
 
         [SerializeField]
@@ -341,13 +343,14 @@ namespace DiasGames.ThirdPersonSystem
 
         public void ColliderSwitch(int switchCount)
         {
-            if (switchCount == 1)
+            if (switchCount > 0)
             {
                 collision.SetActive(true);
-                if (animatorStateInfo.IsName("NormalAttack1"))
-                    AudioManager.Instance.SlashAudio(1);
-                else if (animatorStateInfo.IsName("NormalAttack2"))
-                    AudioManager.Instance.SlashAudio(2);
+                Instantiate(
+                    slashEffectList[switchCount - 1],
+                    collision.transform.position,
+                    Quaternion.Euler(60, 0, 0)
+                );
             }
             else
                 collision.SetActive(false);
