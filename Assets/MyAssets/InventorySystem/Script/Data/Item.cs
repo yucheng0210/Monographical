@@ -78,5 +78,6 @@ public class Item
                 itemCost = 0;
         }
     }
+    public string ItemTarget { get; set; }
     #endregion
 }

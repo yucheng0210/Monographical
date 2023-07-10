@@ -74,6 +74,7 @@ public class DataManager : Singleton<DataManager>, ISavable
                 }
             }
             item.ItemIndex = int.Parse(row[6]);
+            item.ItemTarget = row[7];
             item.ItemHeld = 0;
             ItemList.Add(item.ItemIndex, item);
         }

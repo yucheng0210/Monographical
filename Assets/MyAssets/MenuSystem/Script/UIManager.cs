@@ -23,7 +23,7 @@ public class UIManager : Singleton<UIManager>, IObserver
     private void Start()
     {
         //EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
-        GameManager.Instance.AddObservers(this);
+        // GameManager.Instance.AddObservers(this);
     }
 
     public void ShowUI(string uiName)

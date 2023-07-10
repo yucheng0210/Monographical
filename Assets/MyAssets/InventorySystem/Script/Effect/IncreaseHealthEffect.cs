@@ -4,17 +4,10 @@ using UnityEngine;
 
 public class IncreaseHealthEffect : IEffect
 {
-    private int value;
-
-    public IncreaseHealthEffect(int value)
+    public void ApplyEffect(int value, string target)
     {
-        this.value = value;
-    }
-
-    public void ApplyEffect()
-    {
-        DataManager.Instance.CharacterList["Player"].TakeDamage(
-            DataManager.Instance.CharacterList["Player"],
+        DataManager.Instance.CharacterList[target].TakeDamage(
+            DataManager.Instance.CharacterList[target],
             -value
         );
     }
