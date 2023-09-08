@@ -55,6 +55,6 @@ public class Baffle : MonoBehaviour
 
     public void EventGameOver(params object[] args)
     {
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
     }
 }

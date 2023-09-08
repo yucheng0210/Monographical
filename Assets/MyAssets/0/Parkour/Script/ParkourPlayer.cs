@@ -150,8 +150,9 @@ public class ParkourPlayer : MonoBehaviour
                     }
                     else
                     {
+                        myBody.velocity = new Vector3(myBody.velocity.x, 0, myBody.velocity.z);
                         animator.SetTrigger("isDoubleJump");
-                        myBody.AddForce(transform.up * jumpForce * 0.8f, ForceMode.Impulse);
+                        myBody.AddForce(transform.up * jumpForce * 0.5f, ForceMode.Impulse);
                         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
                     }
                 }
@@ -251,7 +252,7 @@ public class ParkourPlayer : MonoBehaviour
             radius,
             (1 << intLayer)
         );
-        isOnGrounded = colliders.Length != 0 ? true : false;
+        isOnGrounded = colliders.Length != 0;
     }
 
     private IEnumerator ClimbingLadder()
@@ -305,7 +306,7 @@ public class ParkourPlayer : MonoBehaviour
         myBody.useGravity = true;
     }
 
-#region "沒使用事件管理器的開頭"
+    #region "沒使用事件管理器的開頭"
     /*
     private IEnumerator Beginning()
     {
@@ -340,7 +341,7 @@ public class ParkourPlayer : MonoBehaviour
         dialogSystem[1].BlockContinue = false;
     }
     */
-#endregion
+    #endregion
     private IEnumerator LookBack()
     {
         Quaternion lookPos = Quaternion.Euler(0, -180, 0);
