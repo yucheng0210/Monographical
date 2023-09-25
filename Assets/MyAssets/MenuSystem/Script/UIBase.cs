@@ -30,7 +30,11 @@ public abstract class UIBase : MonoBehaviour, IObserver
         if (touchButton != null)
             AddOnClickListener();
     }
-
+    protected virtual void Update()
+    {
+        if (OpenBool && Input.GetKeyDown(KeyCode.Escape))
+            Hide();
+    }
     private void AddOnClickListener()
     {
         switch (actionType)
