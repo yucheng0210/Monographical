@@ -106,6 +106,7 @@ public class ParkourPlayer : MonoBehaviour
             runImpulse.GenerateImpulse();
             if (canMove)
                 myBody.velocity = movement * Time.fixedDeltaTime;
+
         }
     }
 
@@ -205,10 +206,10 @@ public class ParkourPlayer : MonoBehaviour
             case Baffle.BaffleType.Select:
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    SuccessfullyDodge();
-                    StartCoroutine(Turn(-90));
+                    //SuccessfullyDodge();
+                    StartCoroutine(Turn(-60));
                 }
-                if (Input.GetKeyDown(KeyCode.E) || runTest)
+                else if (Input.GetKeyDown(KeyCode.E) || runTest)
                 {
                     SuccessfullyDodge();
                     StartCoroutine(Turn(90));
@@ -281,7 +282,7 @@ public class ParkourPlayer : MonoBehaviour
                 {
                     animator.speed = 1;
                     animationCount++;
-                    sliderFollow.Height += 0.8f;
+                    sliderFollow.Height += 0.75f;
                 }
             }
             if (animator.speed == 1)
@@ -299,7 +300,7 @@ public class ParkourPlayer : MonoBehaviour
         while (animatorStateInfo.IsTag("Climb"))
         {
             animator.speed = 1;
-            myBody.velocity = (transform.up + transform.forward) * 2f;
+            myBody.AddForce((transform.up * 0.5f + transform.forward) * Time.deltaTime, ForceMode.VelocityChange);
             yield return null;
         }
         canMove = true;
@@ -372,25 +373,22 @@ public class ParkourPlayer : MonoBehaviour
 
     private IEnumerator Turn(float direction)
     {
-        playerDirection += direction;
-        if (playerDirection > 0)
-            playerDirection = 0;
-        if (playerDirection < -180)
-            playerDirection = -90;
-        Quaternion lookPos = Quaternion.Euler(0, playerDirection, 0);
-        while (Mathf.Abs(transform.rotation.y - lookPos.y) > 0.01f)
+        float targetRotation = playerDirection + direction;
+        Quaternion lookPos = Quaternion.Euler(0, targetRotation, 0);
+        while (Quaternion.Angle(transform.rotation, lookPos) > 0.01f)
         {
-            transform.Rotate(0, direction * Time.deltaTime * turnSpeed, 0);
+            float step = turnSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, lookPos, step);
             yield return null;
         }
-        transform.rotation = lookPos;
+        playerDirection = targetRotation; // 更新玩家方向
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (isDead)
             return;
-        if (other.CompareTag("Baffle"))
+        if (other.CompareTag("Baffle") && !outOfTime)
         {
             baffle = other.GetComponent<Baffle>();
             slowTime = baffle.SlowTime;
@@ -403,7 +401,7 @@ public class ParkourPlayer : MonoBehaviour
             slowTimeBool = true;
             sliderFollow = baffle.ClueCanvas.GetComponentInChildren<SliderFollow>();
         }
-        if (other.CompareTag("BaffleEnd"))
+        if (other.CompareTag("BaffleEnd") && !outOfTime)
         {
             isClimb = false;
             accumulatedTime = 0;
@@ -412,8 +410,8 @@ public class ParkourPlayer : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Dead") && !isDead && outOfTime)
-            StartCoroutine(Death());
+        if ((other.CompareTag("Dead") || other.CompareTag("JumpDead")) && !isDead && outOfTime)
+            StartCoroutine(Death(other.tag));
     }
 
     private void OnTriggerExit(Collider other)
@@ -422,11 +420,14 @@ public class ParkourPlayer : MonoBehaviour
             capsuleCollider.isTrigger = false;
     }
 
-    private IEnumerator Death()
+    private IEnumerator Death(string tag)
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
         isDead = true;
-        animator.SetTrigger("isDead");
+        if (tag == "Dead")
+            animator.SetTrigger("isDead");
+        else if (tag == "JumpDead")
+            animator.SetTrigger("isJumpDead");
         Time.timeScale = 0.5f;
         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
         GameManager.Instance.EndNotifyObservers();
