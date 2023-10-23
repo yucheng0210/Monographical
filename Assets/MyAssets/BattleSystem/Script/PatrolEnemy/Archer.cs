@@ -43,6 +43,7 @@ public class Archer : PatrolEnemy
     protected override void UpdateState()
     {
         base.UpdateState();
+        //Debug.Log(CurrentCoolDown);
         if (Warning && arrowTrans.childCount < 1 && canDraw)
         {
             canDraw = false;
@@ -74,9 +75,15 @@ public class Archer : PatrolEnemy
             targetPos += Player.GetComponent<Rigidbody>().velocity / (20 / Distance);
         m_trans = arrow.transform;
         distanceToTarget = Vector3.Distance(m_trans.position, targetPos);
+        IsAttacking = true;
         StartCoroutine(Parabola());
     }
-
+    protected override void AdditionalAttack()
+    {
+        base.AdditionalAttack();
+        if (!IsAttacking)
+            IsAttacking = true;
+    }
     public void CreateArrow()
     {
         arrow = Instantiate(arrowPrefab, arrowTrans);

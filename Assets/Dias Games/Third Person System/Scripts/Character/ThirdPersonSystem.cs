@@ -346,11 +346,11 @@ namespace DiasGames.ThirdPersonSystem
             if (switchCount > 0)
             {
                 collision.SetActive(true);
-                Instantiate(
+                /*Instantiate(
                     slashEffectList[switchCount - 1],
                     collision.transform.position,
                     Quaternion.Euler(60, 0, 0)
-                );
+                );*/
             }
             else
                 collision.SetActive(false);

@@ -135,7 +135,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
-            ani.SetTrigger("isHited");
+            
             Collider newOther = (Collider)other[0];
             attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
             characterState.TakeDamage(attackerCharacterState, characterState);
@@ -154,6 +154,7 @@ namespace DiasGames.ThirdPersonSystem
             }
             else
                 ani.SetFloat("BeakBackMode", 1);
+            ani.SetTrigger("isHited");
             if (characterState.CurrentHealth <= 0)
                 Die();
             else
