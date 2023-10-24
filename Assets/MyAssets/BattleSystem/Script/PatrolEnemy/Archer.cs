@@ -72,7 +72,7 @@ public class Archer : PatrolEnemy
         arrowFlag.gameObject.SetActive(true);
         targetPos = Player.transform.position + targetOffset;
         if (advancedAI)
-            targetPos += Player.GetComponent<Rigidbody>().velocity / (20 / Distance);
+            targetPos += Player.GetComponent<Rigidbody>().velocity / (speed / Distance);
         m_trans = arrow.transform;
         distanceToTarget = Vector3.Distance(m_trans.position, targetPos);
         IsAttacking = true;

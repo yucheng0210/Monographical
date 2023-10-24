@@ -63,6 +63,8 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private GameObject hitSpark;
+        [SerializeField]
+        private GameObject hitDistortion;
         public float attack;
         private Animator ani;
         private CharacterState characterState,
@@ -169,6 +171,7 @@ namespace DiasGames.ThirdPersonSystem
             gameObject.GetComponent<HitStop>().StopTime();
             myImpulse.GenerateImpulse();
             Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
+            //Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
             AudioManager.Instance.Impact();
             AudioManager.Instance.PlayerHurted();
             gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
