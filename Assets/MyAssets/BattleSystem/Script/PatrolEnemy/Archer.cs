@@ -96,42 +96,46 @@ public class Archer : PatrolEnemy
     {
         float accumulateTime = 0;
         bool arriveDestination = false;
-        while (!arrowFlag.isHit)
+        while (!arrowFlag.IsHit)
         {
             accumulateTime += Time.deltaTime;
-            if (Vector3.Distance(m_trans.position, targetPos) <= min_distance && !arriveDestination)
+            /*if (Vector3.Distance(m_trans.position, targetPos) <= min_distance && !arriveDestination)
                 arriveDestination = true;
             if (arriveDestination)
-                m_trans.Translate(Vector3.forward * speed * Time.deltaTime);
+                 m_trans.Translate(Vector3.forward * Mathf.Min(speed * Time.deltaTime, currentDist));
             else
+            {*/
+            // 朝向目标, 以计算运动
+            if (m_trans != null)
             {
-                // 朝向目标, 以计算运动
-                m_trans.LookAt(targetPos);
-                // 根据距离衰减 角度
-                float angle =
-                    Mathf.Min(1, Vector3.Distance(m_trans.position, targetPos) / distanceToTarget)
-                    * 30;
-                // 旋转对应的角度（线性插值一定角度，然后每帧绕X轴旋转）
-                m_trans.rotation =
-                    m_trans.rotation * Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
                 // 当前距离目标点
                 float currentDist = Vector3.Distance(m_trans.position, targetPos);
-                // 很接近目标了, 准备结束循环
+                if (!arriveDestination && currentDist <= min_distance)
+                    arriveDestination = true;
+                if (!arriveDestination)
+                {
+                    m_trans.LookAt(targetPos);
+                    // 根据距离衰减 角度
+                    float angle =
+                        Mathf.Min(1, Vector3.Distance(m_trans.position, targetPos) / distanceToTarget)
+                        * 30;
+                    // 旋转对应的角度（线性插值一定角度，然后每帧绕X轴旋转）
+                    m_trans.rotation *= Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
+                    // 很接近目标了, 准备结束循环
+                }
                 // 平移 (朝向Z轴移动)
-                m_trans.Translate(Vector3.forward * Mathf.Min(speed * Time.deltaTime, currentDist));
-                // 暂停执行, 等待下一帧再执行while
+                m_trans.Translate(Vector3.forward * speed * Time.deltaTime);
             }
+            // 暂停执行, 等待下一帧再执行while
+            //}
             yield return null;
         }
-        if (arrowFlag.isHit)
-        {
-            // 使自己的位置, 跟[目标点]重合
-            // m_trans.position = targetPos;
-            // [停止]当前协程任务,参数是协程方法名
-            StopCoroutine(Parabola());
-            Debug.Log(accumulateTime);
-            // 销毁脚本
-            //GameObject.Destroy(this);
-        }
+        // 使自己的位置, 跟[目标点]重合
+        // m_trans.position = targetPos;
+        // [停止]当前协程任务,参数是协程方法名
+        Debug.Log(accumulateTime);
+        //Destroy(m_trans.parent.gameObject);
+        // 销毁脚本
+        //GameObject.Destroy(this);
     }
 }

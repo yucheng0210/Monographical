@@ -484,6 +484,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
             if (shutDown)
                 return;
+            if (EnemyCharacterState.CurrentPoise <= 0)
+            {
+                //Ani.SetFloat("BeakBackMode", 2);
+                EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
+                //myBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
+            }
+            else
+                Ani.SetFloat("BeakBackMode", 1);
             Ani.SetTrigger(isHited);
             currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(

@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    public bool isHit { get; private set; }
+    public bool IsHit { get; private set; }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        isHit = true;
         int characterLayer = LayerMask.NameToLayer("Character");
-        if (other.gameObject.layer == characterLayer)
-            transform.parent.SetParent(other.transform);
-        Destroy(gameObject.transform.parent.gameObject, 0.1f);
-        Destroy(gameObject);
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        IsHit = true;
+        transform.parent.SetParent(other.transform);
+        Destroy(transform.parent.gameObject, 0.1f);
     }
 }
