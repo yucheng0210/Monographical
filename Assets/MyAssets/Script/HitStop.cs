@@ -25,7 +25,7 @@ public class HitStop : MonoBehaviour
         StartCoroutine(WaitRestoreTime());
     }
 
-    IEnumerator WaitRestoreTime()
+    private IEnumerator WaitRestoreTime()
     {
         IsHitStop = true;
         yield return new WaitForSecondsRealtime(restoreTime);

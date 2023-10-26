@@ -64,6 +64,8 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private GameObject hitSpark;
         [SerializeField]
+        private GameObject lightHitSpark;
+        [SerializeField]
         private GameObject hitDistortion;
         public float attack;
         private Animator ani;
@@ -137,7 +139,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
-            
+
             Collider newOther = (Collider)other[0];
             attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
             characterState.TakeDamage(attackerCharacterState, characterState);
@@ -146,7 +148,7 @@ namespace DiasGames.ThirdPersonSystem
                 newOther.ClosestPointOnBounds(transform.position).y,
                 transform.position.z
             );
-            HitEffect(hitPoint);
+            HitEffect(hitPoint, newOther);
             Vector3 direction = newOther.transform.forward + newOther.transform.up;
             if (characterState.CurrentPoise <= 0)
             {
@@ -166,15 +168,18 @@ namespace DiasGames.ThirdPersonSystem
             }
         }
 
-        private void HitEffect(Vector3 hitPoint)
+        private void HitEffect(Vector3 hitPoint, Collider other)
         {
-            gameObject.GetComponent<HitStop>().StopTime();
+            GetComponent<HitStop>().StopTime();
             myImpulse.GenerateImpulse();
-            Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
+            if (other.CompareTag("Light"))
+                Destroy(Instantiate(lightHitSpark, hitPoint, Quaternion.identity), 2);
+            else
+                Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
             //Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
             AudioManager.Instance.Impact();
             AudioManager.Instance.PlayerHurted();
-            gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
+            GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
             //AudioManager.Instance.PlayerHurted();
         }
 

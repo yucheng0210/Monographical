@@ -20,6 +20,8 @@ public class Archer : PatrolEnemy
 
     [SerializeField]
     private GameObject arrowPrefab;
+    [SerializeField]
+    private GameObject meleeAttackEffect;
 
     [SerializeField]
     private Transform arrowTrans;
@@ -82,7 +84,17 @@ public class Archer : PatrolEnemy
     {
         base.AdditionalAttack();
         if (!IsAttacking)
+        {
             IsAttacking = true;
+        }
+    }
+    public void MeleeAttackCollider()
+    {
+        if (Distance <= meleeAttackRadius)
+        {
+            Instantiate(meleeAttackEffect, transform);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider);
+        }
     }
     public void CreateArrow()
     {

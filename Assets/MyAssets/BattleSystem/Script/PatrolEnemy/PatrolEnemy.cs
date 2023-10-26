@@ -50,7 +50,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private float attackRadius = 4f;
 
     [SerializeField]
-    private float meleeAttackRadius = 2.5f;
+    protected float meleeAttackRadius = 2.5f;
 
     [SerializeField]
     private float backWalkRadius = 1;
@@ -114,6 +114,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private GameObject rImage;
+    private bool canExecution;
     private Vector3 movement,
         startPos;
     private Quaternion targetRotation;
@@ -260,9 +261,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
         );
         Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
+        float dot = Vector3.Dot(transform.forward, Player.transform.position - transform.position);
+        //小于0表示在攻击者后方 不在矩形攻击区域 返回false
+        if (dot > 0 && Distance <= attackRadius && canExecution && Input.GetKeyDown(KeyCode.E))
+            Execution();
         if (MyAnimatorStateInfo.IsName("Grounded"))
         {
-            rImage.SetActive(false);
+            //rImage.SetActive(false);
+            canExecution = false;
             lockMove = false;
             unityInputManager.enabled = true;
         }
@@ -432,7 +438,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         lockMove = true;
         Ani.SetTrigger(isLosePoise);
-        rImage.SetActive(true);
+        //rImage.SetActive(true);
+        canExecution = true;
         EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
         collision.SetActive(false);
     }
@@ -479,7 +486,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == playerAttackLayer)
+        if (other.gameObject.layer == playerAttackLayer && !canExecution)
         {
             EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
             if (shutDown)
@@ -488,12 +495,15 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             {
                 //Ani.SetFloat("BeakBackMode", 2);
                 EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
+                LosePoise();
                 //myBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
+            {
                 Ani.SetFloat("BeakBackMode", 1);
-            Ani.SetTrigger(isHited);
-            currentState = EnemyState.BeakBack;
+                Ani.SetTrigger(isHited);
+                currentState = EnemyState.BeakBack;
+            }
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
                 other.ClosestPointOnBounds(transform.position).y,
@@ -505,14 +515,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && rImage.activeSelf && Input.GetKeyDown(KeyCode.E))
-            Execution();
+
     }
 
     private void Execution()
     {
         Animator playerAni = Player.GetComponent<Animator>();
-        Player.gameObject.transform.LookAt(gameObject.transform);
+        Player.transform.LookAt(transform);
+        transform.LookAt(Player.transform);
         unityInputManager.enabled = false;
         playerAni.SetTrigger("isExecution");
         Ani.SetTrigger("isExecuted");

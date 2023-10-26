@@ -93,6 +93,8 @@ public class AudioManager : Singleton<AudioManager>
 
     public void MainAudio()
     {
+        if (Instance.mainSource.clip == Instance.mainClip)
+            return;
         Instance.mainSource.clip = Instance.mainClip;
         Instance.mainSource.loop = true;
         Instance.mainSource.Play();
@@ -100,6 +102,8 @@ public class AudioManager : Singleton<AudioManager>
 
     public void BattleAudio()
     {
+        if (Instance.mainSource.clip == Instance.battleClip)
+            return;
         Instance.mainSource.clip = Instance.battleClip;
         Instance.mainSource.loop = true;
         Instance.mainSource.Play();
