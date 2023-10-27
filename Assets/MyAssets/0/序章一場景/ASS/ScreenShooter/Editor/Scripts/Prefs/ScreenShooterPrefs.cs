@@ -30,7 +30,7 @@ namespace Borodar.ScreenShooter
         // Messages
         //---------------------------------------------------------------------
 
-        [PreferenceItem(AssetInfo.NAME)]
+        //[PreferenceItem(AssetInfo.NAME)]
         public static void EditorPreferences()
         {
             EditorGUILayout.HelpBox(HOME_FOLDER_HINT, MessageType.Info);

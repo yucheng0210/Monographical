@@ -80,21 +80,12 @@ public class Archer : PatrolEnemy
         IsAttacking = true;
         StartCoroutine(Parabola());
     }
-    protected override void AdditionalAttack()
-    {
-        base.AdditionalAttack();
-        if (!IsAttacking)
-        {
-            IsAttacking = true;
-        }
-    }
+
     public void MeleeAttackCollider()
     {
-        if (Distance <= meleeAttackRadius)
-        {
-            Instantiate(meleeAttackEffect, transform);
-            EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider);
-        }
+        IsAttacking = true;
+        Instantiate(meleeAttackEffect, transform);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider);
     }
     public void CreateArrow()
     {

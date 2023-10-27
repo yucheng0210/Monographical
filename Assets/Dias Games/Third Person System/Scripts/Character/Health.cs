@@ -78,11 +78,11 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private float fallDownForce;
         private AnimatorStateInfo animatorStateInfo;
-        private Rigidbody rigidbody;
+        //private Rigidbody rigidbody;
 
         private void Awake()
         {
-            rigidbody = GetComponent<Rigidbody>();
+            //rigidbody = GetComponent<Rigidbody>();
             ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
             allColliders.AddRange(GetComponentsInChildren<Collider>());
             ani = GetComponent<Animator>();
@@ -154,7 +154,7 @@ namespace DiasGames.ThirdPersonSystem
             {
                 ani.SetFloat("BeakBackMode", 2);
                 characterState.CurrentPoise = characterState.MaxPoise;
-                rigidbody.AddForce(direction * fallDownForce, ForceMode.Impulse);
+                //rigidbody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
                 ani.SetFloat("BeakBackMode", 1);

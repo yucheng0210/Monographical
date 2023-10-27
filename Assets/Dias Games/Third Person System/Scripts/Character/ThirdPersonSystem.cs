@@ -200,14 +200,13 @@ namespace DiasGames.ThirdPersonSystem
         private List<GameObject> slashEffectList = new List<GameObject>();
         private MeleeWeaponTrail trail;
 
-        [SerializeField]
-        private int combo;
+        /*[SerializeField]
+        private int combo;*/
         public static bool canRoll;
         private int attack = Animator.StringToHash("AttackMode");
         private CharacterState characterState;
 
-        [SerializeField]
-        private bool shutDown;
+        public bool ShutDown{get;set;}
         private AnimatorStateInfo animatorStateInfo;
         private AnimatorTransitionInfo animatorTransitionInfo;
 
@@ -289,7 +288,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            if (Time.timeScale == 0 || shutDown)
+            if (Time.timeScale == 0 || ShutDown)
                 return;
 
             if (!m_IsAICharacter)
@@ -317,7 +316,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             collision.SetActive(false);
             currentEndurance = maxEndurance;
-            combo = 0;
+            //combo = 0;
         }
 
         private void AttackState()
@@ -951,11 +950,11 @@ namespace DiasGames.ThirdPersonSystem
                 m_Animator.SetFloat("Vertical", 0);
                 m_Animator.SetFloat("Horizontal", 0);
                 m_Animator.SetInteger("AttackMode", 0);
-                shutDown = true;
+                ShutDown = true;
             }
             else
             {
-                shutDown = false;
+                ShutDown = false;
                 m_Animator.SetBool("Standby", false);
             }
         }
