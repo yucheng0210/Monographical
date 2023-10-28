@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        if (gameObject.transform.childCount <= enemyCount-1)
+        if (transform.childCount <= enemyCount - 1)
             Instantiate(enemy, transform.position, Quaternion.identity, transform);
     }
 }

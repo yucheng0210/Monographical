@@ -206,12 +206,13 @@ namespace DiasGames.ThirdPersonSystem
         private int attack = Animator.StringToHash("AttackMode");
         private CharacterState characterState;
 
-        public bool ShutDown{get;set;}
+        public bool ShutDown { get; set; }
         private AnimatorStateInfo animatorStateInfo;
         private AnimatorTransitionInfo animatorTransitionInfo;
 
         [SerializeField]
         private bool isRunning;
+        private Quaternion currentRotation;
 
         public void SetControllerAsAI()
         {
@@ -288,9 +289,13 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            if (Time.timeScale == 0 || ShutDown)
+            if (Time.timeScale == 0)
                 return;
-
+            if (ShutDown)
+            {
+                LockRotation(currentRotation);
+                return;
+            }
             if (!m_IsAICharacter)
             {
                 // Check Camera Zoom
@@ -310,6 +315,7 @@ namespace DiasGames.ThirdPersonSystem
             // ----------------------------------------------------------------- //
 
             canRoll = currentEndurance >= rollConsume ? true : false;
+            currentRotation = transform.rotation;
         }
 
         private void InitialState()
@@ -921,7 +927,17 @@ namespace DiasGames.ThirdPersonSystem
         {
             free = false;
         }
-
+        public void SetShutDown(int arg)
+        {
+            if (arg == 0)
+                ShutDown = false;
+            else
+                ShutDown = true;
+        }
+        private void LockRotation(Quaternion lockRotation)
+        {
+            transform.rotation = lockRotation;
+        }
         public void IsInvincible(bool invincible)
         {
             if (invincible)

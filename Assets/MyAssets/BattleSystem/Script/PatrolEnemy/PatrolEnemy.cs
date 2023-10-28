@@ -120,7 +120,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         startPos;
     private Quaternion targetRotation;
     private float angle;
-    private DiasGames.ThirdPersonSystem.ThirdPersonSystem thirdPersonSystem;
     private int attack = Animator.StringToHash("AttackMode");
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
@@ -173,7 +172,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         AttackerCharacterState = Player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         //lookAtIK = GetComponent<LookAtIK>();
-        thirdPersonSystem = Player.GetComponent<DiasGames.ThirdPersonSystem.ThirdPersonSystem>();
         InitialState();
     }
 
@@ -264,18 +262,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
         //float dot = Vector3.Dot(transform.forward, Player.transform.position - transform.position);
         //小于0表示在攻击者后方 不在矩形攻击区域 返回false
-        if (canExecution)
+        if (canExecution && Distance <= 1 && Input.GetKeyDown(KeyCode.E))
         {
-            Player.transform.LookAt(transform);
-            if (Distance <= 1 && Input.GetKeyDown(KeyCode.E))
-                Execution();
+            canExecution = false;
+            Execution();
         }
         if (MyAnimatorStateInfo.IsName("Grounded"))
         {
             //rImage.SetActive(false);
             canExecution = false;
             lockMove = false;
-            thirdPersonSystem.ShutDown = false;
         }
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             UpdateAttackValue();
@@ -492,10 +488,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == playerAttackLayer && !canExecution)
+        if (other.gameObject.layer == playerAttackLayer)
         {
             EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
-            if (shutDown)
+            Vector3 hitPoint = new Vector3(
+                transform.position.x,
+                other.ClosestPointOnBounds(transform.position).y,
+                transform.position.z
+            );
+            HitEffect(hitPoint);
+            if (shutDown || canExecution)
                 return;
             if (EnemyCharacterState.CurrentPoise <= 0)
             {
@@ -510,18 +512,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Ani.SetTrigger(isHited);
                 currentState = EnemyState.BeakBack;
             }
-            Vector3 hitPoint = new Vector3(
-                transform.position.x,
-                other.ClosestPointOnBounds(transform.position).y,
-                transform.position.z
-            );
-            HitEffect(hitPoint);
         }
     }
 
     private void Execution()
     {
-        thirdPersonSystem.ShutDown = true;
         Animator playerAni = Player.GetComponent<Animator>();
         //playerAni.SetInteger("AttackMode", 0);
         lockMove = true;

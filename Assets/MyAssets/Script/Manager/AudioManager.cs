@@ -40,6 +40,11 @@ public class AudioManager : Singleton<AudioManager>
 
     [SerializeField]
     private AudioClip death;
+    [Header("跑酷音效")]
+    [SerializeField]
+    private AudioClip runningBreathingClip;
+    [SerializeField]
+    private AudioClip rainRunStepClip;
     private AudioSource menuSource,
         fxSource,
         playerSource,
@@ -53,8 +58,17 @@ public class AudioManager : Singleton<AudioManager>
         fxSource = gameObject.AddComponent<AudioSource>();
         playerSource = gameObject.AddComponent<AudioSource>();
         mainSource = gameObject.AddComponent<AudioSource>();
+        Instance.mainSource.loop = true;
     }
-
+    public void ParkourAudio()
+    {
+        Instance.mainSource.clip = Instance.rainRunStepClip;
+        Instance.mainSource.spread = 2;
+        Instance.mainSource.Play();
+        Instance.playerSource.clip = Instance.runningBreathingClip;
+        Instance.playerSource.loop = true;
+        Instance.playerSource.Play();
+    }
     public void MenuEnterAudio()
     {
         Instance.menuSource.clip = Instance.menuEnterClip;
@@ -82,12 +96,14 @@ public class AudioManager : Singleton<AudioManager>
     public void PlayerHurted()
     {
         Instance.playerSource.clip = Instance.hurt;
+        Instance.playerSource.loop = false;
         Instance.playerSource.Play();
     }
 
     public void PlayerDied()
     {
         Instance.playerSource.clip = Instance.death;
+        Instance.playerSource.loop = false;
         Instance.playerSource.Play();
     }
 
@@ -96,7 +112,6 @@ public class AudioManager : Singleton<AudioManager>
         if (Instance.mainSource.clip == Instance.mainClip)
             return;
         Instance.mainSource.clip = Instance.mainClip;
-        Instance.mainSource.loop = true;
         Instance.mainSource.Play();
     }
 
@@ -105,7 +120,6 @@ public class AudioManager : Singleton<AudioManager>
         if (Instance.mainSource.clip == Instance.battleClip)
             return;
         Instance.mainSource.clip = Instance.battleClip;
-        Instance.mainSource.loop = true;
         Instance.mainSource.Play();
     }
 
