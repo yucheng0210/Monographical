@@ -96,6 +96,7 @@ public class ParkourPlayer : MonoBehaviour
         //LookBack(true);
         //StartCoroutine(Beginning());
         EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
+        AudioManager.Instance.ParkourAudio();
     }
 
     private void FixedUpdate()

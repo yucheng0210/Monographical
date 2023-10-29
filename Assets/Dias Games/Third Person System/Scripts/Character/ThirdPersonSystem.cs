@@ -200,19 +200,19 @@ namespace DiasGames.ThirdPersonSystem
         private List<GameObject> slashEffectList = new List<GameObject>();
         private MeleeWeaponTrail trail;
 
-        [SerializeField]
-        private int combo;
+        /*[SerializeField]
+        private int combo;*/
         public static bool canRoll;
         private int attack = Animator.StringToHash("AttackMode");
         private CharacterState characterState;
 
-        [SerializeField]
-        private bool shutDown;
+        public bool ShutDown { get; set; }
         private AnimatorStateInfo animatorStateInfo;
         private AnimatorTransitionInfo animatorTransitionInfo;
 
         [SerializeField]
         private bool isRunning;
+        private Quaternion currentRotation;
 
         public void SetControllerAsAI()
         {
@@ -226,7 +226,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void OnDisable()
         {
-            //            GameManager.Instance.RemoveObservers(this);
+            //GameManager.Instance.RemoveObservers(this);
         }
 
         private void Awake()
@@ -289,9 +289,13 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            if (Time.timeScale == 0 || shutDown)
+            if (Time.timeScale == 0)
                 return;
-
+            if (ShutDown)
+            {
+                LockRotation(currentRotation);
+                return;
+            }
             if (!m_IsAICharacter)
             {
                 // Check Camera Zoom
@@ -311,13 +315,14 @@ namespace DiasGames.ThirdPersonSystem
             // ----------------------------------------------------------------- //
 
             canRoll = currentEndurance >= rollConsume ? true : false;
+            currentRotation = transform.rotation;
         }
 
         private void InitialState()
         {
             collision.SetActive(false);
             currentEndurance = maxEndurance;
-            combo = 0;
+            //combo = 0;
         }
 
         private void AttackState()
@@ -922,7 +927,17 @@ namespace DiasGames.ThirdPersonSystem
         {
             free = false;
         }
-
+        public void SetShutDown(int arg)
+        {
+            if (arg == 0)
+                ShutDown = false;
+            else
+                ShutDown = true;
+        }
+        private void LockRotation(Quaternion lockRotation)
+        {
+            transform.rotation = lockRotation;
+        }
         public void IsInvincible(bool invincible)
         {
             if (invincible)
@@ -951,11 +966,11 @@ namespace DiasGames.ThirdPersonSystem
                 m_Animator.SetFloat("Vertical", 0);
                 m_Animator.SetFloat("Horizontal", 0);
                 m_Animator.SetInteger("AttackMode", 0);
-                shutDown = true;
+                ShutDown = true;
             }
             else
             {
-                shutDown = false;
+                ShutDown = false;
                 m_Animator.SetBool("Standby", false);
             }
         }

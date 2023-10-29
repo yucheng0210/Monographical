@@ -55,7 +55,7 @@ Transform:
   m_GameObject: {fileID: 1419068298657291548}
   m_LocalRotation: {x: -0.0000000018471793, y: -0.0000000074127247, z: 0.0000000037252899,
     w: 1}
-  m_LocalPosition: {x: -0.005, y: 0.013, z: 0.379}
+  m_LocalPosition: {x: 0.0155, y: 0, z: 0.5585}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7769121715586978196}
@@ -79,7 +79,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3182908403410884352
 RectTransform:
   m_ObjectHideFlags: 0
@@ -176,7 +176,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2155861374003699301}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.001, y: -0, z: -0.363}
+  m_LocalPosition: {x: -0.001, y: 0, z: -0.505}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7769121715586978196}
@@ -2077,7 +2077,7 @@ GameObject:
   - component: {fileID: 5299623784839196379}
   - component: {fileID: 5299623784831762745}
   - component: {fileID: -3111741227124823352}
-  - component: {fileID: 2232092148334751298}
+  - component: {fileID: -5011331985218492655}
   - component: {fileID: 7271753491708682879}
   - component: {fileID: 3382502419129016289}
   - component: {fileID: 772769357636117155}
@@ -2150,7 +2150,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &2232092148334751298
+--- !u!136 &-5011331985218492655
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2160,7 +2160,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 87e10f15b64ccf44cb0683d8fed75875, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.3
+  m_Radius: 0.2
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
@@ -2210,10 +2210,11 @@ MonoBehaviour:
   - {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0, type: 3}
   capsuleOffset: 0.3
   rImage: {fileID: 2141800299514556139}
+  canExecution: 0
   currentState: 0
   jumpAttackSize: {x: 1, y: 2, z: 13}
-  minAniSpeed: 0.7
-  maxAniSpeed: 1.4
+  minAniSpeed: 0.8
+  maxAniSpeed: 1.5
 --- !u!114 &3382502419129016289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4908,7 +4909,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _emit: 0
   _emitTime: 0
-  _material: {fileID: 2100000, guid: 5f402d1520e5fa74fa21e08f85b71370, type: 2}
+  _material: {fileID: 2100000, guid: 9f36b02056b4e824f9ddad6844085252, type: 2}
   _lifeTime: 0.2
   _colors:
   - {r: 1, g: 1, b: 1, a: 0.8}
@@ -4920,6 +4921,6 @@ MonoBehaviour:
   _maxVertexDistance: 10
   _maxAngle: 3
   _autoDestruct: 0
-  subdivisions: 10
+  subdivisions: 4
   _base: {fileID: 6449922814833867934}
   _tip: {fileID: 5487369993147773956}

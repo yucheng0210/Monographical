@@ -41,7 +41,7 @@ namespace DiasGames.ThirdPersonSystem
         ThirdPersonSystem m_Controller;
 
         List<string> labels = new List<string>();
-        int abilitySelected = 0;
+        //int abilitySelected = 0;
 
         List<Type> allAvailablesAbilities = new List<Type>();
 

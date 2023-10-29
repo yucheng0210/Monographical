@@ -20,8 +20,10 @@ public class LoadMenu : UIBase
 
     private void Update()
     {
-        if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
-            EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+        /* if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
+             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);*/
+        if (OpenBool && Input.GetKeyDown(KeyCode.Escape))
+            Hide();
     }
 
     private void EventSceneLoading(params object[] args)

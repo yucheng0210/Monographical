@@ -30,7 +30,7 @@ namespace DiasGames.ThirdPersonSystem
         private bool m_MirrorJump = false;
         public int maxJumpCount;
         public int jumpCount;
-        bool exit;
+        //bool exit;
 
         private void Awake()
         {
@@ -71,12 +71,12 @@ namespace DiasGames.ThirdPersonSystem
 
         public void OnExit()
         {
-            exit = true;
+           // exit = true;
         }
 
         public void OnEnter()
         {
-            exit = false;
+            //exit = false;
         }
 
         public override string GetEnterState()

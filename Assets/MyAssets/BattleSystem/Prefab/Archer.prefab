@@ -78,7 +78,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3182908403410884352
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2002,9 +2002,8 @@ GameObject:
   - component: {fileID: 5299623784839196379}
   - component: {fileID: 5299623784831762745}
   - component: {fileID: -3111741227124823352}
-  - component: {fileID: 2232092148334751298}
+  - component: {fileID: 5518728324686790811}
   - component: {fileID: 3382502419129016289}
-  - component: {fileID: 772769357636117155}
   - component: {fileID: -8780692282238036021}
   - component: {fileID: -3548015091740226212}
   - component: {fileID: -7305298094857773424}
@@ -2012,6 +2011,7 @@ GameObject:
   - component: {fileID: 2988639174515585744}
   - component: {fileID: 4879144625304655540}
   - component: {fileID: 2375758275950736121}
+  - component: {fileID: 772769357636117155}
   m_Layer: 15
   m_Name: Archer
   m_TagString: Enemy
@@ -2074,7 +2074,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &2232092148334751298
+--- !u!136 &5518728324686790811
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2084,7 +2084,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 87e10f15b64ccf44cb0683d8fed75875, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.2
+  m_Radius: 0.3
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
@@ -2127,22 +2127,6 @@ MonoBehaviour:
   - {fileID: 5299623784839196377}
   - {fileID: 5299623784839196501}
   - {fileID: 5299623784839196315}
---- !u!114 &772769357636117155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5299623784839033595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6628d3ff17369184699fe469faf9f8c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  templateData: {fileID: 11400000, guid: 4a26ad310cca6b245bd37883f0f32a27, type: 2}
-  characterData: {fileID: 11400000, guid: 4a26ad310cca6b245bd37883f0f32a27, type: 2}
-  attackData: {fileID: 11400000, guid: d55ddef967506244f97096814522d31e, type: 2}
-  characterName: 
 --- !u!114 &-8780692282238036021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2820,12 +2804,12 @@ MonoBehaviour:
   turnSpeed: 3
   beakBackForce: 2
   wanderRadius: 15
-  chaseRadius: 50
-  strafeRadius: 40
-  attackRadius: 30
+  chaseRadius: 40
+  strafeRadius: 30
+  attackRadius: 25
   meleeAttackRadius: 2.5
   backWalkRadius: 10
-  turnBackRadius: 60
+  turnBackRadius: 50
   maxCoolDown: 5
   minCoolDown: 3
   isOnGrounded: 0
@@ -2847,16 +2831,35 @@ MonoBehaviour:
   - {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0, type: 3}
   capsuleOffset: 0.3
   rImage: {fileID: 2141800299514556139}
+  canExecution: 0
   currentState: 0
   speed: 20
   min_distance: 1
   arrowPrefab: {fileID: 8360026549553698552, guid: dbee67f719a506b4d8e111a336d71fe2,
+    type: 3}
+  meleeAttackEffect: {fileID: 1122125053305958, guid: 8c86a3f72cc12994680cd881feaadc75,
     type: 3}
   arrowTrans: {fileID: 1440072133289462744}
   canDraw: 1
   targetOffset: {x: 0, y: 0.75, z: 0}
   bowAni: {fileID: 8278175890013832147}
   advancedAI: 1
+--- !u!114 &772769357636117155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5299623784839033595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6628d3ff17369184699fe469faf9f8c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  templateData: {fileID: 11400000, guid: 4a26ad310cca6b245bd37883f0f32a27, type: 2}
+  characterData: {fileID: 11400000, guid: 4a26ad310cca6b245bd37883f0f32a27, type: 2}
+  attackData: {fileID: 11400000, guid: d55ddef967506244f97096814522d31e, type: 2}
+  characterName: 
 --- !u!1 &5299623784839033597
 GameObject:
   m_ObjectHideFlags: 0

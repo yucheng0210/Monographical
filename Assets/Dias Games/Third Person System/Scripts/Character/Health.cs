@@ -64,6 +64,8 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private GameObject hitSpark;
         [SerializeField]
+        private GameObject lightHitSpark;
+        [SerializeField]
         private GameObject hitDistortion;
         public float attack;
         private Animator ani;
@@ -76,11 +78,11 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private float fallDownForce;
         private AnimatorStateInfo animatorStateInfo;
-        private Rigidbody rigidbody;
+        //private Rigidbody rigidbody;
 
         private void Awake()
         {
-            rigidbody = GetComponent<Rigidbody>();
+            //rigidbody = GetComponent<Rigidbody>();
             ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
             allColliders.AddRange(GetComponentsInChildren<Collider>());
             ani = GetComponent<Animator>();
@@ -137,22 +139,22 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
-            
+
             Collider newOther = (Collider)other[0];
             attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
             characterState.TakeDamage(attackerCharacterState, characterState);
             Vector3 hitPoint = new Vector3(
-                transform.position.x,
+                newOther.bounds.center.x,
                 newOther.ClosestPointOnBounds(transform.position).y,
-                transform.position.z
+                newOther.bounds.center.z
             );
-            HitEffect(hitPoint);
+            HitEffect(hitPoint, newOther);
             Vector3 direction = newOther.transform.forward + newOther.transform.up;
             if (characterState.CurrentPoise <= 0)
             {
                 ani.SetFloat("BeakBackMode", 2);
                 characterState.CurrentPoise = characterState.MaxPoise;
-                rigidbody.AddForce(direction * fallDownForce, ForceMode.Impulse);
+                //rigidbody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
                 ani.SetFloat("BeakBackMode", 1);
@@ -166,15 +168,18 @@ namespace DiasGames.ThirdPersonSystem
             }
         }
 
-        private void HitEffect(Vector3 hitPoint)
+        private void HitEffect(Vector3 hitPoint, Collider other)
         {
-            gameObject.GetComponent<HitStop>().StopTime();
+            GetComponent<HitStop>().StopTime();
             myImpulse.GenerateImpulse();
-            Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
-            //Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
+            if (other.CompareTag("Light"))
+                Destroy(Instantiate(lightHitSpark, hitPoint, Quaternion.identity), 2);
+            else
+                Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
+            Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
             AudioManager.Instance.Impact();
             AudioManager.Instance.PlayerHurted();
-            gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
+            GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
             //AudioManager.Instance.PlayerHurted();
         }
 

@@ -50,7 +50,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private float attackRadius = 4f;
 
     [SerializeField]
-    private float meleeAttackRadius = 2.5f;
+    protected float meleeAttackRadius = 2.5f;
 
     [SerializeField]
     private float backWalkRadius = 1;
@@ -114,11 +114,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private GameObject rImage;
+    [SerializeField]
+    private bool canExecution;
     private Vector3 movement,
         startPos;
     private Quaternion targetRotation;
     private float angle;
-    private DiasGames.ThirdPersonSystem.UnityInputManager unityInputManager;
     private int attack = Animator.StringToHash("AttackMode");
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
@@ -171,7 +172,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         AttackerCharacterState = Player.GetComponent<CharacterState>();
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         //lookAtIK = GetComponent<LookAtIK>();
-        unityInputManager = Player.GetComponent<DiasGames.ThirdPersonSystem.UnityInputManager>();
         InitialState();
     }
 
@@ -260,11 +260,18 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
         );
         Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
+        //float dot = Vector3.Dot(transform.forward, Player.transform.position - transform.position);
+        //小于0表示在攻击者后方 不在矩形攻击区域 返回false
+        if (canExecution && Distance <= 1 && Input.GetKeyDown(KeyCode.E))
+        {
+            canExecution = false;
+            Execution();
+        }
         if (MyAnimatorStateInfo.IsName("Grounded"))
         {
-            rImage.SetActive(false);
+            //rImage.SetActive(false);
+            canExecution = false;
             lockMove = false;
-            unityInputManager.enabled = true;
         }
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             UpdateAttackValue();
@@ -428,11 +435,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
     }
 
-    private void LosePoise()
+    private IEnumerator LosePoise()
     {
         lockMove = true;
         Ani.SetTrigger(isLosePoise);
-        rImage.SetActive(true);
+        yield return null;
+        //rImage.SetActive(true);
+        canExecution = true;
         EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
         collision.SetActive(false);
     }
@@ -482,42 +491,46 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if (other.gameObject.layer == playerAttackLayer)
         {
             EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
-            if (shutDown)
-                return;
-            if (EnemyCharacterState.CurrentPoise <= 0)
-            {
-                //Ani.SetFloat("BeakBackMode", 2);
-                EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
-                //myBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
-            }
-            else
-                Ani.SetFloat("BeakBackMode", 1);
-            Ani.SetTrigger(isHited);
-            currentState = EnemyState.BeakBack;
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
                 other.ClosestPointOnBounds(transform.position).y,
                 transform.position.z
             );
             HitEffect(hitPoint);
+            if (shutDown || canExecution || IsAttacking)
+                return;
+            if (EnemyCharacterState.CurrentPoise <= 0)
+            {
+                //Ani.SetFloat("BeakBackMode", 2);
+                EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
+                StartCoroutine(LosePoise());
+                //myBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
+            }
+            else
+            {
+                //Ani.SetFloat("BeakBackMode", 1);
+                Ani.SetTrigger(isHited);
+                currentState = EnemyState.BeakBack;
+            }
         }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Player") && rImage.activeSelf && Input.GetKeyDown(KeyCode.E))
-            Execution();
     }
 
     private void Execution()
     {
         Animator playerAni = Player.GetComponent<Animator>();
-        Player.gameObject.transform.LookAt(gameObject.transform);
-        unityInputManager.enabled = false;
+        //playerAni.SetInteger("AttackMode", 0);
+        lockMove = true;
+        transform.LookAt(Player.transform);
+        Player.transform.LookAt(transform);
+        playerAni.SetTrigger("isRestart");
         playerAni.SetTrigger("isExecution");
         Ani.SetTrigger("isExecuted");
     }
-
+    public void ExecutionAttack()
+    {
+        HitEffect(transform.position + new Vector3(0, 0.75f, 0));
+        EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
+    }
     private void AnimationRealTime(bool realTimeBool)
     {
         /*if (realTimeBool)
@@ -536,11 +549,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
         //VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
-        gameObject.GetComponent<HitStop>().StopTime();
+        GetComponent<HitStop>().StopTime();
         AudioManager.Instance.Impact();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
-        gameObject.GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
+        GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
     }
 
     public void EndNotify()
