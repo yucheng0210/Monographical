@@ -2749,7 +2749,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 87e10f15b64ccf44cb0683d8fed75875, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.2
+  m_Radius: 0.25
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
@@ -2773,14 +2773,14 @@ MonoBehaviour:
   turnSpeed: 3
   beakBackForce: 2
   wanderRadius: 15
-  chaseRadius: 12
-  strafeRadius: 7
-  attackRadius: 4
+  chaseRadius: 15
+  strafeRadius: 10
+  attackRadius: 7
   meleeAttackRadius: 2.5
   backWalkRadius: 1
-  turnBackRadius: 12
-  maxCoolDown: 2.5
-  minCoolDown: 1.5
+  turnBackRadius: 15
+  maxCoolDown: 3
+  minCoolDown: 2
   isOnGrounded: 0
   shutDown: 0
   lockMove: 0
@@ -3410,7 +3410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _emit: 0
   _emitTime: 0
-  _material: {fileID: 2100000, guid: 9f36b02056b4e824f9ddad6844085252, type: 2}
+  _material: {fileID: 2100000, guid: 33c94031a921bd44496f381392371cea, type: 2}
   _lifeTime: 0.2
   _colors:
   - {r: 1, g: 1, b: 1, a: 0.8}

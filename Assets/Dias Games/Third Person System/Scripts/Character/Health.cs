@@ -144,9 +144,9 @@ namespace DiasGames.ThirdPersonSystem
             attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
             characterState.TakeDamage(attackerCharacterState, characterState);
             Vector3 hitPoint = new Vector3(
-                transform.position.x,
+                newOther.bounds.center.x,
                 newOther.ClosestPointOnBounds(transform.position).y,
-                transform.position.z
+                newOther.bounds.center.z
             );
             HitEffect(hitPoint, newOther);
             Vector3 direction = newOther.transform.forward + newOther.transform.up;
@@ -176,7 +176,7 @@ namespace DiasGames.ThirdPersonSystem
                 Destroy(Instantiate(lightHitSpark, hitPoint, Quaternion.identity), 2);
             else
                 Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
-            //Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
+            Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
             AudioManager.Instance.Impact();
             AudioManager.Instance.PlayerHurted();
             GetComponent<BloodEffect>().SpurtingBlood(hitPoint);

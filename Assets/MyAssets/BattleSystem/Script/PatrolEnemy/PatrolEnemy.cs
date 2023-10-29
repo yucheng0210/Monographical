@@ -497,7 +497,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 transform.position.z
             );
             HitEffect(hitPoint);
-            if (shutDown || canExecution)
+            if (shutDown || canExecution || IsAttacking)
                 return;
             if (EnemyCharacterState.CurrentPoise <= 0)
             {
@@ -508,7 +508,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             }
             else
             {
-                Ani.SetFloat("BeakBackMode", 1);
+                //Ani.SetFloat("BeakBackMode", 1);
                 Ani.SetTrigger(isHited);
                 currentState = EnemyState.BeakBack;
             }

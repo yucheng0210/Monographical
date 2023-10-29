@@ -35,8 +35,10 @@ public class SaveMenu : UIBase
 
     private void Update()
     {
-        if (OpenBool && EventSystem.current.currentSelectedGameObject == null && !clueMenu.OpenBool)
-            EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+        /* if (OpenBool && EventSystem.current.currentSelectedGameObject == null && !clueMenu.OpenBool)
+             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);*/
+        if (OpenBool && Input.GetKeyDown(KeyCode.Escape))
+            Hide();
     }
 
     private void OpenClueMenu()
