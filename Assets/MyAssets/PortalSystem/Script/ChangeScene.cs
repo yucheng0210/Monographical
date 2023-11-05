@@ -14,7 +14,7 @@ public class ChangeScene : MonoBehaviour
     private void Start()
     {
         if (!immediatelyTrans)
-            gameObject.GetComponent<Button>().onClick.AddListener(LoadScene);
+            GetComponent<Button>().onClick.AddListener(LoadScene);
     }
 
     private void LoadScene()

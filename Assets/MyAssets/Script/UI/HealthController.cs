@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class HealthController : MonoBehaviour
 {
-    void Awake()
+    private void Awake()
     {
         healthSlider = GetComponent<Slider>();
         healthSlider.value = 1;
@@ -23,7 +23,7 @@ public class HealthController : MonoBehaviour
     [SerializeField]
     private bool isDiscolor;
 
-    void Update()
+    private void Update()
     {
         Hurt.anchorMax = new Vector2(
             Mathf.Lerp(Hurt.anchorMax.x, LifePoint.anchorMax.x, 1 * Time.deltaTime * 5),

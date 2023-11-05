@@ -7,11 +7,11 @@ using System;
 public class DataManager : Singleton<DataManager>, ISavable
 {
     private string itemDataListPath =
-        "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/ITEMDATALIST.csv";
+        "Assets/Resources/ItemDatas/BackpackData/ITEMDATALIST.csv";
     private string effectDataListPath =
-        "Assets/MyAssets/InventorySystem/ItemDatas/BackpackData/EFFECTDATALIST.csv";
-    private string questDataListPath = "Assets/MyAssets/QuestSystem/QuestData/QUESTMANAGER.csv";
-    private string dialogDataListPath = "Assets/MyAssets/DialogSystem/DialogData";
+        "Assets/Resources/ItemDatas/BackpackData/EFFECTDATALIST.csv";
+    private string questDataListPath = "Assets/Resources/QuestData/QUESTMANAGER.csv";
+    private string dialogDataListPath = "Assets/Resources/DialogData";
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
@@ -34,6 +34,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         QuestList = new Dictionary<int, Quest>();
         DialogList = new Dictionary<string, List<Dialog>>();
         LoadData();
+        DontDestroyOnLoad(this);
     }
 
     private void Start()

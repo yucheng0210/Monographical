@@ -41,8 +41,7 @@ public class DialogSystem : MonoBehaviour
     [SerializeField]
     private int questID;
 
-    [SerializeField]
-    private string dialogName;
+    public string dialogName;
     private string currentBranchID = "DEFAULT";
     private bool continueBool;
     private bool inSelection;
