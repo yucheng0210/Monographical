@@ -113,7 +113,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
+            //healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
