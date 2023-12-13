@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public abstract class PatrolEnemy : MonoBehaviour, IObserver
@@ -91,7 +93,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private float wanderDistance;
 
-    [Header("其他")]
+    [Header("戰鬥特效")]
     [SerializeField]
     private GameObject rockBreak;
 
@@ -99,7 +101,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private GameObject hitSpark;
     [SerializeField]
     private GameObject hitDistortion;
-
+    [Header("其他")]
     [SerializeField]
     private GameObject collision;
 
@@ -113,9 +115,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private float capsuleOffset = 0.3f;
 
     [SerializeField]
-    private GameObject rImage;
-    [SerializeField]
     private bool canExecution;
+    [SerializeField]
+    private PlayableDirector playableDirector;
     private Vector3 movement,
         startPos;
     private Quaternion targetRotation;
@@ -520,11 +522,15 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Animator playerAni = Player.GetComponent<Animator>();
         //playerAni.SetInteger("AttackMode", 0);
         lockMove = true;
+        transform.position = Player.transform.position + Player.transform.forward;
         transform.LookAt(Player.transform);
         Player.transform.LookAt(transform);
         playerAni.SetTrigger("isRestart");
         playerAni.SetTrigger("isExecution");
         Ani.SetTrigger("isExecuted");
+        playableDirector = GameObject.Find("ExecutionTimeline").GetComponent<PlayableDirector>();
+        playableDirector.Play();
+        //Time.timeScale = 0.5f;
     }
     public void ExecutionAttack()
     {

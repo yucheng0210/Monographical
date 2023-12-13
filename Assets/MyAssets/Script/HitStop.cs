@@ -13,6 +13,7 @@ public class HitStop : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(Time.timeScale);
         if (Menu.menuIsOpen && Time.timeScale != 0)
             Time.timeScale = 0;
     }

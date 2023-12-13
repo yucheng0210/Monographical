@@ -320,7 +320,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void InitialState()
         {
-//            collision.SetActive(false);
+            //            collision.SetActive(false);
             currentEndurance = maxEndurance;
             //combo = 0;
         }
