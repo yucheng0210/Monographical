@@ -149,7 +149,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         }
         if (nextMainLineBool)
             EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
-        Destroy(gameObject);
+        Destroy(canvasGroup.gameObject);
     }
 
     public void EndNotify()

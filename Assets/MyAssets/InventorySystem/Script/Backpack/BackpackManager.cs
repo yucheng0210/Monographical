@@ -27,7 +27,7 @@ public class BackpackManager : Singleton<BackpackManager>
         }
         else
             inventory[itemIndex].ItemHeld++;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag, itemIndex);
     }
 
     public void ReduceItem(int itemIndex, Dictionary<int, Item> inventory)

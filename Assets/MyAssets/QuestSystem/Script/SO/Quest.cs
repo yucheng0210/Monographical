@@ -61,7 +61,7 @@ public class Quest
 
     [SerializeField]
     private int parent;
-   #region "Read from Quest_SO"
+    #region "Read from Quest"
     public int ID
     {
         get { return id; }
@@ -97,5 +97,5 @@ public class Quest
         get { return parent; }
         set { parent = value; }
     }
-   #endregion
+    #endregion
 }

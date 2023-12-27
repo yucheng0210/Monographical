@@ -29,10 +29,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         for (int i = 0; i < ActiveQuestList.Count; i++)
         {
-            if (
-                DataManager.Instance.GetQuest(ActiveQuestList[i].ID).Status
-                == Quest.QuestState.Completed
-            )
+            if (DataManager.Instance.GetQuest(ActiveQuestList[i].ID).Status == Quest.QuestState.Completed)
                 ActiveQuestList.Remove(ActiveQuestList[i]);
         }
     }
@@ -50,10 +47,9 @@ public class QuestManager : Singleton<QuestManager>
             int targetHeld = quest.TargetList[i].Item2;
             if (DataManager.Instance.GetItem(questID) == null)
                 break;
-            if (
-                targetIndex == DataManager.Instance.GetItem(questID).ItemIndex
-                && targetHeld <= DataManager.Instance.GetItem(questID).ItemHeld
-            )
+            int itemIndex = DataManager.Instance.GetItem(questID).ItemIndex;
+            int itemHeld = DataManager.Instance.GetItem(questID).ItemHeld;
+            if (targetIndex == itemIndex && targetHeld <= itemHeld)
                 targetCount--;
         }
         if (targetCount == 0)

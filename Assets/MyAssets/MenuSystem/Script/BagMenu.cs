@@ -22,6 +22,10 @@ public class BagMenu : UIBase
 
     [SerializeField]
     private Button useButton;
+    [SerializeField]
+    private Transform pickUpGroupTrans;
+    [SerializeField]
+    private PickUpClue pickUpCluePrefab;
 
     protected override void Start()
     {
@@ -54,6 +58,11 @@ public class BagMenu : UIBase
     public void EventAddItem(params object[] args)
     {
         UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.Backpack);
+        PickUpClue pickUp = Instantiate(pickUpCluePrefab, pickUpGroupTrans);
+        pickUp.itemImage.sprite = DataManager.Instance.ItemList[(int)args[0]].ItemImage;
+        pickUp.itemNameText.text = DataManager.Instance.ItemList[(int)args[0]].ItemName;
+        pickUp.itemCountText.text = "X" + DataManager.Instance.ItemList[(int)args[0]].ItemHeld.ToString();
+        StartCoroutine(UIManager.Instance.FadeOutIn(pickUp.GetComponent<CanvasGroup>(), 0, 2, false, 0.5f));
     }
 
     public void EventRemoveItem(params object[] args)
