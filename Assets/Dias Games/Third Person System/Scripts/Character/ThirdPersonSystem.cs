@@ -320,7 +320,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void InitialState()
         {
-            //            collision.SetActive(false);
+            //collision.SetActive(false);
             currentEndurance = maxEndurance;
             //combo = 0;
         }
@@ -933,6 +933,10 @@ namespace DiasGames.ThirdPersonSystem
                 ShutDown = false;
             else
                 ShutDown = true;
+        }
+        public void SetTimeScale(float scale)
+        {
+            Time.timeScale=scale;
         }
         private void LockRotation(Quaternion lockRotation)
         {

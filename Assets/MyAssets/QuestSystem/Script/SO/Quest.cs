@@ -92,6 +92,7 @@ public class Quest
         get { return targetList; }
         set { targetList = value; }
     }
+    public List<ValueTuple<int, int>> TargetEnemyList { get; set; }
     public int Parent
     {
         get { return parent; }

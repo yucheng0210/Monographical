@@ -6,10 +6,8 @@ using System;
 
 public class DataManager : Singleton<DataManager>, ISavable
 {
-    private string itemDataListPath =
-        "Assets/Resources/ItemDatas/BackpackData/ITEMDATALIST.csv";
-    private string effectDataListPath =
-        "Assets/Resources/ItemDatas/BackpackData/EFFECTDATALIST.csv";
+    private string itemDataListPath = "Assets/Resources/ItemDatas/BackpackData/ITEMDATALIST.csv";
+    private string effectDataListPath = "Assets/Resources/ItemDatas/BackpackData/EFFECTDATALIST.csv";
     private string questDataListPath = "Assets/Resources/QuestData/QUESTMANAGER.csv";
     private string dialogDataListPath = "Assets/Resources/DialogData";
     public Dictionary<int, Item> Backpack { get; set; }
@@ -134,6 +132,7 @@ public class DataManager : Singleton<DataManager>, ISavable
             quest.Des = row[3];
             quest.RewardList = new List<(int, int)>();
             quest.TargetList = new List<(int, int)>();
+            quest.TargetEnemyList = new List<(int, int)>();
             string[] rewards = row[4].Split(';');
             for (int j = 0; j < rewards.Length; j++)
             {
@@ -152,7 +151,16 @@ public class DataManager : Singleton<DataManager>, ISavable
                 if (int.TryParse(target[0], out id) && int.TryParse(target[1], out count))
                     quest.TargetList.Add(new ValueTuple<int, int>(id, count));
             }
-            quest.Parent = int.Parse(row[6]);
+            string[] targetEnemies = row[6].Split(';');
+            for (int j = 0; j < targetEnemies.Length; j++)
+            {
+                string[] targetEnemy = targetEnemies[j].Split('=');
+                int id,
+                    count;
+                if (int.TryParse(targetEnemy[0], out id) && int.TryParse(targetEnemy[1], out count))
+                    quest.TargetEnemyList.Add(new ValueTuple<int, int>(id, count));
+            }
+            quest.Parent = int.Parse(row[7]);
             quest.Status = Quest.QuestState.Inactive;
             QuestList.Add(quest.ID, quest);
         }

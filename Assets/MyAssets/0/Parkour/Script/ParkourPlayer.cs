@@ -107,7 +107,6 @@ public class ParkourPlayer : MonoBehaviour
             runImpulse.GenerateImpulse();
             if (canMove)
                 myBody.velocity = movement * Time.fixedDeltaTime;
-
         }
     }
 
