@@ -11,7 +11,10 @@ public abstract class UIBase : MonoBehaviour, IObserver
 
     [SerializeField]
     protected Button touchButton;
-
+    [SerializeField]
+    private bool escOpenBool = false;
+    [SerializeField]
+    private bool escCloseBool = false;
     public bool OpenBool { get; set; }
     private bool shutDown;
 
@@ -30,7 +33,13 @@ public abstract class UIBase : MonoBehaviour, IObserver
         if (touchButton != null)
             AddOnClickListener();
     }
-
+    protected virtual void Update()
+    {
+        if (escOpenBool && !openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+            Show();
+        if (escCloseBool && openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+            Hide();
+    }
     private void AddOnClickListener()
     {
         switch (actionType)

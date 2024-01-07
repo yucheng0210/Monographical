@@ -69,11 +69,12 @@ public class AudioManager : Singleton<AudioManager>
         BGMSource = transform.GetChild(3).GetComponent<AudioSource>();
         Instance.BGMSource.loop = true;
     }
+
     public void ParkourAudio()
     {
-        Instance.BGMSource.clip = Instance.rainRunStepClip;
-        Instance.BGMSource.spread = 2;
-        Instance.BGMSource.Play();
+        Instance.SESource.clip = Instance.rainRunStepClip;
+        Instance.SESource.spread = 2;
+        Instance.SESource.Play();
         Instance.PlayerSource.clip = Instance.runningBreathingClip;
         Instance.PlayerSource.loop = true;
         Instance.PlayerSource.Play();

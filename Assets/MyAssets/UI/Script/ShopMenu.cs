@@ -47,8 +47,9 @@ public class ShopMenu : UIBase
         );
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (shopDialog.OpenMenu && !OpenBool)
         {
             Show();

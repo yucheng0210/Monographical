@@ -9,7 +9,10 @@ public class SystemMenu : UIBase
     [SerializeField]
     private Button exitButton;
     [SerializeField]
+    private Button backToStartMenuButton;
+    [SerializeField]
     private Button audioButton;
+
     [Header("音量")]
     [SerializeField]
     private Slider masterVolumeSlider;
@@ -25,11 +28,15 @@ public class SystemMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        exitButton.onClick.AddListener(ExitGame);
+        if (exitButton != null)
+            exitButton.onClick.AddListener(ExitGame);
+        if (backToStartMenuButton != null)
+            backToStartMenuButton.onClick.AddListener(() => StartCoroutine(SceneController.Instance.Transition("StartMenu")));
         AudioManager.Instance.MainAudio();
     }
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         UpdateValue();
     }
     private void UpdateValue()
@@ -39,7 +46,7 @@ public class SystemMenu : UIBase
         seVolumeSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("SE", value));
         playerVolumeSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("Player", value));
         bgmVolumeSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("BGM", value));
-        ControllerOtherVolume();
+        //ControllerOtherVolume();
     }
     private void ControllerOtherVolume()
     {

@@ -32,8 +32,9 @@ public class ShortcutBarMenu : UIBase
         shortcutBarButton = openMenu.GetComponentInChildren<Button>();
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if (DataManager.Instance.ShortcutBar.Count == 0)
             return;
         SwitchItem();

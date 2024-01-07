@@ -60,10 +60,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         }
     }
 
-    IEnumerator PortalTransition(
-        string sceneName,
-        TransitionDestination.DestinationTag destinationTag
-    )
+    private IEnumerator PortalTransition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
         GameManager.Instance.LoadingNotify(true);
         SceneFader fade = Instantiate(sceneFaderPrefab);
@@ -112,9 +109,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         }
     }
 
-    private TransitionDestination GetDestination(
-        TransitionDestination.DestinationTag destinationTag
-    )
+    private TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
     {
         var entrances = FindObjectsOfType<TransitionDestination>();
         foreach (var i in entrances)
@@ -127,7 +122,7 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     public IEnumerator Transition(string sceneName)
     {
-        //        GameManager.Instance.LoadingNotify(true);
+        //GameManager.Instance.LoadingNotify(true);
         EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         SceneFader fade = Instantiate(sceneFaderPrefab);
         progressSlider.value = 0.0f;
@@ -140,14 +135,14 @@ public class SceneController : Singleton<SceneController>, ISavable
             progressSlider.value = Mathf.Lerp(
                 progressSlider.value,
                 async.progress / 9 * 10,
-                Time.deltaTime
+                Time.unscaledDeltaTime
             );
             progressText.text = (int)(progressSlider.value * 100) + "%";
             yield return null;
         }
         progressSlider.value = 1.0f;
         progressText.text = (int)(progressSlider.value * 100) + "%";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(1f);
         progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
         // GameManager.Instance.LoadingNotify(false);

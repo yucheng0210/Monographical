@@ -33,8 +33,9 @@ public class SaveMenu : UIBase
         }
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         /* if (OpenBool && EventSystem.current.currentSelectedGameObject == null && !clueMenu.OpenBool)
              EventSystem.current.SetSelectedGameObject(firstButton.gameObject);*/
         if (OpenBool && Input.GetKeyDown(KeyCode.Escape))

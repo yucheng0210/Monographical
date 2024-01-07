@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using RootMotion.FinalIK;
+//using RootMotion.FinalIK;
 
 public class ParkourPlayer : MonoBehaviour
 {
@@ -77,7 +77,7 @@ public class ParkourPlayer : MonoBehaviour
     private Baffle baffle;
     private SliderFollow sliderFollow;
     private Vector3 movement;
-    private LookAtIK lookAtIK;
+    //private LookAtIK lookAtIK;
     private Cinemachine.CinemachineImpulseSource runImpulse;
     private AnimatorStateInfo animatorStateInfo;
     private float x;
@@ -87,7 +87,7 @@ public class ParkourPlayer : MonoBehaviour
         myBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
-        lookAtIK = GetComponent<LookAtIK>();
+        //lookAtIK = GetComponent<LookAtIK>();
         runImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
     }
 
@@ -96,7 +96,7 @@ public class ParkourPlayer : MonoBehaviour
         //LookBack(true);
         //StartCoroutine(Beginning());
         EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
-        AudioManager.Instance.ParkourAudio();
+        AudioControl();
     }
 
     private void FixedUpdate()
@@ -117,7 +117,11 @@ public class ParkourPlayer : MonoBehaviour
         SwitchBaffleType();
         // StartCoroutine(LookBack(true));
     }
-
+    private void AudioControl()
+    {
+        AudioManager.Instance.BGMSource.Stop();
+        AudioManager.Instance.ParkourAudio();
+    }
     private void SwitchStateValue()
     {
         movement = transform.forward * moveSpeed;
@@ -126,6 +130,10 @@ public class ParkourPlayer : MonoBehaviour
         else
             animator.SetBool("isFall", false);
         upTheAir = animatorStateInfo.tagHash == Animator.StringToHash("UPTheAir") ? true : false;
+        if (!isOnGrounded)
+            AudioManager.Instance.SESource.Stop();
+        else if (!AudioManager.Instance.SESource.isPlaying)
+            AudioManager.Instance.SESource.Play();
     }
 
     private void SwitchBaffleType()
@@ -140,6 +148,7 @@ public class ParkourPlayer : MonoBehaviour
         switch (baffle.baffleType)
         {
             case Baffle.BaffleType.Up:
+                InputWrongKey(KeyCode.Space);
                 if (Input.GetButtonDown("X") || Input.GetKeyDown(KeyCode.Space) || runTest)
                 {
                     SuccessfullyDodge();
@@ -159,6 +168,7 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.Left:
+                InputWrongKey(KeyCode.Q);
                 if (Input.GetButtonDown("Y") || Input.GetKeyDown(KeyCode.Q) || runTest)
                 {
                     SuccessfullyDodge();
@@ -167,6 +177,7 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.Right:
+                InputWrongKey(KeyCode.E);
                 if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E) || runTest)
                 {
                     SuccessfullyDodge();
@@ -175,6 +186,7 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.Down:
+                InputWrongKey(KeyCode.S);
                 if (Input.GetButtonDown("B") || Input.GetKeyDown(KeyCode.S) || runTest)
                 {
                     SuccessfullyDodge();
@@ -182,6 +194,7 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.TurnRight:
+                InputWrongKey(KeyCode.E);
                 if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.E) || runTest)
                 {
                     SuccessfullyDodge();
@@ -189,6 +202,7 @@ public class ParkourPlayer : MonoBehaviour
                 }
                 break;
             case Baffle.BaffleType.TurnLeft:
+                InputWrongKey(KeyCode.Q);
                 if (Input.GetButtonDown("A") || Input.GetKeyDown(KeyCode.Q) || runTest)
                 {
                     SuccessfullyDodge();
@@ -204,6 +218,7 @@ public class ParkourPlayer : MonoBehaviour
                 StartCoroutine(ClimbingLadder());
                 break;
             case Baffle.BaffleType.Select:
+                InputWrongKey(KeyCode.E);
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     //SuccessfullyDodge();
@@ -218,7 +233,18 @@ public class ParkourPlayer : MonoBehaviour
         }
         OutOfTime();
     }
-
+    private void InputWrongKey(KeyCode correctKey)
+    {
+        for (KeyCode keyCode = KeyCode.A; keyCode <= KeyCode.Z; keyCode++)
+        {
+            if (correctKey == keyCode)
+                return;
+            if (Input.GetKeyDown(keyCode))
+                accumulatedTime = slowTime;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && correctKey != KeyCode.Space)
+            accumulatedTime = slowTime;
+    }
     private void SuccessfullyDodge()
     {
         Time.timeScale = 1;
@@ -346,7 +372,7 @@ public class ParkourPlayer : MonoBehaviour
     private IEnumerator LookBack()
     {
         Quaternion lookPos = Quaternion.Euler(0, -180, 0);
-        lookAtIK.solver.SetIKPositionWeight(1);
+        //lookAtIK.solver.SetIKPositionWeight(1);
         while (!Mathf.Approximately(followTargetTrans.rotation.y, -lookPos.y))
         {
             followTargetTrans.rotation = Quaternion.Slerp(
@@ -357,7 +383,7 @@ public class ParkourPlayer : MonoBehaviour
             yield return null;
         }
         lookPos = Quaternion.Euler(0, 0, 0);
-        lookAtIK.solver.SetIKPositionWeight(0);
+        //lookAtIK.solver.SetIKPositionWeight(0);
         while ((followTargetTrans.rotation.y - lookPos.y) > 0.1f)
         {
             followTargetTrans.rotation = Quaternion.Slerp(
