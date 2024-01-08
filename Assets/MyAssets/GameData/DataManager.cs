@@ -10,14 +10,16 @@ public class DataManager : Singleton<DataManager>, ISavable
     private string effectDataListPath = "Assets/Resources/ItemDatas/BackpackData/EFFECTDATALIST.csv";
     private string questDataListPath = "Assets/Resources/QuestData/QUESTMANAGER.csv";
     private string dialogDataListPath = "Assets/Resources/DialogData";
+    private string characterDataListPath = Application.streamingAssetsPath + "/CHARACTERLIST.csv";
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
     public Dictionary<string, Effect> EffectList { get; set; }
-    public Dictionary<string, CharacterState> CharacterList { get; set; }
+    //public Dictionary<string, CharacterState> CharacterList { get; set; }
     public Dictionary<int, Quest> QuestList { get; set; }
     public Dictionary<int, Item> ShortcutBar { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
+    public Dictionary<int, Character> CharacterList { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -27,10 +29,11 @@ public class DataManager : Singleton<DataManager>, ISavable
         ShopBag = new Dictionary<int, Item>();
         ItemList = new Dictionary<int, Item>();
         EffectList = new Dictionary<string, Effect>();
-        CharacterList = new Dictionary<string, CharacterState>();
+        //CharacterList = new Dictionary<string, CharacterState>();
         ShortcutBar = new Dictionary<int, Item>();
         QuestList = new Dictionary<int, Quest>();
         DialogList = new Dictionary<string, List<Dialog>>();
+        CharacterList = new Dictionary<int, Character>();
         LoadData();
         DontDestroyOnLoad(this);
     }
@@ -185,6 +188,27 @@ public class DataManager : Singleton<DataManager>, ISavable
             DialogList.Add(fileName, dialogs);
         }
         #endregion
+        #region 角色列表
+        lineData = File.ReadAllLines(characterDataListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Character character = new Character
+            {
+                CharacterID = int.Parse(row[0]),
+                CharacterName = row[1],
+                MaxHealth = int.Parse(row[2]),
+                BaseDefence = int.Parse(row[3]),
+                MaxPoise = int.Parse(row[4]),
+                MinAttack = int.Parse(row[5]),
+                MaxAttack = int.Parse(row[6]),
+                CriticalMultiplier = float.Parse(row[7]),
+                CriticalChance = float.Parse(row[8]),
+                PoiseAttack = int.Parse(row[9])
+            };
+            CharacterList.Add(character.CharacterID, character);
+        }
+        #endregion
     }
 
     public Quest GetQuest(int questID)
@@ -203,10 +227,10 @@ public class DataManager : Singleton<DataManager>, ISavable
             return null;
     }
 
-    public void AddCharacterRegister(CharacterState character)
+    /*public void AddCharacterRegister(CharacterState character)
     {
         CharacterList.Add(character.CharacterName, character);
-    }
+    }*/
 
     public void AddSavableRegister()
     {

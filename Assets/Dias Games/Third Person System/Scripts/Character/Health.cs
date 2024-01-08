@@ -103,7 +103,7 @@ namespace DiasGames.ThirdPersonSystem
         private void Start()
         {
             GameManager.Instance.RegisterPlayer(characterState);
-            DataManager.Instance.AddCharacterRegister(characterState);
+            //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
             EventManager.Instance.AddEventRegister(
                 EventDefinition.eventPlayerInvincible,
