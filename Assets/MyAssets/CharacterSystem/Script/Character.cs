@@ -17,4 +17,8 @@ public class Character
     public float CriticalMultiplier { get; set; }
     public float CriticalChance { get; set; }
     public int PoiseAttack { get; set; }
+    public Character Clone()
+    {
+        return (Character)MemberwiseClone();
+    }
 }

@@ -91,6 +91,7 @@ public class Archer : PatrolEnemy
     {
         arrow = Instantiate(arrowPrefab, arrowTrans);
         arrowFlag = arrow.GetComponentInChildren<Arrow>();
+        arrowFlag.EnemyData = EnemyData;
         arrowFlag.gameObject.SetActive(false);
         canDraw = true;
     }
@@ -119,9 +120,7 @@ public class Archer : PatrolEnemy
                 {
                     m_trans.LookAt(targetPos);
                     // 根据距离衰减 角度
-                    float angle =
-                        Mathf.Min(1, Vector3.Distance(m_trans.position, targetPos) / distanceToTarget)
-                        * 30;
+                    float angle = Mathf.Min(1, Vector3.Distance(m_trans.position, targetPos) / distanceToTarget) * 30;
                     // 旋转对应的角度（线性插值一定角度，然后每帧绕X轴旋转）
                     m_trans.rotation *= Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
                     // 很接近目标了, 准备结束循环

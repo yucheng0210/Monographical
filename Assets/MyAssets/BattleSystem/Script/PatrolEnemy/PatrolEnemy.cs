@@ -103,6 +103,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private GameObject hitDistortion;
     [Header("其他")]
     [SerializeField]
+    private int enemyID;
+    [SerializeField]
     private GameObject collision;
 
     [SerializeField]
@@ -116,7 +118,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private bool canExecution;
-    [SerializeField]
     private PlayableDirector playableDirector;
     private Vector3 movement,
         startPos;
@@ -125,8 +126,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private int attack = Animator.StringToHash("AttackMode");
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
-    private Cinemachine.CinemachineImpulseSource myImpulse;
+    private CinemachineImpulseSource myImpulse;
     public bool IsAttacking { get; set; }
+    public Character EnemyData { get; private set; }
     public CharacterState EnemyCharacterState { get; set; }
     public CharacterState AttackerCharacterState { get; set; }
     private int playerAttackLayer;
@@ -160,27 +162,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     protected virtual void Awake()
     {
-        movement = Vector3.zero;
-        Ani = GetComponent<Animator>();
-        myBody = GetComponent<Rigidbody>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        MyCollider = GetComponent<Collider>();
-        startPos = transform.position;
-        Player = GameManager.Instance.PlayerState.gameObject;
-        myCamera = GetComponentInChildren<Canvas>();
-        myCamera.worldCamera = Camera.main;
-        myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
-        EnemyCharacterState = GetComponent<CharacterState>();
-        AttackerCharacterState = Player.GetComponent<CharacterState>();
-        playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
-        //lookAtIK = GetComponent<LookAtIK>();
         InitialState();
     }
 
     protected virtual void Start()
     {
-        GameManager.Instance.AddObservers(this);
-        AudioManager.Instance.MainAudio();
+        InitialRegister();
     }
 
     private void Update()
@@ -211,14 +198,36 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if (isOnGrounded)
             myBody.velocity = movement * Time.fixedDeltaTime;
     }
+    private void InitialRegister()
+    {
+        GameManager.Instance.AddObservers(this);
+        GameManager.Instance.EnemyList.Add(EnemyData);
+        AudioManager.Instance.MainAudio();
+        Player = GameManager.Instance.PlayerTrans.gameObject;
 
+    }
     private void InitialState()
     {
+        movement = Vector3.zero;
+        Ani = GetComponent<Animator>();
+        myBody = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        MyCollider = GetComponent<Collider>();
+        startPos = transform.position;
+        myCamera = GetComponentInChildren<Canvas>();
+        myCamera.worldCamera = Camera.main;
+        myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
+        CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+        EnemyData = DataManager.Instance.CharacterList[enemyID].Clone();
+        EnemyData.CurrentHealth = EnemyData.MaxHealth;
+        /*EnemyCharacterState = GetComponent<CharacterState>();
+        AttackerCharacterState = Player.GetComponent<CharacterState>();
+        playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
+        //lookAtIK = GetComponent<LookAtIK>();
         EnemyCharacterState.CurrentHealth = EnemyCharacterState.MaxHealth;
         EnemyCharacterState.CurrentDefence = EnemyCharacterState.BaseDefence;
-        EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
+        EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;*/
         //lookAtIK.solver.target = Player.transform.GetChild(0).transform;
-        CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
 
     protected virtual void UpdateValue()
@@ -226,13 +235,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         distance = Vector3.Distance(transform.position, Player.transform.position);
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
-        healthSlider.value = (EnemyCharacterState.CurrentHealth / EnemyCharacterState.MaxHealth);
+        healthSlider.value = (EnemyData.CurrentHealth / EnemyData.MaxHealth);
         MyAnimatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
     }
 
     protected virtual void UpdateState()
     {
-        if (EnemyCharacterState.CurrentHealth <= 0)
+        if (EnemyData.CurrentHealth <= 0)
             StartCoroutine(Death());
         else if (gameObject.GetComponent<HitStop>().IsHitStop)
             currentState = EnemyState.BeakBack;
@@ -257,10 +266,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             isMeleeAttack = true;
         else if (isMeleeAttack)
             isMeleeAttack = false;
-        Ani.SetFloat(
-            "Direction",
-            Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2)
-        );
+        Ani.SetFloat("Direction", Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2));
         Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
         //float dot = Vector3.Dot(transform.forward, Player.transform.position - transform.position);
         //小于0表示在攻击者后方 不在矩形攻击区域 返回false

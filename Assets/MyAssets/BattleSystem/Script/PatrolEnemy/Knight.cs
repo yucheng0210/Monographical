@@ -16,12 +16,6 @@ public class Knight : PatrolEnemy
     private float maxAniSpeed;
     private float maxPoiseAttack;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        maxPoiseAttack = EnemyCharacterState.PoiseAttack;
-    }
-
     public void JumpAttackColliderSwitch()
     {
         //攻击者位置指向目标位置的向量
@@ -72,9 +66,9 @@ public class Knight : PatrolEnemy
     {
         base.UpdateState();
         if (MyAnimatorStateInfo.IsName("JumpAttack"))
-            EnemyCharacterState.PoiseAttack = maxPoiseAttack * 2;
+            EnemyData.PoiseAttack *= 2;
         else
-            EnemyCharacterState.PoiseAttack = maxPoiseAttack;
+            EnemyData.PoiseAttack = DataManager.Instance.CharacterList[EnemyData.CharacterID].PoiseAttack;
     }
     /* private void OnDrawGizmos()
      {

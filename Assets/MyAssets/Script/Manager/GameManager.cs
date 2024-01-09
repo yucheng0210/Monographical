@@ -5,17 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>, ISavable
 {
-    private bool gameIsOver;
     private List<Enemy> enemies;
     private CharacterState playerState;
     private float gameTime;
     List<IObserver> observerList = new List<IObserver>();
-
+    public Character PlayerData { get; private set; }
+    public Transform PlayerTrans { get; private set; }
+    public List<Character> EnemyList { get; private set; }
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(this);
         enemies = new List<Enemy>();
+        EnemyList = new List<Character>();
     }
 
     private void Start()
@@ -31,7 +33,15 @@ public class GameManager : Singleton<GameManager>, ISavable
         else
             gameTime += Time.unscaledDeltaTime;
     }
-
+    public void TakeDamage(Character attacker, Character defender)
+    {
+        float damage = Random.Range(attacker.MinAttack, attacker.MaxAttack);
+        bool isCritical = Random.value < attacker.CriticalChance;
+        if (isCritical)
+            damage *= attacker.CriticalMultiplier;
+        defender.CurrentHealth -= (int)Mathf.Max(damage - defender.CurrentDefence, 0);
+        defender.CurrentPoise -= attacker.PoiseAttack;
+    }
     public void AddObservers(IObserver observer)
     {
         observerList.Add(observer);
@@ -54,19 +64,17 @@ public class GameManager : Singleton<GameManager>, ISavable
               observer.SceneLoadingNotify(loadingBool);*/
     }
 
-    public void RegisterPlayer(CharacterState player)
+    public void RegisterPlayer(Character playerData, Transform playerTrans)
     {
-        playerState = player;
+        PlayerData = playerData;
+        PlayerTrans = playerTrans;
+        PlayerData.CurrentHealth = PlayerData.MaxHealth;
+        PlayerData.CurrentDefence = PlayerData.BaseDefence;
     }
 
     public CharacterState PlayerState
     {
         get { return playerState; }
-    }
-
-    public void AddEnemyToList(Enemy script)
-    {
-        enemies.Add(script);
     }
 
     public void AddSavableRegister()

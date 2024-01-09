@@ -37,6 +37,7 @@ namespace DiasGames.ThirdPersonSystem
         private List<Collider> allColliders = new List<Collider>();
         private Cinemachine.CinemachineImpulseSource myImpulse;
         private int enemyAttackLayer;
+        private int arrowAttackLayer;
 
         /*public float HealthValue
         {
@@ -77,6 +78,8 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private float fallDownForce;
+        [SerializeField]
+        private int playerID;
         private AnimatorStateInfo animatorStateInfo;
         //private Rigidbody rigidbody;
 
@@ -96,13 +99,13 @@ namespace DiasGames.ThirdPersonSystem
 
             DisableRagdoll();
             enemyAttackLayer = LayerMask.NameToLayer("EnemyAttack");
+            arrowAttackLayer = LayerMask.NameToLayer("ArrowAttack");
             characterState = GetComponent<CharacterState>();
-            InitialState();
         }
 
         private void Start()
         {
-            GameManager.Instance.RegisterPlayer(characterState);
+            GameManager.Instance.RegisterPlayer(DataManager.Instance.CharacterList[playerID].Clone(), transform);
             //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
             EventManager.Instance.AddEventRegister(
@@ -113,23 +116,17 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            //healthSlider.value = characterState.CurrentHealth / characterState.MaxHealth;
+            healthSlider.value = (float)GameManager.Instance.PlayerData.CurrentHealth / (float)GameManager.Instance.PlayerData.MaxHealth;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
         }
 
-        private void InitialState()
-        {
-            characterState.CurrentHealth = characterState.MaxHealth;
-            characterState.CurrentDefence = characterState.BaseDefence;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (
-                other.gameObject.layer == enemyAttackLayer
-                && characterState.CurrentHealth >= 0
+               (other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer)
+                && GameManager.Instance.PlayerData.CurrentHealth >= 0
                 && !animatorStateInfo.IsName("StandUp")
             )
                 IsHited(other);
@@ -139,10 +136,13 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
-
+            Character enemyData = null;
             Collider newOther = (Collider)other[0];
-            attackerCharacterState = newOther.gameObject.GetComponentInParent<CharacterState>();
-            characterState.TakeDamage(attackerCharacterState, characterState);
+            if (newOther.gameObject.layer == arrowAttackLayer)
+                enemyData = newOther.GetComponent<Arrow>().EnemyData;
+            else if (newOther.gameObject.layer == enemyAttackLayer)
+                enemyData = newOther.transform.root.GetComponent<PatrolEnemy>().EnemyData;
+            GameManager.Instance.TakeDamage(enemyData, GameManager.Instance.PlayerData);
             Vector3 hitPoint = new Vector3(
                 newOther.bounds.center.x,
                 newOther.ClosestPointOnBounds(transform.position).y,
