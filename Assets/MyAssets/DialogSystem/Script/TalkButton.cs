@@ -5,8 +5,23 @@ using UnityEngine;
 public class TalkButton : MonoBehaviour
 {
     public GameObject button;
-    public GameObject talkUI;
-
+    [SerializeField]
+    private DialogSystem talkUI;
+    [SerializeField]
+    private string dialogName;
+    [SerializeField]
+    private bool isQuest;
+    [SerializeField]
+    private int questID;
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+        {
+            talkUI.QuestID = questID;
+            talkUI.DialogName = dialogName;
+            talkUI.IsQuestDialog = isQuest;
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -18,13 +33,13 @@ public class TalkButton : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             button.SetActive(false);
-            talkUI.SetActive(false);
+            talkUI.gameObject.SetActive(false);
         }
     }
 
     private void Update()
     {
         if (button.activeSelf && Input.GetKeyDown(KeyCode.E))
-            talkUI.SetActive(true);
+            talkUI.gameObject.SetActive(true);
     }
 }

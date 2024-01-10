@@ -22,5 +22,6 @@ public class EventDefinition
     public const string eventPlayerInvincible = "EVENT_PLAYER_INVINCIBLE";
     public const string eventExecution = "EVENT_EXECUTION";
     public const string eventSceneLoading = "EVENT_SCENE_LOADING";
+    public const string eventEnemyDead = "EVENT_ENEMY_DEAD";
 
 }

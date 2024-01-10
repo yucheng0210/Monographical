@@ -12,6 +12,7 @@ public class GameManager : Singleton<GameManager>, ISavable
     public Character PlayerData { get; private set; }
     public Transform PlayerTrans { get; private set; }
     public List<Character> EnemyList { get; private set; }
+    public Dictionary<int, int> CurrentTotalKill { get; set; }
     protected override void Awake()
     {
         base.Awake();
@@ -32,6 +33,13 @@ public class GameManager : Singleton<GameManager>, ISavable
             gameTime = 0;
         else
             gameTime += Time.unscaledDeltaTime;
+    }
+    public void AddCurrentTotalKill(int id)
+    {
+        if (CurrentTotalKill.ContainsKey(id))
+            CurrentTotalKill[id] += 1;
+        else
+            CurrentTotalKill.Add(id, 1);
     }
     public void TakeDamage(Character attacker, Character defender)
     {

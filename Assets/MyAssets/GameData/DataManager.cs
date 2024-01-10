@@ -6,10 +6,10 @@ using System;
 
 public class DataManager : Singleton<DataManager>, ISavable
 {
-    private string itemDataListPath = "Assets/Resources/ItemDatas/BackpackData/ITEMDATALIST.csv";
-    private string effectDataListPath = "Assets/Resources/ItemDatas/BackpackData/EFFECTDATALIST.csv";
-    private string questDataListPath = "Assets/Resources/QuestData/QUESTMANAGER.csv";
-    private string dialogDataListPath = "Assets/Resources/DialogData";
+    private string itemDataListPath = Application.streamingAssetsPath + "/ITEMDATALIST.csv";
+    private string effectDataListPath = Application.streamingAssetsPath + "/EFFECTDATALIST.csv";
+    private string questDataListPath = Application.streamingAssetsPath + "/QUESTLIST.csv";
+    private string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
     private string characterDataListPath = Application.streamingAssetsPath + "/CHARACTERLIST.csv";
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }

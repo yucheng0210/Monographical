@@ -35,13 +35,11 @@ public class DialogSystem : MonoBehaviour
     [SerializeField]
     private GameObject choiceManager;
 
-    [SerializeField]
-    private bool isQuestDialog = false;
+    public bool IsQuestDialog { get; set; }
 
-    [SerializeField]
-    private int questID;
+    public int QuestID { get; set; }
 
-    public string dialogName;
+    public string DialogName { get; set; }
     private string currentBranchID = "DEFAULT";
     private bool continueBool;
     private bool inSelection;
@@ -52,19 +50,6 @@ public class DialogSystem : MonoBehaviour
         set { openMenu = value; }
     }
     public bool BlockContinue { get; set; }
-
-    private void OnEnable()
-    {
-        textFinished = false;
-        textLabel.text = "";
-        currentTextWaitTime = maxTextWaitTime;
-        continueBool = true;
-        index = 0;
-        isTalking = true;
-        textFinished = true;
-        SetCharacterInfo();
-        Initialize();
-    }
 
     private void Start()
     {
@@ -77,6 +62,19 @@ public class DialogSystem : MonoBehaviour
             EventQuestCompleted
         );
     }
+    private void OnEnable()
+    {
+        textFinished = false;
+        textLabel.text = "";
+        currentTextWaitTime = maxTextWaitTime;
+        continueBool = true;
+        index = 0;
+        isTalking = true;
+        textFinished = true;
+        //SetCharacterInfo();
+        Initialize();
+    }
+
 
     private void OnDisable()
     {
@@ -94,16 +92,16 @@ public class DialogSystem : MonoBehaviour
 
     private void Initialize()
     {
-        if (isQuestDialog)
+        if (IsQuestDialog)
         {
             QuestManager.Instance.UpdateActiveQuests();
-            QuestManager.Instance.CheckQuestProgress(questID);
+            QuestManager.Instance.CheckQuestProgress(QuestID);
         }
     }
 
     private void SetType()
     {
-        if (index >= DataManager.Instance.DialogList[dialogName].Count)
+        if (index >= DataManager.Instance.DialogList[DialogName].Count)
         {
             if (inSelection)
                 return;
@@ -111,13 +109,13 @@ public class DialogSystem : MonoBehaviour
                 gameObject.SetActive(false);
             return;
         }
-        if (DataManager.Instance.DialogList[dialogName][index].Branch != currentBranchID)
+        if (DataManager.Instance.DialogList[DialogName][index].Branch != currentBranchID)
         {
             if (!inSelection)
                 index++;
             return;
         }
-        switch (DataManager.Instance.DialogList[dialogName][index].Type)
+        switch (DataManager.Instance.DialogList[DialogName][index].Type)
         {
             case "TALK":
                 if (continueBool && !inSelection)
@@ -143,15 +141,17 @@ public class DialogSystem : MonoBehaviour
                 }
                 break;
             case "QUEST":
-                QuestManager.Instance.ActivateQuest(questID);
+                QuestManager.Instance.ActivateQuest(QuestID);
                 index++;
                 break;
             case "CALL":
-                currentBranchID = DataManager.Instance.DialogList[dialogName][index].Order;
                 if (currentBranchID == "REWARDED")
-                    QuestManager.Instance.GetRewards(questID);
+                    QuestManager.Instance.GetRewards(QuestID);
                 if (continueBool)
+                {
                     gameObject.SetActive(false);
+                    currentBranchID = DataManager.Instance.DialogList[DialogName][index].Order;
+                }
                 break;
         }
     }
@@ -161,9 +161,9 @@ public class DialogSystem : MonoBehaviour
         textFinished = false;
         textLabel.text = "";
         SetCharacterInfo();
-        for (int i = 0; i < DataManager.Instance.DialogList[dialogName][index].Content.Length; i++)
+        for (int i = 0; i < DataManager.Instance.DialogList[DialogName][index].Content.Length; i++)
         {
-            textLabel.text += DataManager.Instance.DialogList[dialogName][index].Content[i];
+            textLabel.text += DataManager.Instance.DialogList[DialogName][index].Content[i];
             yield return new WaitForSeconds(currentTextWaitTime);
         }
         textFinished = true;
@@ -181,17 +181,17 @@ public class DialogSystem : MonoBehaviour
                 faceImage.sprite = npcFace;
                 break;
         }*/
-        characterName.text = DataManager.Instance.DialogList[dialogName][index].TheName;
+        characterName.text = DataManager.Instance.DialogList[DialogName][index].TheName;
     }
 
     private void ChoiceMenu()
     {
         inSelection = true;
-        string buttonBranchID = DataManager.Instance.DialogList[dialogName][index].Order;
+        string buttonBranchID = DataManager.Instance.DialogList[DialogName][index].Order;
         GameObject choice;
         choice = Instantiate(choiceButton, choiceManager.transform.position, Quaternion.identity);
         choice.transform.SetParent(choiceManager.transform, false);
-        choice.GetComponentInChildren<Text>().text = DataManager.Instance.DialogList[dialogName][
+        choice.GetComponentInChildren<Text>().text = DataManager.Instance.DialogList[DialogName][
             index
         ].Content;
         choice
@@ -206,7 +206,7 @@ public class DialogSystem : MonoBehaviour
     private void GetBranchID(string buttonBranchID)
     {
         if (buttonBranchID == "ACTIVATE")
-            QuestManager.Instance.ActivateQuest(questID);
+            QuestManager.Instance.ActivateQuest(QuestID);
         currentBranchID = buttonBranchID;
         DestroyChoice();
         inSelection = false;

@@ -140,7 +140,7 @@ namespace DiasGames.ThirdPersonSystem
             Collider newOther = (Collider)other[0];
             if (newOther.gameObject.layer == arrowAttackLayer)
                 enemyData = newOther.GetComponent<Arrow>().EnemyData;
-            else if (newOther.gameObject.layer == enemyAttackLayer)
+            else
                 enemyData = newOther.transform.root.GetComponent<PatrolEnemy>().EnemyData;
             GameManager.Instance.TakeDamage(enemyData, GameManager.Instance.PlayerData);
             Vector3 hitPoint = new Vector3(

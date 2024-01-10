@@ -15,7 +15,7 @@ public class DialogChange : MonoBehaviour
         {
             isChange = true;
             dialogSystem.gameObject.SetActive(true);
-            dialogSystem.dialogName = changeName;
+            dialogSystem.DialogName = changeName;
         }
     }
 }

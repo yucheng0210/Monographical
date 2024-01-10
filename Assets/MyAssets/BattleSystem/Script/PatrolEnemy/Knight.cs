@@ -14,7 +14,6 @@ public class Knight : PatrolEnemy
 
     [SerializeField]
     private float maxAniSpeed;
-    private float maxPoiseAttack;
 
     public void JumpAttackColliderSwitch()
     {
@@ -56,10 +55,7 @@ public class Knight : PatrolEnemy
 
     public void ChangeAnimationSpeed(int count)
     {
-        Ani.speed =
-            count == 0
-                ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f
-                : 1;
+        Ani.speed = count == 0 ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f : 1;
     }
 
     protected override void UpdateState()

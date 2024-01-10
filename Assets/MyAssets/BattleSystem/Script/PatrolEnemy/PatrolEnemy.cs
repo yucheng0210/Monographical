@@ -204,7 +204,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         GameManager.Instance.EnemyList.Add(EnemyData);
         AudioManager.Instance.MainAudio();
         Player = GameManager.Instance.PlayerTrans.gameObject;
-
     }
     private void InitialState()
     {
@@ -220,9 +219,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         EnemyData = DataManager.Instance.CharacterList[enemyID].Clone();
         EnemyData.CurrentHealth = EnemyData.MaxHealth;
+        playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         /*EnemyCharacterState = GetComponent<CharacterState>();
         AttackerCharacterState = Player.GetComponent<CharacterState>();
-        playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         //lookAtIK = GetComponent<LookAtIK>();
         EnemyCharacterState.CurrentHealth = EnemyCharacterState.MaxHealth;
         EnemyCharacterState.CurrentDefence = EnemyCharacterState.BaseDefence;
@@ -235,7 +234,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         distance = Vector3.Distance(transform.position, Player.transform.position);
         wanderDistance = Vector3.Distance(transform.position, startPos);
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
-        healthSlider.value = (EnemyData.CurrentHealth / EnemyData.MaxHealth);
+        healthSlider.value = (float)EnemyData.CurrentHealth / (float)EnemyData.MaxHealth;
         MyAnimatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
     }
 
@@ -427,6 +426,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         shutDown = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
+        GameManager.Instance.AddCurrentTotalKill(enemyID);
+        for (int i = 0; i < QuestManager.Instance.ActiveQuestList.Count; i++)
+        {
+            List<(int, int)> targetEnemyList = QuestManager.Instance.ActiveQuestList[i].TargetEnemyList;
+            for (int j = 0; j < targetEnemyList.Count; j++)
+            {
+                if (targetEnemyList[j].Item1 == enemyID)
+                    QuestManager.Instance.AddQuestCurrentKill(enemyID);
+            }
+        }
         yield return new WaitForSeconds(4);
         int randomIndex = UnityEngine.Random.Range(0, dropItemList.Count);
         Instantiate(dropItemList[randomIndex], transform.position, Quaternion.identity);
@@ -450,7 +459,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         yield return null;
         //rImage.SetActive(true);
         canExecution = true;
-        EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
+        EnemyData.CurrentPoise = EnemyData.MaxPoise;
         collision.SetActive(false);
     }
 
@@ -498,7 +507,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (other.gameObject.layer == playerAttackLayer)
         {
-            EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
+            GameManager.Instance.TakeDamage(GameManager.Instance.PlayerData, EnemyData);
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
                 other.ClosestPointOnBounds(transform.position).y,
@@ -507,10 +516,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             HitEffect(hitPoint);
             if (shutDown || canExecution || IsAttacking)
                 return;
-            if (EnemyCharacterState.CurrentPoise <= 0)
+            if (EnemyData.CurrentPoise <= 0)
             {
                 //Ani.SetFloat("BeakBackMode", 2);
-                EnemyCharacterState.CurrentPoise = EnemyCharacterState.MaxPoise;
+                EnemyData.CurrentPoise = EnemyData.MaxPoise;
                 StartCoroutine(LosePoise());
                 //myBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
