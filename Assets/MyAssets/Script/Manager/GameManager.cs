@@ -19,6 +19,7 @@ public class GameManager : Singleton<GameManager>, ISavable
         DontDestroyOnLoad(this);
         enemies = new List<Enemy>();
         EnemyList = new List<Character>();
+        CurrentTotalKill = new Dictionary<int, int>();
     }
 
     private void Start()

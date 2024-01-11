@@ -11,6 +11,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         base.Awake();
         ActiveQuestList = new List<Quest>();
+        QuestCurrentKill = new Dictionary<int, int>();
     }
     public void AddQuestCurrentKill(int id)
     {

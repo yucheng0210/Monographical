@@ -218,7 +218,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
         CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         EnemyData = DataManager.Instance.CharacterList[enemyID].Clone();
-        EnemyData.CurrentHealth = EnemyData.MaxHealth;
+        //EnemyData.CurrentHealth = EnemyData.MaxHealth;
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         /*EnemyCharacterState = GetComponent<CharacterState>();
         AttackerCharacterState = Player.GetComponent<CharacterState>();

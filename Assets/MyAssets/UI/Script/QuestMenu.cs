@@ -7,6 +7,8 @@ public class QuestMenu : UIBase
 {
     [SerializeField]
     private Text questInfo;
+    [SerializeField]
+    private Text rewardInfo;
 
     [SerializeField]
     private QuestSlot slotPrefab;
@@ -17,10 +19,7 @@ public class QuestMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventOnClickedToQuest,
-            EventOnClicked
-        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToQuest, EventOnClicked);
     }
 
     public override void Show()
