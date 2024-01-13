@@ -6,11 +6,12 @@ using System;
 
 public class DataManager : Singleton<DataManager>, ISavable
 {
-    private string itemDataListPath = Application.streamingAssetsPath + "/ITEMDATALIST.csv";
-    private string effectDataListPath = Application.streamingAssetsPath + "/EFFECTDATALIST.csv";
-    private string questDataListPath = Application.streamingAssetsPath + "/QUESTLIST.csv";
-    private string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
-    private string characterDataListPath = Application.streamingAssetsPath + "/CHARACTERLIST.csv";
+    private readonly string itemDataListPath = Application.streamingAssetsPath + "/ITEMDATALIST.csv";
+    private readonly string effectDataListPath = Application.streamingAssetsPath + "/EFFECTDATALIST.csv";
+    private readonly string questDataListPath = Application.streamingAssetsPath + "/QUESTLIST.csv";
+    private readonly string dialogDataListPath = Application.streamingAssetsPath + "/DialogData";
+    private readonly string characterDataListPath = Application.streamingAssetsPath + "/CHARACTERLIST.csv";
+    private readonly string weaponDataListPath = Application.streamingAssetsPath + "/WEAPONLIST.csv";
     public Dictionary<int, Item> Backpack { get; set; }
     public Dictionary<int, Item> ShopBag { get; set; }
     public Dictionary<int, Item> ItemList { get; set; }
@@ -20,6 +21,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     public Dictionary<int, Item> ShortcutBar { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Character> CharacterList { get; set; }
+    public List<Weapon> WeaponList { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -34,6 +36,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         QuestList = new Dictionary<int, Quest>();
         DialogList = new Dictionary<string, List<Dialog>>();
         CharacterList = new Dictionary<int, Character>();
+        WeaponList = new List<Weapon>();
         LoadData();
         DontDestroyOnLoad(this);
     }
@@ -209,6 +212,27 @@ public class DataManager : Singleton<DataManager>, ISavable
             CharacterList.Add(character.CharacterID, character);
         }
         #endregion
+        /*#region 武器列表
+        lineData = File.ReadAllLines(characterDataListPath);
+        for (int i = 1; i < lineData.Length; i++)
+        {
+            string[] row = lineData[i].Split(',');
+            Weapon weapon = new Weapon
+            {
+                WeaponType = row[0],
+                WeaponID = int.Parse(row[1]),
+                WeaponRare = row[2],
+                WeaponName = row[3],
+                WeaponImagePath = row[4],
+                WeaponAttribute = row[5],
+                WeaponAttack = int.Parse(row[6]),
+                WeaponEffect = row[7],
+                WeaponCriticalChance = int.Parse(row[8]),
+                WeaponCriticalMultiplier = int.Parse(row[9])
+            };
+            WeaponList.Add(weapon);
+        }
+        #endregion*/
     }
 
     public Quest GetQuest(int questID)

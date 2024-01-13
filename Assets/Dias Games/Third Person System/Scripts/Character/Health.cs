@@ -124,11 +124,8 @@ namespace DiasGames.ThirdPersonSystem
 
         private void OnTriggerEnter(Collider other)
         {
-            if (
-               (other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer)
-                && GameManager.Instance.PlayerData.CurrentHealth >= 0
-                && !animatorStateInfo.IsName("StandUp")
-            )
+            if ((other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer)
+                && GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
                 IsHited(other);
         }
 
