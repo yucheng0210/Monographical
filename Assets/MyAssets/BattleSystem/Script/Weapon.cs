@@ -12,6 +12,6 @@ public class Weapon
     public string WeaponAttribute { get; set; }
     public int WeaponAttack { get; set; }
     public string WeaponEffect { get; set; }
-    public int WeaponCriticalChance { get; set; }
-    public int WeaponCriticalMultiplier { get; set; }
+    public float WeaponCriticalChance { get; set; }
+    public float WeaponCriticalMultiplier { get; set; }
 }

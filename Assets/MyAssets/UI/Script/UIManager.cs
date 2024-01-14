@@ -65,11 +65,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         newItem.SlotName.text = quest.TheName;
     }
 
-    public void RefreshItem(
-        BackpackSlot slotPrefab,
-        Transform slotGroupTrans,
-        Dictionary<int, Item> inventory
-    )
+    public void RefreshItem(BackpackSlot slotPrefab, Transform slotGroupTrans, Dictionary<int, Item> inventory)
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
             Destroy(slotGroupTrans.GetChild(i).gameObject);
@@ -86,11 +82,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         }
     }
 
-    public void RefreshItem(
-        QuestSlot slotPrefab,
-        Transform slotGroupTrans,
-        Dictionary<int, Quest> inventory
-    )
+    public void RefreshItem(QuestSlot slotPrefab, Transform slotGroupTrans, Dictionary<int, Quest> inventory)
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
             Destroy(slotGroupTrans.GetChild(i).gameObject);

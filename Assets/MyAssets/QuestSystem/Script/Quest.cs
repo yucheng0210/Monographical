@@ -98,5 +98,6 @@ public class Quest
         get { return parent; }
         set { parent = value; }
     }
+    public bool IsNewQuest { get; set; }
     #endregion
 }

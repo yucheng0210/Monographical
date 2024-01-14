@@ -168,6 +168,7 @@ public class DataManager : Singleton<DataManager>, ISavable
             }
             quest.Parent = int.Parse(row[7]);
             quest.Status = Quest.QuestState.Inactive;
+            quest.IsNewQuest = true;
             QuestList.Add(quest.ID, quest);
         }
         #endregion
@@ -212,8 +213,8 @@ public class DataManager : Singleton<DataManager>, ISavable
             CharacterList.Add(character.CharacterID, character);
         }
         #endregion
-        /*#region 武器列表
-        lineData = File.ReadAllLines(characterDataListPath);
+        #region 武器列表
+        lineData = File.ReadAllLines(weaponDataListPath);
         for (int i = 1; i < lineData.Length; i++)
         {
             string[] row = lineData[i].Split(',');
@@ -227,12 +228,12 @@ public class DataManager : Singleton<DataManager>, ISavable
                 WeaponAttribute = row[5],
                 WeaponAttack = int.Parse(row[6]),
                 WeaponEffect = row[7],
-                WeaponCriticalChance = int.Parse(row[8]),
-                WeaponCriticalMultiplier = int.Parse(row[9])
+                WeaponCriticalChance = float.Parse(row[8]),
+                WeaponCriticalMultiplier = float.Parse(row[9])
             };
             WeaponList.Add(weapon);
         }
-        #endregion*/
+        #endregion
     }
 
     public Quest GetQuest(int questID)

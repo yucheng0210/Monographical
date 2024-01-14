@@ -7,7 +7,8 @@ public class QuestSlot : MonoBehaviour
 {
     [SerializeField]
     private Text slotName;
-
+    [SerializeField]
+    private GameObject exclamationMark;
     public Text SlotName
     {
         get { return slotName; }
@@ -18,11 +19,17 @@ public class QuestSlot : MonoBehaviour
 
     private void Awake()
     {
-        gameObject.GetComponent<Button>().onClick.AddListener(OnClicked);
+        GetComponent<Button>().onClick.AddListener(OnClicked);
     }
-
+    private void Start()
+    {
+        if (!MyQuest.IsNewQuest)
+            Destroy(exclamationMark);
+    }
     private void OnClicked()
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToQuest, MyQuest);
+        MyQuest.IsNewQuest = false;
+        Destroy(exclamationMark);
     }
 }
