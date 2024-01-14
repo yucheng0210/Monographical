@@ -63,7 +63,6 @@ public class UIManager : Singleton<UIManager>, IObserver
         newItem.gameObject.transform.SetParent(slotGroupTrans, false);
         newItem.MyQuest = quest;
         newItem.SlotName.text = quest.TheName;
-        newItem.NPCName.text = quest.NPC;
     }
 
     public void RefreshItem(

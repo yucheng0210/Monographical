@@ -8,18 +8,12 @@ public class QuestSlot : MonoBehaviour
     [SerializeField]
     private Text slotName;
 
-    [SerializeField]
-    private Text npcName;
     public Text SlotName
     {
         get { return slotName; }
         set { slotName = value; }
     }
-    public Text NPCName
-    {
-        get { return npcName; }
-        set { npcName = value; }
-    }
+
     public Quest MyQuest { get; set; }
 
     private void Awake()
