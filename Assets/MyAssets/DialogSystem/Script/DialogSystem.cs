@@ -142,6 +142,7 @@ public class DialogSystem : MonoBehaviour
                 break;
             case "QUEST":
                 QuestManager.Instance.ActivateQuest(QuestID);
+                EventManager.Instance.DispatchEvent(EventDefinition.eventQuestNPCMove, QuestID);
                 index++;
                 break;
             case "CALL":

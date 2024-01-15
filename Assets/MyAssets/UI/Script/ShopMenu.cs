@@ -20,8 +20,8 @@ public class ShopMenu : UIBase
     [SerializeField]
     private Text itemNameText;
 
-    [SerializeField]
-    private Text switchButtonText;
+    /*[SerializeField]
+    private Text switchButtonText;*/
 
     [SerializeField]
     private Text useButtonText;
@@ -107,7 +107,7 @@ public class ShopMenu : UIBase
                 slotGroupTrans,
                 DataManager.Instance.ShopBag
             );
-            switchButtonText.text = "賣";
+            //switchButtonText.text = "賣";
             useButtonText.text = "買";
             switchBool = false;
         }
@@ -118,7 +118,7 @@ public class ShopMenu : UIBase
                 slotGroupTrans,
                 DataManager.Instance.Backpack
             );
-            switchButtonText.text = "買";
+            //switchButtonText.text = "買";
             useButtonText.text = "賣";
             switchBool = true;
         }

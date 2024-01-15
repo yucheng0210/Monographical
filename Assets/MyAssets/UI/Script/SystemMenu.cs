@@ -15,6 +15,8 @@ public class SystemMenu : UIBase
 
     [Header("音量")]
     [SerializeField]
+    private GameObject audioMenu;
+    [SerializeField]
     private Slider masterVolumeSlider;
     [SerializeField]
     private Slider menuVolumeSlider;
@@ -28,19 +30,27 @@ public class SystemMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        if (exitButton != null)
-            exitButton.onClick.AddListener(ExitGame);
-        if (backToStartMenuButton != null)
-            backToStartMenuButton.onClick.AddListener(() => StartCoroutine(SceneController.Instance.Transition("StartMenu")));
-        AudioManager.Instance.MainAudio();
+        Initialize();
     }
     protected override void Update()
     {
         base.Update();
         UpdateValue();
     }
+    private void Initialize()
+    {
+        if (exitButton != null)
+            exitButton.onClick.AddListener(ExitGame);
+        if (backToStartMenuButton != null)
+            backToStartMenuButton.onClick.AddListener(() => StartCoroutine(SceneController.Instance.Transition("StartMenu")));
+        audioButton.onClick.AddListener(() => audioMenu.SetActive(true));
+        AudioManager.Instance.MainAudio();
+    }
+
     private void UpdateValue()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            audioMenu.SetActive(false);
         masterVolumeSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("Master", value));
         menuVolumeSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("Menu", value));
         seVolumeSlider.onValueChanged.AddListener((float value) => AudioManager.Instance.ChanageAudioVolume("SE", value));

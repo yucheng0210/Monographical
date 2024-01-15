@@ -17,6 +17,7 @@ public class EventDefinition
     public const string eventOnClickedToQuest = "EVENT_ONCLICKED_TO_QUEST";
     public const string eventQuestActivate = "EVENT_QUEST_ACTIVATE";
     public const string eventQuestCompleted = "EVENT_QUEST_COMPLETED";
+    public const string eventQuestNPCMove = "EVENT_QUEST_NPC_MOVE";
     //戰鬥
     public const string eventIsHited = "EVENT_IS_HITED";
     public const string eventPlayerInvincible = "EVENT_PLAYER_INVINCIBLE";

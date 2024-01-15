@@ -35,10 +35,10 @@ public abstract class UIBase : MonoBehaviour, IObserver
     }
     protected virtual void Update()
     {
-        if (escOpenBool && !openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
-            Show();
         if (escCloseBool && openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             Hide();
+        if (escOpenBool && !openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+            Show();
     }
     private void AddOnClickListener()
     {
