@@ -18,15 +18,6 @@ public class LoadMenu : UIBase
         );
     }
 
-    protected override void Update()
-    {
-        base.Update();
-        /* if (OpenBool && EventSystem.current.currentSelectedGameObject == null)
-             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);*/
-        if (OpenBool && Input.GetKeyDown(KeyCode.Escape))
-            Hide();
-    }
-
     private void EventSceneLoading(params object[] args)
     {
         gameObject.SetActive(false);

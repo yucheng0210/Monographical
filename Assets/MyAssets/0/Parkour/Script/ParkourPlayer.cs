@@ -69,8 +69,8 @@ public class ParkourPlayer : MonoBehaviour
     private bool runTest;
 
     [Header("其他")]
-    [SerializeField]
-    private Transform followTargetTrans;
+    //[SerializeField]
+    //private Transform followTargetTrans;
 
     /* [SerializeField]
     private DialogSystem[] dialogSystem;*/
@@ -95,7 +95,7 @@ public class ParkourPlayer : MonoBehaviour
     {
         //LookBack(true);
         //StartCoroutine(Beginning());
-        EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
+        //EventManager.Instance.AddEventRegister(EventDefinition.eventMainLine, HandleMainLine);
         AudioControl();
     }
 
@@ -369,33 +369,33 @@ public class ParkourPlayer : MonoBehaviour
     }
     */
     #endregion
-    private IEnumerator LookBack()
-    {
-        Quaternion lookPos = Quaternion.Euler(0, -180, 0);
-        //lookAtIK.solver.SetIKPositionWeight(1);
-        while (!Mathf.Approximately(followTargetTrans.rotation.y, -lookPos.y))
-        {
-            followTargetTrans.rotation = Quaternion.Slerp(
-                followTargetTrans.rotation,
-                lookPos,
-                Time.deltaTime * turnSpeed
-            );
-            yield return null;
-        }
-        lookPos = Quaternion.Euler(0, 0, 0);
-        //lookAtIK.solver.SetIKPositionWeight(0);
-        while ((followTargetTrans.rotation.y - lookPos.y) > 0.1f)
-        {
-            followTargetTrans.rotation = Quaternion.Slerp(
-                followTargetTrans.rotation,
-                lookPos,
-                Time.deltaTime * turnSpeed
-            );
-            yield return null;
-        }
-        followTargetTrans.rotation = lookPos;
-        EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
-    }
+    /* private IEnumerator LookBack()
+     {
+         Quaternion lookPos = Quaternion.Euler(0, -180, 0);
+         //lookAtIK.solver.SetIKPositionWeight(1);
+         while (!Mathf.Approximately(followTargetTrans.rotation.y, -lookPos.y))
+         {
+             followTargetTrans.rotation = Quaternion.Slerp(
+                 followTargetTrans.rotation,
+                 lookPos,
+                 Time.deltaTime * turnSpeed
+             );
+             yield return null;
+         }
+         lookPos = Quaternion.Euler(0, 0, 0);
+         //lookAtIK.solver.SetIKPositionWeight(0);
+         while ((followTargetTrans.rotation.y - lookPos.y) > 0.1f)
+         {
+             followTargetTrans.rotation = Quaternion.Slerp(
+                 followTargetTrans.rotation,
+                 lookPos,
+                 Time.deltaTime * turnSpeed
+             );
+             yield return null;
+         }
+         followTargetTrans.rotation = lookPos;
+         EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
+     }*/
 
     private IEnumerator Turn(float direction)
     {
@@ -412,6 +412,8 @@ public class ParkourPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if ((other.CompareTag("Dead") || other.CompareTag("JumpDead")) && !isDead && outOfTime)
+            StartCoroutine(Death(other.tag));
         if (isDead)
             return;
         if (other.CompareTag("Baffle") && !outOfTime)
@@ -432,12 +434,6 @@ public class ParkourPlayer : MonoBehaviour
             isClimb = false;
             accumulatedTime = 0;
         }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if ((other.CompareTag("Dead") || other.CompareTag("JumpDead")) && !isDead && outOfTime)
-            StartCoroutine(Death(other.tag));
     }
 
     private void OnTriggerExit(Collider other)
@@ -470,19 +466,19 @@ public class ParkourPlayer : MonoBehaviour
         StartCoroutine(SceneController.Instance.Transition("StartMenu"));
     }
 
-    private void HandleMainLine(params object[] args)
-    {
-        switch ((int)args[0])
-        {
-            case 0:
+    /* private void HandleMainLine(params object[] args)
+     {
+         switch ((int)args[0])
+         {
+             case 0:
 
-                break;
-            case 1:
-                StartCoroutine(LookBack());
-                break;
-            case 5:
-                canMove = true;
-                break;
-        }
-    }
+                 break;
+             case 1:
+                 StartCoroutine(LookBack());
+                 break;
+             case 5:
+                 canMove = true;
+                 break;
+         }
+     }*/
 }

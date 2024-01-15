@@ -10,7 +10,9 @@ public class SaveOnClicked : MonoBehaviour
     private Text dataName;
     private Text dataTime;
     private int saveID;
-#region "SaveManager"
+    private ClueMenu clueMenu;
+
+    #region "SaveManager"
     /*
     private void Awake()
     {
@@ -40,8 +42,9 @@ public class SaveOnClicked : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
-        dataName = gameObject.transform.GetChild(0).GetComponent<Text>();
-        dataTime = gameObject.transform.GetChild(1).GetComponent<Text>();
+        dataName = transform.GetChild(0).GetComponent<Text>();
+        dataTime = transform.GetChild(1).GetComponent<Text>();
+        clueMenu = transform.root.GetComponent<ClueMenu>();
     }
 
     private void Start()
@@ -51,7 +54,7 @@ public class SaveOnClicked : MonoBehaviour
 
     private void OnEnable()
     {
-        saveID = gameObject.transform.GetSiblingIndex();
+        saveID = transform.GetSiblingIndex();
         dataName.text = SaveLoadManager.Instance.GetDataName(saveID);
         dataTime.text = SaveLoadManager.Instance.GetDataTime(saveID);
     }
@@ -59,7 +62,10 @@ public class SaveOnClicked : MonoBehaviour
     private void SaveData()
     {
         if (SaveLoadManager.Instance.GetDataName(saveID) != "NO DATA")
-            ClueMenu.currentSaveID = saveID;
+        {
+            clueMenu.Show();
+            clueMenu.CurrentSaveID = saveID;
+        }
         else
         {
             SaveLoadManager.Instance.Save(saveID);

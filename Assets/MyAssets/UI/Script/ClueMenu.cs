@@ -15,7 +15,7 @@ public class ClueMenu : UIBase
 
     [SerializeField]
     private Button noButton;
-    public static int currentSaveID;
+    public int CurrentSaveID { get; set; }
 
     protected override void Start()
     {
@@ -26,9 +26,9 @@ public class ClueMenu : UIBase
 
     private void SaveData()
     {
-        SaveLoadManager.Instance.Save(currentSaveID);
+        SaveLoadManager.Instance.Save(CurrentSaveID);
         if (SceneManager.GetActiveScene().name == "StartMenu")
-            SaveLoadManager.Instance.Load(currentSaveID);
+            SaveLoadManager.Instance.Load(CurrentSaveID);
         Time.timeScale = 1;
         gameObject.SetActive(false);
     }
