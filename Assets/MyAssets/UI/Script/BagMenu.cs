@@ -22,6 +22,7 @@ public class BagMenu : UIBase
 
     [SerializeField]
     private Button useButton;
+
     [SerializeField]
     private Transform pickUpGroupTrans;
     [SerializeField]
@@ -31,14 +32,8 @@ public class BagMenu : UIBase
     {
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventAddItemToBag, EventAddItem);
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventRemoveItemToBag,
-            EventRemoveItem
-        );
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventReviseMoneyToBag,
-            EventReviseMoney
-        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRemoveItemToBag, EventRemoveItem);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventReviseMoneyToBag, EventReviseMoney);
         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
     }
 

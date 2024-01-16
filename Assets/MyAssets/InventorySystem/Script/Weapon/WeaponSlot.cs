@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class BackpackSlot : MonoBehaviour
+public class WeaponSlot : MonoBehaviour
 {
+    private Weapon slotWeapon;
 
     [SerializeField]
     private Image slotImage;
@@ -22,7 +22,11 @@ public class BackpackSlot : MonoBehaviour
         get { return slotCount; }
         set { slotCount = value; }
     }
-    public Item SlotItem { get; set; }
+    public Weapon SlotWeapon
+    {
+        get { return slotWeapon; }
+        set { slotWeapon = value; }
+    }
 
     private void Start()
     {
@@ -31,6 +35,6 @@ public class BackpackSlot : MonoBehaviour
 
     public void OnClicked()
     {
-        EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToBag, SlotItem);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToWeapon, slotWeapon);
     }
 }

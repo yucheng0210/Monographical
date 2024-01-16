@@ -25,10 +25,7 @@ public class ShortcutBarMenu : UIBase
         base.Start();
         currentIndex = 0;
         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventRemoveItemToBag,
-            EventRemoveItem
-        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRemoveItemToBag,EventRemoveItem);
         shortcutBarButton = openMenu.GetComponentInChildren<Button>();
     }
 

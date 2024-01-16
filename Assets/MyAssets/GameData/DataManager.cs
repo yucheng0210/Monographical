@@ -22,6 +22,7 @@ public class DataManager : Singleton<DataManager>, ISavable
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Character> CharacterList { get; set; }
     public List<Weapon> WeaponList { get; set; }
+    public List<Weapon> WeaponBag { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -37,6 +38,7 @@ public class DataManager : Singleton<DataManager>, ISavable
         DialogList = new Dictionary<string, List<Dialog>>();
         CharacterList = new Dictionary<int, Character>();
         WeaponList = new List<Weapon>();
+        WeaponBag = new List<Weapon>();
         LoadData();
         DontDestroyOnLoad(this);
     }
@@ -229,7 +231,8 @@ public class DataManager : Singleton<DataManager>, ISavable
                 WeaponAttack = int.Parse(row[6]),
                 WeaponEffect = row[7],
                 WeaponCriticalChance = float.Parse(row[8]),
-                WeaponCriticalMultiplier = float.Parse(row[9])
+                WeaponCriticalMultiplier = float.Parse(row[9]),
+                WeaponDescription = row[10]
             };
             WeaponList.Add(weapon);
         }

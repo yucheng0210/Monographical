@@ -46,21 +46,24 @@ public class UIManager : Singleton<UIManager>, IObserver
 
     private void CreateNewItem(Item item, BackpackSlot slotPrefab, Transform slotGroupTrans)
     {
-        BackpackSlot newItem = Instantiate(
-            slotPrefab,
-            slotGroupTrans.position,
-            Quaternion.identity
-        );
-        newItem.gameObject.transform.SetParent(slotGroupTrans, false);
+        BackpackSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
+        newItem.transform.SetParent(slotGroupTrans, false);
         newItem.SlotItem = item;
         newItem.SlotImage.sprite = item.ItemImage;
         newItem.SlotCount.text = item.ItemHeld.ToString();
     }
-
+    private void CreateNewItem(Weapon weapon, WeaponSlot slotPrefab, Transform slotGroupTrans)
+    {
+        WeaponSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
+        newItem.transform.SetParent(slotGroupTrans, false);
+        //newItem.SlotWeapon = weapon;
+        //newItem.SlotImage.sprite = weapon.WeaponImagePath;
+        //newItem.SlotCount.text = item.ItemHeld.ToString();
+    }
     private void CreateNewItem(Quest quest, QuestSlot slotPrefab, Transform slotGroupTrans)
     {
         QuestSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
-        newItem.gameObject.transform.SetParent(slotGroupTrans, false);
+        newItem.transform.SetParent(slotGroupTrans, false);
         newItem.MyQuest = quest;
         newItem.SlotName.text = quest.TheName;
     }

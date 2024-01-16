@@ -12,10 +12,7 @@ public class LoadMenu : UIBase
     protected override void Start()
     {
         base.Start();
-        EventManager.Instance.AddEventRegister(
-            EventDefinition.eventSceneLoading,
-            EventSceneLoading
-        );
+        EventManager.Instance.AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
     }
 
     private void EventSceneLoading(params object[] args)
