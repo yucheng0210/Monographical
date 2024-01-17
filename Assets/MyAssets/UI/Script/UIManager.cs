@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +44,7 @@ public class UIManager : Singleton<UIManager>, IObserver
             HideUI(i.Key);
         }
     }
-
+    #region CreateNewItem
     private void CreateNewItem(Item item, BackpackSlot slotPrefab, Transform slotGroupTrans)
     {
         BackpackSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
@@ -56,9 +57,9 @@ public class UIManager : Singleton<UIManager>, IObserver
     {
         WeaponSlot newItem = Instantiate(slotPrefab, slotGroupTrans.position, Quaternion.identity);
         newItem.transform.SetParent(slotGroupTrans, false);
-        //newItem.SlotWeapon = weapon;
-        //newItem.SlotImage.sprite = weapon.WeaponImagePath;
-        //newItem.SlotCount.text = item.ItemHeld.ToString();
+        newItem.SlotWeapon = weapon;
+        newItem.SlotImage.sprite = Resources.Load<Sprite>(weapon.WeaponImagePath);
+        newItem.SlotCount.text = weapon.WeaponHeld.ToString();
     }
     private void CreateNewItem(Quest quest, QuestSlot slotPrefab, Transform slotGroupTrans)
     {
@@ -67,7 +68,8 @@ public class UIManager : Singleton<UIManager>, IObserver
         newItem.MyQuest = quest;
         newItem.SlotName.text = quest.TheName;
     }
-
+    #endregion
+    #region RefreshItem
     public void RefreshItem(BackpackSlot slotPrefab, Transform slotGroupTrans, Dictionary<int, Item> inventory)
     {
         for (int i = 0; i < slotGroupTrans.childCount; i++)
@@ -101,7 +103,24 @@ public class UIManager : Singleton<UIManager>, IObserver
                 CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
         }
     }
-
+    public void RefreshItem(WeaponSlot slotPrefab, Transform slotGroupTrans, Dictionary<int, Weapon> inventory)
+    {
+        for (int i = 0; i < slotGroupTrans.childCount; i++)
+            Destroy(slotGroupTrans.GetChild(i).gameObject);
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            int id = inventory.ElementAt(i).Key;
+            if (inventory[id].WeaponHeld == 0)
+            {
+                inventory.Remove(id);
+                RefreshItem(slotPrefab, slotGroupTrans, inventory);
+                break;
+            }
+            else
+                CreateNewItem(inventory[id], slotPrefab, slotGroupTrans);
+        }
+    }
+    #endregion
     public IEnumerator FadeOut(CanvasGroup canvasGroup, float fadeTime)
     {
         while (canvasGroup.alpha < 1)
@@ -121,8 +140,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         Destroy(gameObject);
     }
 
-    public IEnumerator FadeOutIn(
-        CanvasGroup canvasGroup,
+    public IEnumerator FadeOutIn(CanvasGroup canvasGroup,
         float firstWaitTime,
         float secondWaitTime,
         bool nextMainLineBool,

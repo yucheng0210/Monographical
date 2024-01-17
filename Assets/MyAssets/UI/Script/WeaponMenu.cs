@@ -8,5 +8,24 @@ public class WeaponMenu : UIBase
     private Transform slotGroupTrans;
 
     [SerializeField]
-    private BackpackSlot slotPrefab;
+    private WeaponSlot slotPrefab;
+    protected override void Start()
+    {
+        base.Start();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToWeapon, EventOnClickedToWeapon);
+    }
+    public override void Show()
+    {
+        base.Show();
+        UpdateItemInfo();
+        UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.WeaponBag);
+    }
+    private void UpdateItemInfo()
+    {
+
+    }
+    private void EventOnClickedToWeapon(params object[] args)
+    {
+        UpdateItemInfo();
+    }
 }

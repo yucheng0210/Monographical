@@ -29,7 +29,17 @@ public class BackpackManager : Singleton<BackpackManager>
             inventory[itemIndex].ItemHeld++;
         EventManager.Instance.DispatchEvent(EventDefinition.eventAddItemToBag, itemIndex);
     }
-
+    public void AddWeapon(int weaponID)
+    {
+        Dictionary<int, Weapon> weaponBag = DataManager.Instance.WeaponBag;
+        if (!weaponBag.ContainsKey(weaponID))
+        {
+            weaponBag.Add(weaponID, DataManager.Instance.WeaponList[weaponID]);
+            weaponBag[weaponID].WeaponHeld++;
+        }
+        else
+            weaponBag[weaponID].WeaponHeld++;
+    }
     public void ReduceItem(int itemIndex, Dictionary<int, Item> inventory)
     {
         inventory[itemIndex].ItemHeld--;

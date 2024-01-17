@@ -26,6 +26,7 @@ public class GameManager : Singleton<GameManager>, ISavable
     {
         ISavable savable = this;
         savable.AddSavableRegister();
+        InitializeData();
     }
 
     private void Update()
@@ -34,6 +35,10 @@ public class GameManager : Singleton<GameManager>, ISavable
             gameTime = 0;
         else
             gameTime += Time.unscaledDeltaTime;
+    }
+    private void InitializeData()
+    {
+        BackpackManager.Instance.AddWeapon(1);
     }
     public void AddCurrentTotalKill(int id)
     {

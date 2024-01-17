@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 public class WeaponSlot : MonoBehaviour
 {
-    private Weapon slotWeapon;
 
     [SerializeField]
     private Image slotImage;
@@ -22,11 +21,7 @@ public class WeaponSlot : MonoBehaviour
         get { return slotCount; }
         set { slotCount = value; }
     }
-    public Weapon SlotWeapon
-    {
-        get { return slotWeapon; }
-        set { slotWeapon = value; }
-    }
+    public Weapon SlotWeapon { get; set; }
 
     private void Start()
     {
@@ -35,6 +30,6 @@ public class WeaponSlot : MonoBehaviour
 
     public void OnClicked()
     {
-        EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToWeapon, slotWeapon);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventOnClickedToWeapon, SlotWeapon);
     }
 }

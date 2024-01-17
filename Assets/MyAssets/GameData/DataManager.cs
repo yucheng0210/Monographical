@@ -21,8 +21,8 @@ public class DataManager : Singleton<DataManager>, ISavable
     public Dictionary<int, Item> ShortcutBar { get; set; }
     public Dictionary<string, List<Dialog>> DialogList { get; set; }
     public Dictionary<int, Character> CharacterList { get; set; }
-    public List<Weapon> WeaponList { get; set; }
-    public List<Weapon> WeaponBag { get; set; }
+    public Dictionary<int, Weapon> WeaponList { get; set; }
+    public Dictionary<int, Weapon> WeaponBag { get; set; }
     public int MoneyCount { get; set; }
 
     protected override void Awake()
@@ -37,8 +37,8 @@ public class DataManager : Singleton<DataManager>, ISavable
         QuestList = new Dictionary<int, Quest>();
         DialogList = new Dictionary<string, List<Dialog>>();
         CharacterList = new Dictionary<int, Character>();
-        WeaponList = new List<Weapon>();
-        WeaponBag = new List<Weapon>();
+        WeaponList = new Dictionary<int, Weapon>();
+        WeaponBag = new Dictionary<int, Weapon>();
         LoadData();
         DontDestroyOnLoad(this);
     }
@@ -232,9 +232,10 @@ public class DataManager : Singleton<DataManager>, ISavable
                 WeaponEffect = row[7],
                 WeaponCriticalChance = float.Parse(row[8]),
                 WeaponCriticalMultiplier = float.Parse(row[9]),
-                WeaponDescription = row[10]
+                WeaponDescription = row[10],
+                WeaponHeld = 0
             };
-            WeaponList.Add(weapon);
+            WeaponList.Add(weapon.WeaponID, weapon);
         }
         #endregion
     }
