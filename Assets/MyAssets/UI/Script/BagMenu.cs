@@ -54,9 +54,9 @@ public class BagMenu : UIBase
     {
         UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.Backpack);
         PickUpClue pickUp = Instantiate(pickUpCluePrefab, pickUpGroupTrans);
-        pickUp.itemImage.sprite = DataManager.Instance.ItemList[(int)args[0]].ItemImage;
-        pickUp.itemNameText.text = DataManager.Instance.ItemList[(int)args[0]].ItemName;
-        pickUp.itemCountText.text = "X" + DataManager.Instance.ItemList[(int)args[0]].ItemHeld.ToString();
+        pickUp.ItemImage.sprite = DataManager.Instance.ItemList[(int)args[0]].ItemImage;
+        pickUp.ItemNameText.text = DataManager.Instance.ItemList[(int)args[0]].ItemName;
+        pickUp.ItemCountText.text = "X" + DataManager.Instance.ItemList[(int)args[0]].ItemHeld.ToString();
         StartCoroutine(UIManager.Instance.FadeOutIn(pickUp.GetComponent<CanvasGroup>(), 0, 2, false, 0.5f));
     }
 

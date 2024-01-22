@@ -39,9 +39,10 @@ public class UIManager : Singleton<UIManager>, IObserver
 
     public void HideAllUI()
     {
-        foreach (var i in UIDict)
+        for (int i = 0; i < UIDict.Count; i++)
         {
-            HideUI(i.Key);
+            string key = UIDict.ElementAt(i).Key;
+            HideUI(key);
         }
     }
     #region CreateNewItem
@@ -95,8 +96,9 @@ public class UIManager : Singleton<UIManager>, IObserver
         {
             if (i.Value.Status == Quest.QuestState.Rewarded)
             {
-                inventory.Remove(i.Key);
-                RefreshItem(slotPrefab, slotGroupTrans, inventory);
+                /*inventory.Remove(i.Key);
+                RefreshItem(slotPrefab, slotGroupTrans, inventory);*/
+                CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
                 break;
             }
             else if (i.Value.Status == Quest.QuestState.Active)

@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 public class PickUpClue : MonoBehaviour
 {
-    public Image itemImage { get; set; }
-    public Text itemNameText { get; set; }
-    public Text itemCountText { get; set; }
+    public Image ItemImage { get; set; }
+    public Text ItemNameText { get; set; }
+    public Text ItemCountText { get; set; }
     private void Awake()
     {
-        itemImage = transform.GetChild(0).GetComponent<Image>();
-        itemNameText = transform.GetChild(1).GetComponent<Text>();
-        itemCountText = transform.GetChild(2).GetComponent<Text>();
+        ItemImage = transform.GetChild(0).GetComponent<Image>();
+        ItemNameText = transform.GetChild(1).GetComponent<Text>();
+        ItemCountText = transform.GetChild(2).GetComponent<Text>();
     }
 }

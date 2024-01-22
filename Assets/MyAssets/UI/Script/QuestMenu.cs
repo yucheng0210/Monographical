@@ -23,6 +23,8 @@ public class QuestMenu : UIBase
 
     [SerializeField]
     private Transform slotGroupTrans;
+    [SerializeField]
+    private Button receiveRewardButton;
 
     protected override void Start()
     {
@@ -54,6 +56,14 @@ public class QuestMenu : UIBase
         ClearAllItemInfo();
         Quest quest = (Quest)args[0];
         string questTargetContent = "";
+        QuestManager.Instance.CheckQuestProgress(quest.ID);
+        receiveRewardButton.onClick.RemoveAllListeners();
+        if (quest.Status == Quest.QuestState.Completed)
+        {
+            receiveRewardButton.onClick.AddListener(() => QuestManager.Instance.GetRewards(quest.ID));
+            receiveRewardButton.onClick.AddListener(() => receiveRewardButton.onClick.RemoveAllListeners());
+            quest.Status = Quest.QuestState.Rewarded;
+        }
         for (int i = 0; i < quest.TargetList.Count; i++)
         {
             Item item = DataManager.Instance.ItemList[quest.TargetList[i].Item1];

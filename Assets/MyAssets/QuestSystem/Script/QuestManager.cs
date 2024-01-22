@@ -90,6 +90,7 @@ public class QuestManager : Singleton<QuestManager>
             }
         }
         QuestCurrentKill.Clear();
+        Debug.Log("finish");
     }
 
     public void GetRewards(int questID)
@@ -104,5 +105,6 @@ public class QuestManager : Singleton<QuestManager>
                 BackpackManager.Instance.AddItem(rewardIndex, DataManager.Instance.Backpack);
             }
         }
+        Debug.Log("getreward");
     }
 }
