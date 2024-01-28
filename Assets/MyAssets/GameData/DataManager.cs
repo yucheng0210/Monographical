@@ -233,6 +233,7 @@ public class DataManager : Singleton<DataManager>, ISavable
                 WeaponCriticalChance = float.Parse(row[8]),
                 WeaponCriticalMultiplier = float.Parse(row[9]),
                 WeaponDescription = row[10],
+                WeaponHitStopTime = float.Parse(row[11]),
                 WeaponHeld = 0
             };
             WeaponList.Add(weapon.WeaponID, weapon);

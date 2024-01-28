@@ -2190,8 +2190,8 @@ MonoBehaviour:
   meleeAttackRadius: 2.5
   backWalkRadius: 1
   turnBackRadius: 12
-  maxCoolDown: 2.5
-  minCoolDown: 1.5
+  maxCoolDown: 8
+  minCoolDown: 5
   isOnGrounded: 0
   shutDown: 0
   lockMove: 0
@@ -2203,13 +2203,13 @@ MonoBehaviour:
   hitSpark: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
   hitDistortion: {fileID: 4311849393234507680, guid: f1214296d26b483439e70c97a848776e,
     type: 3}
+  enemyID: 0
   collision: {fileID: 8569674824298110385}
   healthSlider: {fileID: 6898380709392697190}
   dropItemList:
   - {fileID: 5186399199287112279, guid: 740c503dbd529a04797ee22df03e196b, type: 3}
   - {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0, type: 3}
   capsuleOffset: 0.3
-  rImage: {fileID: 2141800299514556139}
   canExecution: 0
   currentState: 0
   jumpAttackSize: {x: 1, y: 2, z: 13}
@@ -2282,8 +2282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddf69126143bbf4b91de90611c8eb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restoreTime: 0.12
-  hitTimeScale: 0.1
 --- !u!114 &-3548015091740226212
 MonoBehaviour:
   m_ObjectHideFlags: 0

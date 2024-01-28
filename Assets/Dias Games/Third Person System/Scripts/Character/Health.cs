@@ -105,7 +105,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Start()
         {
-            GameManager.Instance.RegisterPlayer(DataManager.Instance.CharacterList[playerID].Clone(), transform);
+            GameManager.Instance.RegisterPlayer(DataManager.Instance.CharacterList[playerID].Clone(), transform, ani);
             //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
             EventManager.Instance.AddEventRegister(
@@ -167,7 +167,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void HitEffect(Vector3 hitPoint, Collider other)
         {
-            GetComponent<HitStop>().StopTime();
+            GetComponent<HitStop>().StopTime(0.1f, 0.2f);
             myImpulse.GenerateImpulse();
             if (other.CompareTag("Light"))
                 Destroy(Instantiate(lightHitSpark, hitPoint, Quaternion.identity), 2);

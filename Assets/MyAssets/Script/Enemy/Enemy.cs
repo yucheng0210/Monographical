@@ -280,7 +280,7 @@ public class Enemy : MonoBehaviour, IObserver
         //beakBackDirection = (transform.position - player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
         currentState = EnemyState.BeakBack;
-        gameObject.GetComponent<HitStop>().StopTime();
+        //gameObject.GetComponent<HitStop>().StopTime();
         ani.SetTrigger(isHited);
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();

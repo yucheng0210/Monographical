@@ -11,6 +11,8 @@ public class GameManager : Singleton<GameManager>, ISavable
     List<IObserver> observerList = new List<IObserver>();
     public Character PlayerData { get; private set; }
     public Transform PlayerTrans { get; private set; }
+    public Animator PlayerAni { get; private set; }
+    public Weapon PlayerEquipWeapon { get; set; }
     public List<Character> EnemyList { get; private set; }
     public Dictionary<int, int> CurrentTotalKill { get; set; }
     protected override void Awake()
@@ -39,6 +41,7 @@ public class GameManager : Singleton<GameManager>, ISavable
     private void InitializeData()
     {
         BackpackManager.Instance.AddWeapon(1);
+        PlayerEquipWeapon = DataManager.Instance.WeaponBag[1];
     }
     public void AddCurrentTotalKill(int id)
     {
@@ -49,10 +52,11 @@ public class GameManager : Singleton<GameManager>, ISavable
     }
     public void TakeDamage(Character attacker, Character defender)
     {
-        float damage = Random.Range(attacker.MinAttack, attacker.MaxAttack);
-        bool isCritical = Random.value < attacker.CriticalChance;
+        float weaponDamage = PlayerEquipWeapon.WeaponAttack;
+        float damage = Random.Range(attacker.MinAttack + weaponDamage, attacker.MaxAttack + weaponDamage);
+        bool isCritical = Random.value < (attacker.CriticalChance + PlayerEquipWeapon.WeaponCriticalChance);
         if (isCritical)
-            damage *= attacker.CriticalMultiplier;
+            damage *= (attacker.CriticalMultiplier + PlayerEquipWeapon.WeaponCriticalMultiplier);
         defender.CurrentHealth -= (int)Mathf.Max(damage - defender.CurrentDefence, 0);
         defender.CurrentPoise -= attacker.PoiseAttack;
     }
@@ -78,10 +82,11 @@ public class GameManager : Singleton<GameManager>, ISavable
               observer.SceneLoadingNotify(loadingBool);*/
     }
 
-    public void RegisterPlayer(Character playerData, Transform playerTrans)
+    public void RegisterPlayer(Character playerData, Transform playerTrans, Animator playerAni)
     {
         PlayerData = playerData;
         PlayerTrans = playerTrans;
+        PlayerAni = playerAni;
         PlayerData.CurrentHealth = PlayerData.MaxHealth;
         PlayerData.CurrentDefence = PlayerData.BaseDefence;
     }

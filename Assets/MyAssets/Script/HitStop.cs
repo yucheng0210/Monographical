@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class HitStop : MonoBehaviour
 {
-    [SerializeField]
-    private float restoreTime;
-
-    [SerializeField]
-    private float hitTimeScale = 0.2f;
     public bool IsHitStop { get; private set; }
 
     private void Update()
@@ -17,15 +12,15 @@ public class HitStop : MonoBehaviour
             Time.timeScale = 0;
     }
 
-    public void StopTime()
+    public void StopTime(float hitTimeScale, float restoreTime)
     {
         if (IsHitStop && Menu.menuIsOpen)
             return;
         Time.timeScale = hitTimeScale;
-        StartCoroutine(WaitRestoreTime());
+        StartCoroutine(WaitRestoreTime(restoreTime));
     }
 
-    private IEnumerator WaitRestoreTime()
+    private IEnumerator WaitRestoreTime(float restoreTime)
     {
         IsHitStop = true;
         yield return new WaitForSecondsRealtime(restoreTime);

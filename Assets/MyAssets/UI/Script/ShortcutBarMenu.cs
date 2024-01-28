@@ -25,7 +25,7 @@ public class ShortcutBarMenu : UIBase
         base.Start();
         currentIndex = 0;
         EventManager.Instance.AddEventRegister(EventDefinition.eventOnClickedToBag, EventOnClicked);
-        EventManager.Instance.AddEventRegister(EventDefinition.eventRemoveItemToBag,EventRemoveItem);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventRemoveItemToBag, EventRemoveItem);
         shortcutBarButton = openMenu.GetComponentInChildren<Button>();
     }
 
@@ -84,9 +84,10 @@ public class ShortcutBarMenu : UIBase
     private void UseItem()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            BackpackManager.Instance.UseItem(
-                DataManager.Instance.ShortcutBar.ElementAt(currentIndex).Value.ItemIndex
-            );
+        {
+            BackpackManager.Instance.UseItem(DataManager.Instance.ShortcutBar.ElementAt(currentIndex).Value.ItemIndex);
+            GameManager.Instance.PlayerAni.SetTrigger("isDrink");
+        }
     }
 
     public void EventOnClicked(params object[] args)

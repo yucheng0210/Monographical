@@ -218,7 +218,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
         CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         EnemyData = DataManager.Instance.CharacterList[enemyID].Clone();
-        //EnemyData.CurrentHealth = EnemyData.MaxHealth;
+        EnemyData.CurrentHealth = EnemyData.MaxHealth;
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
         /*EnemyCharacterState = GetComponent<CharacterState>();
         AttackerCharacterState = Player.GetComponent<CharacterState>();
@@ -570,7 +570,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
         //VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
-        GetComponent<HitStop>().StopTime();
+        GetComponent<HitStop>().StopTime(0.1f, 0.2f);
         AudioManager.Instance.Impact();
         AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();

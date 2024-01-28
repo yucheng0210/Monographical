@@ -15,5 +15,6 @@ public class Weapon
     public float WeaponCriticalChance { get; set; }
     public float WeaponCriticalMultiplier { get; set; }
     public string WeaponDescription { get; set; }
+    public float WeaponHitStopTime { get; set; }
     public int WeaponHeld { get; set; }
 }
