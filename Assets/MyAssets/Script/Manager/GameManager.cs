@@ -89,6 +89,7 @@ public class GameManager : Singleton<GameManager>, ISavable
         PlayerAni = playerAni;
         PlayerData.CurrentHealth = PlayerData.MaxHealth;
         PlayerData.CurrentDefence = PlayerData.BaseDefence;
+        PlayerData.CurrentPoise = PlayerData.MaxPoise;
     }
 
     public CharacterState PlayerState

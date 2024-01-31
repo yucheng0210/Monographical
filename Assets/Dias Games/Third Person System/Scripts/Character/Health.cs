@@ -98,8 +98,8 @@ namespace DiasGames.ThirdPersonSystem
             GlobalEvents.AddEvent("RestoreHealth", RestoreHealth);
 
             DisableRagdoll();
-            enemyAttackLayer = LayerMask.NameToLayer("EnemyAttack");
             arrowAttackLayer = LayerMask.NameToLayer("ArrowAttack");
+            enemyAttackLayer = LayerMask.NameToLayer("EnemyAttack");
             characterState = GetComponent<CharacterState>();
         }
 
@@ -108,15 +108,13 @@ namespace DiasGames.ThirdPersonSystem
             GameManager.Instance.RegisterPlayer(DataManager.Instance.CharacterList[playerID].Clone(), transform, ani);
             //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
-            EventManager.Instance.AddEventRegister(
-                EventDefinition.eventPlayerInvincible,
-                EventInvincible
-            );
+            EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerInvincible, EventInvincible);
         }
 
         private void Update()
         {
-            healthSlider.value = (float)GameManager.Instance.PlayerData.CurrentHealth / (float)GameManager.Instance.PlayerData.MaxHealth;
+            healthSlider.value = (float)GameManager.Instance.PlayerData.CurrentHealth
+            / (float)GameManager.Instance.PlayerData.MaxHealth;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
@@ -124,21 +122,29 @@ namespace DiasGames.ThirdPersonSystem
 
         private void OnTriggerEnter(Collider other)
         {
-            if ((other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer)
-                && GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
-                IsHited(other);
+            bool otherLayerBool = other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer
+            || other.gameObject.layer == LayerMask.NameToLayer("Trap");
+            Character enemyData = null;
+            if (otherLayerBool && GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
+            {
+
+                Debug.Log("damage");
+                if (other.gameObject.layer == arrowAttackLayer)
+                    enemyData = other.GetComponent<Arrow>().EnemyData;
+                else if (other.gameObject.layer == LayerMask.NameToLayer("Trap"))
+                    enemyData = other.transform.root.GetComponent<DungeonTrap>().TrapData;
+                else
+                    enemyData = other.transform.root.GetComponent<PatrolEnemy>().EnemyData;
+                IsHited(other, enemyData);
+            }
         }
 
         private void IsHited(params object[] other)
         {
             if (isInvincible)
                 return;
-            Character enemyData = null;
             Collider newOther = (Collider)other[0];
-            if (newOther.gameObject.layer == arrowAttackLayer)
-                enemyData = newOther.GetComponent<Arrow>().EnemyData;
-            else
-                enemyData = newOther.transform.root.GetComponent<PatrolEnemy>().EnemyData;
+            Character enemyData = (Character)other[1];
             GameManager.Instance.TakeDamage(enemyData, GameManager.Instance.PlayerData);
             Vector3 hitPoint = new Vector3(
                 newOther.bounds.center.x,
@@ -147,7 +153,7 @@ namespace DiasGames.ThirdPersonSystem
             );
             HitEffect(hitPoint, newOther);
             Vector3 direction = newOther.transform.forward + newOther.transform.up;
-            if (characterState.CurrentPoise <= 0)
+            if (GameManager.Instance.PlayerData.CurrentPoise <= 0)
             {
                 ani.SetFloat("BeakBackMode", 2);
                 characterState.CurrentPoise = characterState.MaxPoise;
@@ -156,7 +162,7 @@ namespace DiasGames.ThirdPersonSystem
             else
                 ani.SetFloat("BeakBackMode", 1);
             ani.SetTrigger("isHited");
-            if (characterState.CurrentHealth <= 0)
+            if (GameManager.Instance.PlayerData.CurrentHealth <= 0)
                 Die();
             else
             {
@@ -236,7 +242,7 @@ namespace DiasGames.ThirdPersonSystem
             if (m_CurrentHealth <= 0)
             {
                 m_CurrentHealth = 0;
-                Die();
+                //Die();
             }
             else
             {
