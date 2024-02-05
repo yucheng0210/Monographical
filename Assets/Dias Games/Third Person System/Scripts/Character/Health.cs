@@ -287,5 +287,6 @@ namespace DiasGames.ThirdPersonSystem
         {
             isInvincible = (bool)args[0];
         }
+        
     }
 }

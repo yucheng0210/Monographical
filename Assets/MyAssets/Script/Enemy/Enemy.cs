@@ -102,10 +102,6 @@ public class Enemy : MonoBehaviour, IObserver
         InitialState();
     }
 
-    private void Start()
-    {
-        GameManager.Instance.AddObservers(this);
-    }
 
     private void OnDisable()
     {

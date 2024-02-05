@@ -200,7 +200,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     private void InitialRegister()
     {
-        GameManager.Instance.AddObservers(this);
         GameManager.Instance.EnemyList.Add(EnemyData);
         AudioManager.Instance.MainAudio();
         Player = GameManager.Instance.PlayerTrans.gameObject;

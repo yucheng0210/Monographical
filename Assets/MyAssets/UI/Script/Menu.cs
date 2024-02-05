@@ -31,7 +31,6 @@ public abstract class Menu : MonoBehaviour, IObserver
 
     protected virtual void Start()
     {
-        GameManager.Instance.AddObservers(this);
         if (touchButton != null)
             AddOnClickListener();
     }

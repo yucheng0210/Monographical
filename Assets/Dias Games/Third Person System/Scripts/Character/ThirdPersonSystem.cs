@@ -219,10 +219,6 @@ namespace DiasGames.ThirdPersonSystem
             m_IsAICharacter = true;
         }
 
-        private void Start()
-        {
-            GameManager.Instance.AddObservers(this);
-        }
 
         private void OnDisable()
         {
@@ -334,6 +330,7 @@ namespace DiasGames.ThirdPersonSystem
                 && free
                 && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
+                && m_InputManager.enabled
             )
             {
                 m_Animator.SetTrigger("isAttack");
@@ -936,20 +933,38 @@ namespace DiasGames.ThirdPersonSystem
         }
         public void SetTimeScale(float scale)
         {
-            Time.timeScale=scale;
+            Time.timeScale = scale;
         }
         private void LockRotation(Quaternion lockRotation)
         {
             transform.rotation = lockRotation;
         }
-        public void IsInvincible(bool invincible)
+        public void IsInvincible(int invincible)
         {
-            if (invincible)
+            if (invincible == 1)
                 EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, true);
             else
                 EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, false);
         }
-
+        public void PlayerCantMove(int cantMove)
+        {
+            if (cantMove == 1)
+            {
+                m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionX;
+                m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionY;
+                m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionZ;
+                m_InputManager.enabled = false;
+                //EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, true);
+            }
+            else
+            {
+                m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+                m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+                m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+                m_InputManager.enabled = true;
+                //EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, false);
+            }
+        }
         public void ResetIsHited()
         {
             m_Animator.ResetTrigger("isHited");

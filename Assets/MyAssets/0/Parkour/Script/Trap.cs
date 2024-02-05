@@ -13,7 +13,6 @@ public class Trap : MonoBehaviour, IObserver
     private void Start()
     {
         traps = new List<GameObject>(transform.childCount);
-        GameManager.Instance.AddObservers(this);
         for (int i = 0; i < transform.childCount; i++)
         {
             traps.Add(transform.GetChild(i).gameObject);

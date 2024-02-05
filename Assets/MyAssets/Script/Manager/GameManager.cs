@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>, ISavable
     private float gameTime;
     List<IObserver> observerList = new List<IObserver>();
     public Character PlayerData { get; private set; }
-    public Transform PlayerTrans { get; private set; }
+    public Transform PlayerTrans { get; set; }
     public Animator PlayerAni { get; private set; }
     public Weapon PlayerEquipWeapon { get; set; }
     public List<Character> EnemyList { get; private set; }

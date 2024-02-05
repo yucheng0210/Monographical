@@ -1,5 +1,29 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7178769758498463386
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: RadialBlur
+  m_EditorClassIdentifier: Assembly-CSharp::RadialBlur
+  active: 0
+  m_AdvancedMode: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.16
+    min: 0
+    max: 1
+  sampleCount:
+    m_OverrideState: 1
+    m_Value: 4
+    min: 4
+    max: 16
 --- !u!114 &-466525434632250678
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -87,6 +111,7 @@ MonoBehaviour:
   - {fileID: 5344652756874662184}
   - {fileID: -466525434632250678}
   - {fileID: 4745465664678062571}
+  - {fileID: -7178769758498463386}
 --- !u!114 &4745465664678062571
 MonoBehaviour:
   m_ObjectHideFlags: 3

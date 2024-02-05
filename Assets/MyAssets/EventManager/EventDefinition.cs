@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EventDefinition
 {
-    public const string eventGameOver = "EVENT_GAME_OVER";
     public const string eventMainLine = "MAIN_LINE";
     public const string eventNextMainLine = "NEXT_MAIN_LINE";
     public const string eventAutoSave = "EVENT_AUTO_SAVE";
@@ -21,10 +20,11 @@ public class EventDefinition
     public const string eventQuestCompleted = "EVENT_QUEST_COMPLETED";
     public const string eventQuestNPCMove = "EVENT_QUEST_NPC_MOVE";
     //戰鬥
+    public const string eventGameOver = "EVENT_GAME_OVER";
     public const string eventIsHited = "EVENT_IS_HITED";
     public const string eventPlayerInvincible = "EVENT_PLAYER_INVINCIBLE";
     public const string eventExecution = "EVENT_EXECUTION";
     public const string eventSceneLoading = "EVENT_SCENE_LOADING";
-    public const string eventEnemyDead = "EVENT_ENEMY_DEAD";
+    public const string eventPlayerCantMove = "EVENT_PLAYER_CANT_MOVE";
 
 }
