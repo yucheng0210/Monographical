@@ -18,13 +18,16 @@ public class OpenDoor : MonoBehaviour
     private void OnTriggerStay(Collider collider)
     {
         if (collider.CompareTag("Player") && Input.GetKeyDown(KeyCode.E) && !isOpen)
-        {
-            isOpen = true;
-            GameManager.Instance.PlayerTrans.LookAt(lookTrans);
-            GameManager.Instance.PlayerTrans.position = lookTrans.position;
-            GameManager.Instance.PlayerAni.SetTrigger("isOpenDoor");
-            leftDoorTrans.DOLocalRotate(new Vector3(0, openAngle, 0), openTime);
-            rightDoorTrans.DOLocalRotate(new Vector3(0, -openAngle, 0), openTime);
-        }
+            StartCoroutine(Open());
+    }
+    private IEnumerator Open()
+    {
+        isOpen = true;
+        GameManager.Instance.PlayerTrans.LookAt(lookTrans);
+        GameManager.Instance.PlayerTrans.position = lookTrans.position;
+        yield return null;
+        GameManager.Instance.PlayerAni.SetTrigger("isOpenDoor");
+        leftDoorTrans.DOLocalRotate(new Vector3(0, openAngle, 0), openTime);
+        rightDoorTrans.DOLocalRotate(new Vector3(0, -openAngle, 0), openTime);
     }
 }

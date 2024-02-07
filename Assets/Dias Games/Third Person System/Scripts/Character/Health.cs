@@ -128,7 +128,6 @@ namespace DiasGames.ThirdPersonSystem
             if (otherLayerBool && GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
             {
 
-                Debug.Log("damage");
                 if (other.gameObject.layer == arrowAttackLayer)
                     enemyData = other.GetComponent<Arrow>().EnemyData;
                 else if (other.gameObject.layer == LayerMask.NameToLayer("Trap"))
@@ -143,6 +142,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
+            Debug.Log("damage");
             Collider newOther = (Collider)other[0];
             Character enemyData = (Character)other[1];
             GameManager.Instance.TakeDamage(enemyData, GameManager.Instance.PlayerData);
@@ -287,6 +287,6 @@ namespace DiasGames.ThirdPersonSystem
         {
             isInvincible = (bool)args[0];
         }
-        
+
     }
 }
