@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 namespace DiasGames.ThirdPersonSystem
 {
@@ -260,7 +261,10 @@ namespace DiasGames.ThirdPersonSystem
             if (GameObject.FindGameObjectsWithTag("Player").Length > 1)
                 Destroy(this.gameObject);
         }
-
+        private void Start()
+        {
+            EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerCantMove, EventPlayerCantMove);
+        }
         private void FixedUpdate()
         {
             CheckGround(); // check ground bellow character
@@ -946,10 +950,16 @@ namespace DiasGames.ThirdPersonSystem
             else
                 EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, false);
         }
+        private void EventPlayerCantMove(params object[] args)
+        {
+            m_Animator.SetBool("Standby", true);
+            PlayerCantMove((int)args[0]);
+        }
         public void PlayerCantMove(int cantMove)
         {
             if (cantMove == 1)
             {
+                Camera.main.GetComponent<CinemachineBrain>().enabled = false;
                 m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionX;
                 m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionY;
                 m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionZ;
@@ -958,6 +968,8 @@ namespace DiasGames.ThirdPersonSystem
             }
             else
             {
+                m_Animator.SetBool("Standby", false);
+                Camera.main.GetComponent<CinemachineBrain>().enabled = true;
                 m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
                 m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionY;
                 m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;

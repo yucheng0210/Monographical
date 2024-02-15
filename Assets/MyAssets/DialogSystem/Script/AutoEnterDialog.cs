@@ -16,6 +16,7 @@ public class AutoEnterDialog : MonoBehaviour
             isEnter = true;
             talkUI.DialogName = dialogName;
             talkUI.gameObject.SetActive(true);
+            EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 1);
         }
     }
 }

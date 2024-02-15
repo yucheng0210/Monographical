@@ -148,6 +148,8 @@ public class DialogSystem : MonoBehaviour
             case "CALL":
                 if (currentBranchID == "REWARDED")
                     QuestManager.Instance.GetRewards(QuestID);
+                if (DataManager.Instance.DialogList[DialogName][index].Order == "PLAYERCANMOVE")
+                    EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
                 if (continueBool)
                 {
                     gameObject.SetActive(false);
