@@ -150,11 +150,10 @@ public class DialogSystem : MonoBehaviour
                     QuestManager.Instance.GetRewards(QuestID);
                 if (DataManager.Instance.DialogList[DialogName][index].Order == "PLAYERCANMOVE")
                     EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
-                if (continueBool)
-                {
-                    gameObject.SetActive(false);
+                else
                     currentBranchID = DataManager.Instance.DialogList[DialogName][index].Order;
-                }
+                if (continueBool)
+                    gameObject.SetActive(false);
                 break;
         }
     }

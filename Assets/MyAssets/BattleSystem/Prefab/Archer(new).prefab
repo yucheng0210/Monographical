@@ -929,6 +929,7 @@ MonoBehaviour:
   role: {fileID: 0}
   height: 2
   xOffset: 0
+  zOffset: 0
 --- !u!1 &2764192201897226523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1861,6 +1862,8 @@ MonoBehaviour:
   hitSpark: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
   hitDistortion: {fileID: 4311849393234507680, guid: f1214296d26b483439e70c97a848776e,
     type: 3}
+  currentAI: 0
+  currentState: 0
   enemyID: 2002
   collision: {fileID: 5593703716842024691, guid: dce229fb85820a1499d115d0cec3268d,
     type: 3}
@@ -1870,7 +1873,6 @@ MonoBehaviour:
   - {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0, type: 3}
   capsuleOffset: 0.3
   canExecution: 0
-  currentState: 0
   speed: 20
   min_distance: 1
   arrowPrefab: {fileID: 8360026549553698552, guid: dbee67f719a506b4d8e111a336d71fe2,
@@ -1933,8 +1935,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ddf69126143bbf4b91de90611c8eb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restoreTime: 0.2
-  hitTimeScale: 0.1
 --- !u!114 &-1367925289985191036
 MonoBehaviour:
   m_ObjectHideFlags: 0

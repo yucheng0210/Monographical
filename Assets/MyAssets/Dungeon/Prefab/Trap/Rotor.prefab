@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 9068945177189024964}
   - component: {fileID: 3622161734776548547}
   - component: {fileID: 4280126939954697530}
-  m_Layer: 0
+  - component: {fileID: 914177315505451750}
+  - component: {fileID: 6389548117116870811}
+  m_Layer: 3
   m_Name: Rotor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,3 +99,29 @@ MonoBehaviour:
   trapID: 3004
   rotorTrans: {fileID: 8521122611402415893}
   rotateOnceDuration: 1
+--- !u!65 &914177315505451750
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9177322068176326737}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: -0.000000029802322, y: 0.5000589, z: -0.00000008940697}
+--- !u!65 &6389548117116870811
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9177322068176326737}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2, y: 1.2, z: 1.2}
+  m_Center: {x: -0.000000029802322, y: 0.5000589, z: -0.00000008940697}

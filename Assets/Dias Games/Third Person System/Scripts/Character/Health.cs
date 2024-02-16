@@ -142,6 +142,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (isInvincible)
                 return;
+            isInvincible = true;
             Debug.Log("damage");
             Collider newOther = (Collider)other[0];
             Character enemyData = (Character)other[1];
