@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     {
         for (int i = 0; i < enemyCount; i++)
         {
-            Instantiate(enemy, transform.position, Quaternion.identity);
+            Instantiate(enemy, transform);
         }
     }
 }

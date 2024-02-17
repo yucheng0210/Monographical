@@ -5,7 +5,8 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
-
+using UnityEngine.AI;
+using DG.Tweening;
 public abstract class PatrolEnemy : MonoBehaviour, IObserver
 {
     public Animator Ani { get; set; }
@@ -13,7 +14,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private Rigidbody myBody;
     private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
-
+    private NavMeshAgent navMeshAgent;
     //private LookAtIK lookAtIK;
 
     [Header("移動參數")]
@@ -41,6 +42,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [Header("AI巡邏半徑參數")]
     [SerializeField]
     private float wanderRadius = 15;
+    [SerializeField]
+    private List<Transform> navPointList = new List<Transform>();
 
     [SerializeField]
     private float chaseRadius = 12;
@@ -92,6 +95,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private float wanderDistance;
+    [SerializeField]
+    private int currentNavPoint;
 
     [Header("戰鬥特效")]
     [SerializeField]
@@ -106,6 +111,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private EnemyAI currentAI;
     [SerializeField]
     private EnemyState currentState;
+    [SerializeField]
+    private bool cantStrafe;
 
     [Header("其他")]
     [SerializeField]
@@ -174,12 +181,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     protected virtual void Awake()
     {
-        InitialState();
+        StartCoroutine(InitialState());
     }
 
     protected virtual void Start()
     {
-        InitialRegister();
+        StartCoroutine(InitialRegister());
     }
 
     private void Update()
@@ -190,11 +197,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             AnimationRealTime(false);
             return;
         }
+        if (shutDown)
+            return;
         OnGrounded();
         if (isOnGrounded)
         {
-            if (shutDown)
-                return;
             StateSwitch();
             UpdateValue();
             UpdateState();
@@ -210,14 +217,18 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if (isOnGrounded)
             myBody.velocity = movement * Time.fixedDeltaTime;
     }
-    private void InitialRegister()
+    private IEnumerator InitialRegister()
     {
+        yield return null;
         GameManager.Instance.EnemyList.Add(EnemyData);
         AudioManager.Instance.MainAudio();
         Player = GameManager.Instance.PlayerTrans.gameObject;
+        shutDown = false;
+        //navMeshAgent.SetDestination(navPointList[1].position);
     }
-    private void InitialState()
+    private IEnumerator InitialState()
     {
+        yield return null;
         movement = Vector3.zero;
         Ani = GetComponent<Animator>();
         myBody = GetComponent<Rigidbody>();
@@ -231,6 +242,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         EnemyData = DataManager.Instance.CharacterList[enemyID].Clone();
         EnemyData.CurrentHealth = EnemyData.MaxHealth;
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
+        navMeshAgent = GetComponent<NavMeshAgent>();
         switch (currentAI)
         {
             case EnemyAI.Wander:
@@ -278,7 +290,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 currentState = EnemyState.Attack;
             else if (distance <= backWalkRadius || isBack)
                 currentState = EnemyState.BackWalk;
-            else if (distance <= strafeRadius)
+            else if (distance <= strafeRadius && !cantStrafe)
                 currentState = EnemyState.Strafe;
             else if (distance <= chaseRadius)
                 currentState = EnemyState.Chase;
@@ -361,6 +373,27 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 movement = transform.forward * walkSpeed;
                 break;
             case EnemyState.Nav:
+                if (navMeshAgent.destination == null)
+                {
+                    navMeshAgent.SetDestination(navPointList[1].position);
+                    currentNavPoint = 0;
+                }
+                if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                {
+                    if (currentNavPoint == 0)
+                    {
+                        navMeshAgent.SetDestination(navPointList[1].position);
+                        currentNavPoint = 1;
+                    }
+                    else
+                    {
+                        //transform.DOLocalRotateQuaternion(navPointList[0].rotation, 0.5f);
+                        navMeshAgent.SetDestination(navPointList[0].position);
+                        currentNavPoint = 0;
+                    }
+                }
+                direction = 0;
+                forward = 1;
                 break;
             case EnemyState.Stand:
                 direction = 0;
@@ -430,14 +463,33 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     AudioManager.Instance.MainAudio();
                 }
                 Warning = false;
-                if (wanderDistance < wanderRadius)
-                    currentState = EnemyState.Wander;
-                else
+                switch (currentAI)
                 {
-                    Look(startPos);
-                    direction = 0;
-                    forward = 2;
-                    movement = transform.forward * runSpeed;
+                    case EnemyAI.Wander:
+                        if (wanderDistance < wanderRadius)
+                            currentState = EnemyState.Wander;
+                        else
+                        {
+                            Look(startPos);
+                            direction = 0;
+                            forward = 2;
+                            movement = transform.forward * runSpeed;
+                        }
+                        break;
+                    case EnemyAI.Nav:
+
+                        navMeshAgent.SetDestination(navPointList[1].position);
+                        currentNavPoint = 1;
+                        direction = 0;
+                        forward = 2;
+                        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                            currentState = EnemyState.Nav;
+                        break;
+                    case EnemyAI.Stand:
+                        navMeshAgent.SetDestination(startPos);
+                        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                            currentState = EnemyState.Stand;
+                        break;
                 }
                 break;
             case EnemyState.BeakBack:

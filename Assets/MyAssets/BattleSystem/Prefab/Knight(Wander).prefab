@@ -1089,7 +1089,7 @@ GameObject:
   - component: {fileID: 5625624627655370864}
   - component: {fileID: 1662460199589364550}
   - component: {fileID: 1057333095764183700}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2681,9 +2681,9 @@ GameObject:
   - component: {fileID: -2866895090361175497}
   - component: {fileID: 5230761901958537003}
   - component: {fileID: -4129846585842139951}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Knight(Wander)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2783,7 +2783,7 @@ MonoBehaviour:
   maxCoolDown: 8
   minCoolDown: 5
   isOnGrounded: 0
-  shutDown: 0
+  shutDown: 1
   lockMove: 0
   isMeleeAttack: 0
   isBack: 0
@@ -2795,6 +2795,7 @@ MonoBehaviour:
     type: 3}
   currentAI: 0
   currentState: 0
+  cantStrafe: 0
   enemyID: 2001
   collision: {fileID: 2142591553028016222}
   healthSlider: {fileID: 1623643460466991958}
@@ -3018,7 +3019,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3770469165760702934}
-  m_Layer: 28
+  m_Layer: 0
   m_Name: End
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -3054,6 +3055,26 @@ PrefabInstance:
     - target: {fileID: 6867724713604872528, guid: 8bc22866488f5744e828847ec7d67bf0,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867724713604872531, guid: 8bc22866488f5744e828847ec7d67bf0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867724713811732368, guid: 8bc22866488f5744e828847ec7d67bf0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867724713917416088, guid: 8bc22866488f5744e828847ec7d67bf0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867724713996120489, guid: 8bc22866488f5744e828847ec7d67bf0,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6867724714123337690, guid: 8bc22866488f5744e828847ec7d67bf0,
@@ -3191,11 +3212,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyUICanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6867724714123337694, guid: 8bc22866488f5744e828847ec7d67bf0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6867724714543585550, guid: 8bc22866488f5744e828847ec7d67bf0,
         type: 3}
       propertyPath: role
       value: 
       objectReference: {fileID: 8790181549431798319}
+    - target: {fileID: 6867724714543585552, guid: 8bc22866488f5744e828847ec7d67bf0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bc22866488f5744e828847ec7d67bf0, type: 3}
 --- !u!224 &1623643460331496832 stripped
@@ -3226,6 +3257,10 @@ PrefabInstance:
     - target: {fileID: 1845237839428460, guid: ab8ac2017bc4c9e40b484324e5ee20e7, type: 3}
       propertyPath: m_Name
       value: Sword_DH
+      objectReference: {fileID: 0}
+    - target: {fileID: 1845237839428460, guid: ab8ac2017bc4c9e40b484324e5ee20e7, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4673611459674428, guid: ab8ac2017bc4c9e40b484324e5ee20e7, type: 3}
       propertyPath: m_RootOrder
@@ -3328,7 +3363,7 @@ PrefabInstance:
     - target: {fileID: 5583992660072787650, guid: ab8ac2017bc4c9e40b484324e5ee20e7,
         type: 3}
       propertyPath: m_Layer
-      value: 28
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5583992660072787650, guid: ab8ac2017bc4c9e40b484324e5ee20e7,
         type: 3}

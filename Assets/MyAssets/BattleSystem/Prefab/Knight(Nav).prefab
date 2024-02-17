@@ -2682,9 +2682,9 @@ GameObject:
   - component: {fileID: 5230761901958537003}
   - component: {fileID: -4129846585842139951}
   - component: {fileID: -5558284211124066976}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Knight(Nav)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2775,6 +2775,7 @@ MonoBehaviour:
   turnSpeed: 3
   beakBackForce: 2
   wanderRadius: 15
+  navPointList: []
   chaseRadius: 15
   strafeRadius: 10
   attackRadius: 7
@@ -2784,18 +2785,20 @@ MonoBehaviour:
   maxCoolDown: 8
   minCoolDown: 5
   isOnGrounded: 0
-  shutDown: 0
+  shutDown: 1
   lockMove: 0
   isMeleeAttack: 0
   isBack: 0
   distance: 0
   wanderDistance: 0
+  currentNavPoint: 0
   rockBreak: {fileID: 1949624779417528, guid: e73124b5ba126cc499fb7e927b7a79ac, type: 3}
   hitSpark: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
   hitDistortion: {fileID: 4311849393234507680, guid: f1214296d26b483439e70c97a848776e,
     type: 3}
   currentAI: 1
   currentState: 0
+  cantStrafe: 0
   enemyID: 2001
   collision: {fileID: 2142591553028016222}
   healthSlider: {fileID: 1623643460466991958}
