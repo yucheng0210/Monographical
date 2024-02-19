@@ -188,9 +188,12 @@ public class DataManager : Singleton<DataManager>, ISavable
                 dialog.TheName = row[2];
                 dialog.Order = row[3];
                 dialog.Content = row[4];
+                if (i == 1)
+                    dialog.CurrentBranch = "DEFAULT";
                 dialogs.Add(dialog);
             }
             string fileName = Path.GetFileNameWithoutExtension(file);
+
             DialogList.Add(fileName, dialogs);
         }
         #endregion

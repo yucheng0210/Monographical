@@ -32,6 +32,7 @@ public class SliderFollow : MonoBehaviour
     {
         //currentHeight = Mathf.Lerp(currentHeight, height, Time.deltaTime * 5);
         transform.position = role.transform.position + new Vector3(xOffset, height, zOffset);
-        transform.rotation = Camera.main.transform.rotation;
+        if (Camera.main != null)
+            transform.rotation = Camera.main.transform.rotation;
     }
 }

@@ -5,10 +5,7 @@ using UnityEngine;
 public class EventManager : Singleton<EventManager>
 {
     public delegate void EventHandler(params object[] args);
-    private Dictionary<string, EventHandler> eventListenters = new Dictionary<
-        string,
-        EventHandler
-    >();
+    private Dictionary<string, EventHandler> eventListenters = new Dictionary<string, EventHandler>();
 
     public void AddEventRegister(string eventName, EventHandler handler)
     {

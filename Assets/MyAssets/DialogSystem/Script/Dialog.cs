@@ -46,5 +46,6 @@ public class Dialog
         get { return order; }
         set { order = value; }
     }
+    public string CurrentBranch { get; set; }
     #endregion
 }

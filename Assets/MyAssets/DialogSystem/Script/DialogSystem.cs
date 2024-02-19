@@ -71,6 +71,7 @@ public class DialogSystem : MonoBehaviour
         index = 0;
         isTalking = true;
         textFinished = true;
+        currentBranchID = DataManager.Instance.DialogList[DialogName][0].CurrentBranch;
         //SetCharacterInfo();
         Initialize();
     }
@@ -151,9 +152,18 @@ public class DialogSystem : MonoBehaviour
                 if (DataManager.Instance.DialogList[DialogName][index].Order == "PLAYERCANMOVE")
                     EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
                 else
+                {
                     currentBranchID = DataManager.Instance.DialogList[DialogName][index].Order;
+                    DataManager.Instance.DialogList[DialogName][0].CurrentBranch
+                    = DataManager.Instance.DialogList[DialogName][index].Order;
+                }
                 if (continueBool)
                     gameObject.SetActive(false);
+                break;
+            case "EVENT":
+                EventManager.Instance.DispatchEvent(EventDefinition.eventDialogEvent
+                , DataManager.Instance.DialogList[DialogName][index].Order);
+                index++;
                 break;
         }
     }
@@ -210,6 +220,7 @@ public class DialogSystem : MonoBehaviour
         if (buttonBranchID == "ACTIVATE")
             QuestManager.Instance.ActivateQuest(QuestID);
         currentBranchID = buttonBranchID;
+        DataManager.Instance.DialogList[DialogName][0].CurrentBranch = buttonBranchID;
         DestroyChoice();
         inSelection = false;
         continueBool = true;
@@ -236,10 +247,12 @@ public class DialogSystem : MonoBehaviour
     private void EventQuestActivate(params object[] args)
     {
         currentBranchID = "ACTIVE";
+        DataManager.Instance.DialogList[DialogName][0].CurrentBranch = "ACTIVE";
     }
 
     private void EventQuestCompleted(params object[] args)
     {
         currentBranchID = "COMPLETED";
+        DataManager.Instance.DialogList[DialogName][0].CurrentBranch = "COMPLETED";
     }
 }

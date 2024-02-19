@@ -37,6 +37,13 @@ public class GameManager : Singleton<GameManager>, ISavable
             gameTime = 0;
         else
             gameTime += Time.unscaledDeltaTime;
+        if (Input.GetKeyDown(KeyCode.Escape) && !UIManager.Instance.UIDict["MineSweaperMenu"].OpenBool)
+        {
+            if (!UIManager.Instance.MenuIsOpen)
+                UIManager.Instance.ShowUI("MainMenu");
+            else
+                UIManager.Instance.HideAllUI();
+        }
     }
     private void InitializeData()
     {

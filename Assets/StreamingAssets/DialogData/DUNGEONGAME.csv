@@ -1,0 +1,8 @@
+﻿分支,類型,名稱,指令,內容
+DEFAULT,TALK,無名氏,,要不要玩踩地雷遊戲？
+DEFAULT,CHOICE,,Yes,玩啦，哪次不玩。
+DEFAULT,CHOICE,,NO,傻子才玩。
+NO,TALK,無名氏,,…………………………………………….。
+NO,CALL,,DEFAULT,
+Yes,EVENT,,MINE,
+Yes,CALL,,DEFAULT,
