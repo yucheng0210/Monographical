@@ -452,7 +452,7 @@ public class ParkourPlayer : MonoBehaviour
             animator.SetTrigger("isJumpDead");
         Time.timeScale = 0.5f;
         runImpulse.GenerateImpulse(new Vector3(25, 15, 0));
-        GameManager.Instance.EndNotifyObservers();
+        Main.Manager.GameManager.Instance.EndNotifyObservers();
         myBody.velocity = Vector3.zero;
         beakBackForce = transform.TransformDirection(beakBackForce);
         myBody.AddForce(beakBackForce, ForceMode.Impulse);

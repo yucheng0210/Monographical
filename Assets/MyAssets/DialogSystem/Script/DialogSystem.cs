@@ -15,8 +15,7 @@ public class DialogSystem : MonoBehaviour
     private Text characterName;
 
     [SerializeField]
-    private Sprite playerFace,
-        npcFace;
+    private Sprite playerFace, npcFace;
 
     private int index;
 
@@ -27,7 +26,6 @@ public class DialogSystem : MonoBehaviour
     private float currentTextWaitTime;
     private bool textFinished;
     private bool openMenu;
-    public static bool isTalking;
 
     [SerializeField]
     private GameObject choiceButton;
@@ -69,7 +67,7 @@ public class DialogSystem : MonoBehaviour
         currentTextWaitTime = maxTextWaitTime;
         continueBool = true;
         index = 0;
-        isTalking = true;
+        Main.Manager.GameManager.Instance.IsTalking = true;
         textFinished = true;
         currentBranchID = DataManager.Instance.DialogList[DialogName][0].CurrentBranch;
         //SetCharacterInfo();
@@ -79,7 +77,7 @@ public class DialogSystem : MonoBehaviour
 
     private void OnDisable()
     {
-        isTalking = false;
+        Main.Manager.GameManager.Instance.IsTalking = false;
         DestroyChoice();
     }
 

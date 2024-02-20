@@ -62,9 +62,9 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     private IEnumerator PortalTransition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
-        GameManager.Instance.LoadingNotify(true);
+        Main.Manager.GameManager.Instance.LoadingNotify(true);
         SceneFader fade = Instantiate(sceneFaderPrefab);
-        player = GameManager.Instance.PlayerState.gameObject;
+        player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         progressSlider.value = 0.0f;
         if (SceneManager.GetActiveScene().name != sceneName)
         {
@@ -93,7 +93,7 @@ public class SceneController : Singleton<SceneController>, ISavable
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
-            GameManager.Instance.LoadingNotify(false);
+            Main.Manager.GameManager.Instance.LoadingNotify(false);
             yield return StartCoroutine(fade.FadeIn());
         }
         else
@@ -103,7 +103,7 @@ public class SceneController : Singleton<SceneController>, ISavable
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
-            GameManager.Instance.LoadingNotify(false);
+            Main.Manager.GameManager.Instance.LoadingNotify(false);
             yield return StartCoroutine(fade.FadeIn());
             yield return null;
         }
@@ -122,7 +122,7 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     public IEnumerator Transition(string sceneName)
     {
-        //GameManager.Instance.LoadingNotify(true);
+        //Main.Manager.GameManager.Instance.LoadingNotify(true);
         EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         SceneFader fade = Instantiate(sceneFaderPrefab);
         progressSlider.value = 0.0f;
@@ -145,7 +145,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         yield return new WaitForSecondsRealtime(1f);
         progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
-        // GameManager.Instance.LoadingNotify(false);
+        // Main.Manager.GameManager.Instance.LoadingNotify(false);
         yield return StartCoroutine(fade.FadeIn());
     }
 

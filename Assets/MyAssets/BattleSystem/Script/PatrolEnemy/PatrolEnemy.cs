@@ -220,9 +220,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private IEnumerator InitialRegister()
     {
         yield return null;
-        GameManager.Instance.EnemyList.Add(EnemyData);
+        Main.Manager.GameManager.Instance.EnemyList.Add(EnemyData);
         AudioManager.Instance.MainAudio();
-        Player = GameManager.Instance.PlayerTrans.gameObject;
+        Player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         shutDown = false;
         //navMeshAgent.SetDestination(navPointList[1].position);
     }
@@ -509,7 +509,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         shutDown = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
-        GameManager.Instance.AddCurrentTotalKill(enemyID);
+        Main.Manager.GameManager.Instance.AddCurrentTotalKill(enemyID);
         for (int i = 0; i < QuestManager.Instance.ActiveQuestList.Count; i++)
         {
             List<(int, int)> targetEnemyList = QuestManager.Instance.ActiveQuestList[i].TargetEnemyList;
@@ -590,7 +590,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         if (other.gameObject.layer == playerAttackLayer)
         {
-            GameManager.Instance.TakeDamage(GameManager.Instance.PlayerData, EnemyData);
+            Main.Manager.GameManager.Instance.TakeDamage(Main.Manager.GameManager.Instance.PlayerData, EnemyData);
             Vector3 hitPoint = new Vector3(
                 transform.position.x,
                 other.ClosestPointOnBounds(transform.position).y,

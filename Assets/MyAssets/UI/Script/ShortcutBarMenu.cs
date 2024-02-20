@@ -86,7 +86,7 @@ public class ShortcutBarMenu : UIBase
         if (Input.GetKeyDown(KeyCode.R))
         {
             BackpackManager.Instance.UseItem(DataManager.Instance.ShortcutBar.ElementAt(currentIndex).Value.ItemIndex);
-            GameManager.Instance.PlayerAni.SetTrigger("isDrink");
+            Main.Manager.GameManager.Instance.PlayerAni.SetTrigger("isDrink");
         }
     }
 

@@ -105,7 +105,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Start()
         {
-            GameManager.Instance.RegisterPlayer(DataManager.Instance.CharacterList[playerID].Clone(), transform, ani);
+            Main.Manager.GameManager.Instance.RegisterPlayer(DataManager.Instance.CharacterList[playerID].Clone(), transform, ani);
             //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerInvincible, EventInvincible);
@@ -113,8 +113,8 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            healthSlider.value = (float)GameManager.Instance.PlayerData.CurrentHealth
-            / (float)GameManager.Instance.PlayerData.MaxHealth;
+            healthSlider.value = (float)Main.Manager.GameManager.Instance.PlayerData.CurrentHealth
+            / (float)Main.Manager.GameManager.Instance.PlayerData.MaxHealth;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
@@ -125,7 +125,7 @@ namespace DiasGames.ThirdPersonSystem
             bool otherLayerBool = other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer
             || other.gameObject.layer == LayerMask.NameToLayer("Trap");
             Character enemyData = null;
-            if (otherLayerBool && GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
+            if (otherLayerBool && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
             {
 
                 if (other.gameObject.layer == arrowAttackLayer)
@@ -146,7 +146,7 @@ namespace DiasGames.ThirdPersonSystem
             Debug.Log("damage");
             Collider newOther = (Collider)other[0];
             Character enemyData = (Character)other[1];
-            GameManager.Instance.TakeDamage(enemyData, GameManager.Instance.PlayerData);
+            Main.Manager.GameManager.Instance.TakeDamage(enemyData, Main.Manager.GameManager.Instance.PlayerData);
             Vector3 hitPoint = new Vector3(
                 newOther.bounds.center.x,
                 newOther.ClosestPointOnBounds(transform.position).y,
@@ -154,7 +154,7 @@ namespace DiasGames.ThirdPersonSystem
             );
             HitEffect(hitPoint, newOther);
             Vector3 direction = newOther.transform.forward + newOther.transform.up;
-            if (GameManager.Instance.PlayerData.CurrentPoise <= 0)
+            if (Main.Manager.GameManager.Instance.PlayerData.CurrentPoise <= 0)
             {
                 ani.SetFloat("BeakBackMode", 2);
                 characterState.CurrentPoise = characterState.MaxPoise;
@@ -163,7 +163,7 @@ namespace DiasGames.ThirdPersonSystem
             else
                 ani.SetFloat("BeakBackMode", 1);
             ani.SetTrigger("isHited");
-            if (GameManager.Instance.PlayerData.CurrentHealth <= 0)
+            if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
                 Die();
             else
             {
@@ -206,7 +206,7 @@ namespace DiasGames.ThirdPersonSystem
             EnableRagdoll();
             OnDie.Invoke();
             OnCharacterDie?.Invoke();
-            GameManager.Instance.EndNotifyObservers();
+            Main.Manager.GameManager.Instance.EndNotifyObservers();
 
             // Play sound
             if (AudioManager.Instance != null)

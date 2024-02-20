@@ -92,7 +92,7 @@ public class Enemy : MonoBehaviour, IObserver
         controller = GetComponent<CharacterController>();
         startPos = transform.position;
         collision.SetActive(false);
-        player = GameManager.Instance.PlayerState.gameObject;
+        player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         myCamera = GetComponentInChildren<Canvas>();
         myCamera.worldCamera = Camera.main;
         myImpulse = GetComponent<Cinemachine.CinemachineImpulseSource>();
@@ -105,7 +105,7 @@ public class Enemy : MonoBehaviour, IObserver
 
     private void OnDisable()
     {
-        GameManager.Instance.RemoveObservers(this);
+        Main.Manager.GameManager.Instance.RemoveObservers(this);
     }
 
     private void Update()

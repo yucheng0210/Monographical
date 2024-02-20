@@ -304,7 +304,7 @@ namespace DiasGames.ThirdPersonSystem
                 else
                     isZomming = false;
             }
-            if (!DialogSystem.isTalking)
+            if (!Main.Manager.GameManager.Instance.IsTalking)
                 AttackState();
             enduranceSlider.value = currentEndurance / maxEndurance;
             // ----------------------- ABILITY UPDATE --------------------------- //
@@ -959,6 +959,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             if (cantMove == 1)
             {
+                Main.Manager.GameManager.Instance.PlayerCantMove = true;
                 Camera.main.GetComponent<CinemachineBrain>().enabled = false;
                 m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionX;
                 m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionY;
@@ -968,6 +969,7 @@ namespace DiasGames.ThirdPersonSystem
             }
             else
             {
+                Main.Manager.GameManager.Instance.PlayerCantMove = false;
                 m_Animator.SetBool("Standby", false);
                 Camera.main.GetComponent<CinemachineBrain>().enabled = true;
                 m_Rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;

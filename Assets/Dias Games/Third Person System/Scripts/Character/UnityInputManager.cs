@@ -71,8 +71,8 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private Transform m_Camera;
 
-        [SerializeField]
-        private bool m_CursorVisible = false;
+       /* [SerializeField]
+        private bool m_CursorVisible = false;*/
 
         // --------------------- INPUT BUTTONS --------------------- //
 
@@ -187,13 +187,13 @@ namespace DiasGames.ThirdPersonSystem
 
         CinemachineFreeLook[] m_FreeLookCameras;
 
-        private bool m_HideCursor = true;
-        private float waitTimeToHide = 0f;
+        /*private bool m_HideCursor = true;
+        private float waitTimeToHide = 0f;*/
 
         private void Awake()
         {
-            Cursor.lockState = m_CursorVisible ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = m_CursorVisible;
+           /* Cursor.lockState = m_CursorVisible ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = m_CursorVisible;*/
 
             // Find main camera if it was not attached in hierarchy
             if (m_Camera == null)
@@ -285,7 +285,7 @@ namespace DiasGames.ThirdPersonSystem
 
         private void HandleCursorVisibility()
         {
-            if (m_CursorVisible)
+            /*if (m_CursorVisible)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
@@ -306,16 +306,15 @@ namespace DiasGames.ThirdPersonSystem
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                m_HideCursor = true;
-                waitTimeToHide = 0.1f;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape) || Time.timeScale == 0 || DialogSystem.isTalking)
-                m_HideCursor = false;
+            }*/
+            /* Debug.Log(Main.Manager.GameManager.Instance.IsTalking);
+             if (Input.GetMouseButtonDown(0) && !(Time.timeScale == 0 && Main.Manager.GameManager.Instance.IsTalking))
+             {
+                 m_HideCursor = true;
+                 waitTimeToHide = 0.1f;
+             }
+             if (Input.GetKeyDown(KeyCode.Escape) || Time.timeScale == 0 || Main.Manager.GameManager.Instance.IsTalking)
+                 m_HideCursor = false;*/
         }
 
         public InputButton GetInputReference(InputReference reference)

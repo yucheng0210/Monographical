@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.Playables;
 public class MineSweaperMenu : UIBase
 {
     [SerializeField]
     private Button quitButton;
+    [SerializeField]
+    private Transform mineGroupTrans;
+    [SerializeField]
+    private PlayableDirector playableDirector = null;
     private Camera mainCamera;
     protected override void Start()
     {
@@ -18,17 +22,46 @@ public class MineSweaperMenu : UIBase
     public override void Show()
     {
         //base.Show();
+        StartCoroutine(LoadShow());
+    }
+    private IEnumerator LoadShow()
+    {
+        UIManager.Instance.MenuIsOpen = true;
         openMenu.SetActive(true);
         OpenBool = true;
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 1);
         mainCamera.gameObject.SetActive(false);
+        yield return null;
+        for (int y = 0; y < Main.Manager.GameManager.Instance.MinePosList.GetLength(0); y++)
+        {
+            for (int x = 0; x < Main.Manager.GameManager.Instance.MinePosList.GetLength(1); x++)
+            {
+                if (Main.Manager.GameManager.Instance.MinePosList[y, x])
+                    mineGroupTrans.GetChild(y).GetChild(x).gameObject.SetActive(true);
+            }
+        }
     }
     public override void Hide()
     {
+        StartCoroutine(LoadHide());
+    }
+    private IEnumerator LoadHide()
+    {
+        UIManager.Instance.MenuIsOpen = false;
+        if (playableDirector != null)
+        {
+            quitButton.onClick.RemoveAllListeners();
+            playableDirector.Stop();
+            playableDirector.time = 0;
+            playableDirector.Evaluate();
+            playableDirector.Play();
+            yield return new WaitForSecondsRealtime((float)playableDirector.duration);
+        }
         openMenu.SetActive(false);
         OpenBool = false;
         mainCamera.gameObject.SetActive(true);
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
+        quitButton.onClick.AddListener(Hide);
     }
     private void EventDialogEvent(params object[] args)
     {

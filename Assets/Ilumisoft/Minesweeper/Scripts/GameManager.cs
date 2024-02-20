@@ -55,7 +55,13 @@ namespace Ilumisoft.Minesweeper
         {
             // Make sure the number of bombs is not larger than the grid size
             bombCount = Mathf.Min(bombCount, grid.Width * grid.Height);
-
+            /*for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    Main.Manager.GameManager.Instance.MinePosList[x, y] = false;
+                }
+            }*/
             for (int i = 0; i < bombCount; i++)
             {
                 // Calculate a random position
@@ -72,6 +78,7 @@ namespace Ilumisoft.Minesweeper
                 {
                     i--;
                 }
+                Main.Manager.GameManager.Instance.MinePosList[y, x] = true;
             }
         }
 
@@ -136,7 +143,7 @@ namespace Ilumisoft.Minesweeper
                 {
                     GameOver(won: false);
                 }
-                else if(HasRevealedAllSafeTiles())
+                else if (HasRevealedAllSafeTiles())
                 {
                     GameOver(won: true);
                 }
