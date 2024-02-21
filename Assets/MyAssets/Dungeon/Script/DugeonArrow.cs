@@ -11,18 +11,26 @@ public class DugeonArrow : DungeonTrap
     private Transform launcherTrans;
     [SerializeField]
     private float arrowForce;
+    [SerializeField]
+    private bool isAutoShoot;
+    [SerializeField]
+    private float autoShootStartTime;
+    [SerializeField]
+    private float autoShootCoolDown;
     protected override void Initialize()
     {
-
+        if (isAutoShoot)
+            InvokeRepeating(nameof(Shoot), autoShootStartTime, autoShootCoolDown);
+    }
+    private void Shoot()
+    {
+        GameObject arrow = Instantiate(arrowPrefab, launcherTrans);
+        arrow.GetComponent<Rigidbody>().AddForce(arrowForce * launcherTrans.forward, ForceMode.Impulse);
+        Destroy(arrow, 2);
     }
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.CompareTag("Player"))
-        {
-            GameObject arrow = Instantiate(arrowPrefab, launcherTrans);
-            arrow.GetComponent<Rigidbody>().AddForce(arrowForce * launcherTrans.forward, ForceMode.Impulse);
-            Destroy(arrow, 5);
-        }
-
+        if (collider.CompareTag("Player") && !isAutoShoot)
+            Shoot();
     }
 }
