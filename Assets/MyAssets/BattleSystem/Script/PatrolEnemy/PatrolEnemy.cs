@@ -27,19 +27,26 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private float strafeSpeed = 30;
 
-    [SerializeField]
+    /*[SerializeField]
     private float dashSpeed = 300;
 
     [SerializeField]
-    private float meleeSpeed = 80;
+    private float meleeSpeed = 80;*/
 
     [SerializeField]
     private float turnSpeed = 3;
 
     [SerializeField]
     private float beakBackForce = 2;
+    [Header("Nav移動參數")]
+    [SerializeField]
+    private float navWalkSpeed = 50f;
 
+    [SerializeField]
+    private float navRunSpeed = 200;
     [Header("AI巡邏半徑參數")]
+    [SerializeField]
+    private float visionAngle = 15;
     [SerializeField]
     private float wanderRadius = 15;
     [SerializeField]
@@ -284,18 +291,18 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         {
             if (distance >= turnBackRadius)
                 currentState = EnemyState.TurnBack;
-            else if (angle > 60)
-                currentState = EnemyState.Turn;
+            /*else if (angle > visionAngle)
+                currentState = EnemyState.Turn;*/
             else if (distance <= attackRadius && CurrentCoolDown <= 0)
                 currentState = EnemyState.Attack;
             else if (distance <= backWalkRadius || isBack)
                 currentState = EnemyState.BackWalk;
-            else if (distance <= strafeRadius && !cantStrafe)
+            else if (distance <= strafeRadius)
                 currentState = EnemyState.Strafe;
             else if (distance <= chaseRadius)
                 currentState = EnemyState.Chase;
         }
-        else if (distance <= chaseRadius && angle < 60)
+        else if (distance <= chaseRadius && angle < visionAngle)
             currentState = EnemyState.Chase;
         if (distance <= meleeAttackRadius)
             isMeleeAttack = true;
@@ -329,9 +336,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Ani.SetInteger(attack, 0);
         if (MyAnimatorStateInfo.normalizedTime < 0.55f)
         {
-            movement = isMeleeAttack
+            /*movement = isMeleeAttack
                 ? transform.forward * meleeSpeed
-                : transform.forward * dashSpeed;
+                : transform.forward * dashSpeed;*/
         }
         else
             movement = Vector3.zero;
@@ -378,6 +385,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     navMeshAgent.SetDestination(navPointList[1].position);
                     currentNavPoint = 0;
                 }
+                navMeshAgent.speed = navWalkSpeed;
                 if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
                 {
                     if (currentNavPoint == 0)
@@ -407,21 +415,35 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 {
                     AudioManager.Instance.BattleAudio();
                     Warning = true;
+                    navMeshAgent.SetDestination(Player.transform.position);
                 }
+                navMeshAgent.speed = navRunSpeed;
+                navMeshAgent.isStopped = false;
                 direction = 0;
                 forward = 2;
-                movement = transform.forward * runSpeed;
+                //movement = transform.forward * runSpeed;
                 break;
             case EnemyState.Strafe:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
                 direction = 0.5f;
                 forward = 0.5f;
-                movement = (transform.forward + transform.right * 0.5f) * strafeSpeed;
+                if (cantStrafe)
+                {
+                    navMeshAgent.isStopped = false;
+                    navMeshAgent.speed = navWalkSpeed;
+                    navMeshAgent.SetDestination(Player.transform.position);
+                }
+                else
+                {
+                    navMeshAgent.isStopped = true;
+                    movement = (transform.forward + transform.right * 0.5f) * strafeSpeed;
+                }
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
+                navMeshAgent.isStopped = true;
                 if (isMeleeAttack)
                 {
                     Ani.SetInteger(attack, 1);
@@ -433,6 +455,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
+                navMeshAgent.isStopped = true;
                 direction = 0;
                 forward = -1;
                 movement = -transform.forward * walkSpeed;
@@ -445,6 +468,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Look(Player.transform.position);
                 Vector3 dir = Player.transform.position - transform.position;
                 Vector3 cross = Vector3.Cross(transform.forward, dir);
+                navMeshAgent.isStopped = true;
                 if (cross.y >= 0)
                 {
                     direction = 2;
@@ -463,6 +487,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     AudioManager.Instance.MainAudio();
                 }
                 Warning = false;
+                navMeshAgent.isStopped = false;
                 switch (currentAI)
                 {
                     case EnemyAI.Wander:
@@ -477,8 +502,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                         }
                         break;
                     case EnemyAI.Nav:
-
-                        navMeshAgent.SetDestination(navPointList[1].position);
+                        navMeshAgent.SetDestination(navPointList[0].position);
                         currentNavPoint = 1;
                         direction = 0;
                         forward = 2;

@@ -37,7 +37,11 @@ namespace Ilumisoft.Minesweeper
         {
             CreateBoard();
         }
-
+        private void OnEnable()
+        {
+            gameOverUI.SetActive(false);
+            levelCompleteUI.SetActive(false);
+        }
         /// <summary>
         /// 
         /// </summary>

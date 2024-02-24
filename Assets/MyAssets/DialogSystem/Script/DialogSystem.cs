@@ -145,18 +145,20 @@ public class DialogSystem : MonoBehaviour
                 index++;
                 break;
             case "CALL":
-                if (currentBranchID == "REWARDED")
-                    QuestManager.Instance.GetRewards(QuestID);
-                if (DataManager.Instance.DialogList[DialogName][index].Order == "PLAYERCANMOVE")
-                    EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
-                else
-                {
-                    currentBranchID = DataManager.Instance.DialogList[DialogName][index].Order;
-                    DataManager.Instance.DialogList[DialogName][0].CurrentBranch
-                    = DataManager.Instance.DialogList[DialogName][index].Order;
-                }
                 if (continueBool)
+                {
+                    if (currentBranchID == "REWARDED")
+                        QuestManager.Instance.GetRewards(QuestID);
+                    if (DataManager.Instance.DialogList[DialogName][index].Order == "PLAYERCANMOVE")
+                        EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
+                    else
+                    {
+                        currentBranchID = DataManager.Instance.DialogList[DialogName][index].Order;
+                        DataManager.Instance.DialogList[DialogName][0].CurrentBranch
+                        = DataManager.Instance.DialogList[DialogName][index].Order;
+                    }
                     gameObject.SetActive(false);
+                }
                 break;
             case "EVENT":
                 EventManager.Instance.DispatchEvent(EventDefinition.eventDialogEvent
