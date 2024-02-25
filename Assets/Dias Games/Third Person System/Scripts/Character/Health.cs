@@ -80,6 +80,8 @@ namespace DiasGames.ThirdPersonSystem
         private float fallDownForce;
         [SerializeField]
         private int playerID;
+        [SerializeField]
+        private GameObject onfireEffect;
         private AnimatorStateInfo animatorStateInfo;
         //private Rigidbody rigidbody;
 
@@ -119,7 +121,24 @@ namespace DiasGames.ThirdPersonSystem
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
         }
-
+        private IEnumerator OnFire()
+        {
+            while (onfireEffect.activeSelf && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth > 0)
+            {
+                Main.Manager.GameManager.Instance.TakeDamage(DataManager.Instance.CharacterList[3006]
+                , Main.Manager.GameManager.Instance.PlayerData);
+                //Debug.Log("OnFire");
+                if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
+                    Die();
+                yield return new WaitForSeconds(1);
+            }
+        }
+        public void Extinguishing()
+        {
+            int randomIndex = UnityEngine.Random.Range(0, 4);
+            if (randomIndex == 0)
+                onfireEffect.SetActive(false);
+        }
         private void OnTriggerEnter(Collider other)
         {
             bool otherLayerBool = other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer
@@ -157,7 +176,7 @@ namespace DiasGames.ThirdPersonSystem
             if (Main.Manager.GameManager.Instance.PlayerData.CurrentPoise <= 0)
             {
                 ani.SetFloat("BeakBackMode", 2);
-                characterState.CurrentPoise = characterState.MaxPoise;
+                Main.Manager.GameManager.Instance.PlayerData.CurrentPoise = Main.Manager.GameManager.Instance.PlayerData.MaxPoise;
                 //rigidbody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
@@ -178,6 +197,11 @@ namespace DiasGames.ThirdPersonSystem
             myImpulse.GenerateImpulse();
             if (other.CompareTag("Light"))
                 Destroy(Instantiate(lightHitSpark, hitPoint, Quaternion.identity), 2);
+            else if (other.CompareTag("Fire") && !onfireEffect.activeSelf)
+            {
+                onfireEffect.SetActive(true);
+                StartCoroutine(OnFire());
+            }
             else
                 Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
             Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);

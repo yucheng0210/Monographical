@@ -67,13 +67,18 @@ namespace Main.Manager
         }
         public void TakeDamage(Character attacker, Character defender)
         {
-            float weaponDamage = PlayerEquipWeapon.WeaponAttack;
-            float damage = Random.Range(attacker.MinAttack + weaponDamage, attacker.MaxAttack + weaponDamage);
+            /*float weaponDamage = PlayerEquipWeapon.WeaponAttack;
+            float playerMinAttack=attacker.MinAttack + weaponDamage;
+            float playerMaxAttack= attacker.MaxAttack + weaponDamage;
+            float playerCriticalMultiplier=attacker.CriticalMultiplier + PlayerEquipWeapon.WeaponCriticalMultiplier;
+            */
+            float damage = Random.Range(attacker.MinAttack, attacker.MaxAttack);
             bool isCritical = Random.value < (attacker.CriticalChance + PlayerEquipWeapon.WeaponCriticalChance);
             if (isCritical)
-                damage *= (attacker.CriticalMultiplier + PlayerEquipWeapon.WeaponCriticalMultiplier);
+                damage *= attacker.CriticalMultiplier;
             defender.CurrentHealth -= (int)Mathf.Max(damage - defender.CurrentDefence, 0);
             defender.CurrentPoise -= attacker.PoiseAttack;
+            Debug.Log(damage);
         }
         public void AddObservers(IObserver observer)
         {
