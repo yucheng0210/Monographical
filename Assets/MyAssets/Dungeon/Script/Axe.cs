@@ -6,15 +6,13 @@ using UnityEngine;
 public class Axe : DungeonTrap
 {
     [SerializeField]
-    private float rotateRange;
+    private Vector3 rotateRange;
     [SerializeField]
     private float rotateOnceDuration;
 
     protected override void Initialize()
     {
-        transform.DOLocalRotate
-        (new Vector3(transform.localEulerAngles.x + rotateRange,
-         transform.localEulerAngles.y, transform.localEulerAngles.z), rotateOnceDuration)
+        transform.DOLocalRotate(transform.localEulerAngles + rotateRange, rotateOnceDuration)
        .SetLoops(-1, LoopType.Yoyo)
        .SetEase(Ease.InOutQuad);
     }
