@@ -8,10 +8,14 @@ public class Rotor : DungeonTrap
     private Transform rotorTrans;
     [SerializeField]
     private float rotateOnceDuration;
-
+    [SerializeField]
+    private Vector3 rotateDirection;
     protected override void Initialize()
     {
-        rotorTrans.DOLocalRotate(new Vector3(0f, 360f, 0f), rotateOnceDuration, RotateMode.FastBeyond360).SetLoops(-1)
+        if (rotorTrans == null)
+            rotorTrans = transform;
+        rotorTrans.DOLocalRotate(rotorTrans.localEulerAngles + rotateDirection, rotateOnceDuration, RotateMode.FastBeyond360)
+        .SetLoops(-1)
        .SetEase(Ease.Linear);
     }
 }
