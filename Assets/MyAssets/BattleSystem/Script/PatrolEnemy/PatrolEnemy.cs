@@ -146,7 +146,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private int attack = Animator.StringToHash("AttackMode");
     private int isHited = Animator.StringToHash("isHited");
     private int isLosePoise = Animator.StringToHash("isLosePoise");
-    private CinemachineImpulseSource myImpulse;
+    protected CinemachineImpulseSource myImpulse;
     public bool IsAttacking { get; set; }
     public Character EnemyData { get; private set; }
     public CharacterState EnemyCharacterState { get; set; }

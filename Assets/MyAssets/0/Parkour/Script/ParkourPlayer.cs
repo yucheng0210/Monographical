@@ -286,11 +286,7 @@ public class ParkourPlayer : MonoBehaviour
     {
         float animationCount = 0;
         float animationProgress = 0;
-        transform.position = new Vector3(
-            baffle.transform.position.x,
-            transform.position.y,
-            transform.position.z
-        );
+        transform.position = new Vector3(baffle.transform.position.x, transform.position.y, transform.position.z);
         isClimb = true;
         animator.SetBool("isClimb", isClimb);
         while (animator.GetBool("isClimb"))
@@ -445,6 +441,7 @@ public class ParkourPlayer : MonoBehaviour
     private IEnumerator Death(string tag)
     {
         EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
+        StopAllCoroutines();
         isDead = true;
         if (tag == "Dead")
             animator.SetTrigger("isDead");
@@ -456,9 +453,7 @@ public class ParkourPlayer : MonoBehaviour
         myBody.velocity = Vector3.zero;
         beakBackForce = transform.TransformDirection(beakBackForce);
         myBody.AddForce(beakBackForce, ForceMode.Impulse);
-        gameObject
-            .GetComponent<BloodEffect>()
-            .SpurtingBlood(transform.position + new Vector3(0, 1.75f, 0));
+        GetComponent<BloodEffect>().SpurtingBlood(transform.position + new Vector3(0, 1.75f, 0));
         yield return new WaitForSecondsRealtime(2);
         Time.timeScale = 1;
         yield return new WaitForSecondsRealtime(5);

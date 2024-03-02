@@ -32,6 +32,8 @@ public class DialogSystem : MonoBehaviour
 
     [SerializeField]
     private GameObject choiceManager;
+    [SerializeField]
+    private bool auto;
 
     public bool IsQuestDialog { get; set; }
 
@@ -239,6 +241,7 @@ public class DialogSystem : MonoBehaviour
                 Input.GetKeyDown(KeyCode.KeypadEnter)
                 || Input.GetMouseButtonDown(0)
                 || Input.GetButtonDown("A")
+                || auto
             ) && !BlockContinue
         )
             continueBool = true;

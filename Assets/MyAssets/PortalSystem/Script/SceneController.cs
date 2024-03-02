@@ -36,6 +36,11 @@ public class SceneController : Singleton<SceneController>, ISavable
         savable.AddSavableRegister();
         AddSceneName();
     }
+    /*private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            SceneManager.LoadScene(1);
+    }*/
 
     private void AddSceneName()
     {
@@ -128,6 +133,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         progressSlider.value = 0.0f;
         yield return StartCoroutine(fade.FadeOut());
         progressCanvas.SetActive(true);
+        progressText.text = (int)(progressSlider.value * 100) + "%";
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
         while (progressSlider.value < 0.99f)

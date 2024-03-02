@@ -306,7 +306,8 @@ namespace DiasGames.ThirdPersonSystem
             }
             if (!Main.Manager.GameManager.Instance.IsTalking)
                 AttackState();
-            enduranceSlider.value = currentEndurance / maxEndurance;
+            if (enduranceSlider != null)
+                enduranceSlider.value = currentEndurance / maxEndurance;
             // ----------------------- ABILITY UPDATE --------------------------- //
 
             if (m_ActiveAbility != null)
