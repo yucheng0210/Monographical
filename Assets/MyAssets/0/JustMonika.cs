@@ -19,7 +19,11 @@ public class JustMonika : MonoBehaviour
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventDialogEvent, EventDialogEvent);
     }
-
+    private void Update()
+    {
+         cursorPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+         UnityEngine.Debug.Log(cursorPos);
+    }
     private IEnumerator UpdateCursorPos()
     {
         isControlCursor = true;
