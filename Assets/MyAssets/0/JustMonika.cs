@@ -6,36 +6,26 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 public class JustMonika : MonoBehaviour
 {
-    [SerializeField]
-    private float moveTime = 5;
-    private bool isControlCursor;
     [DllImport("user32.dll")]
     public static extern int SetCursorPos(int x, int y);
-    private int destinationX = 0;
-    private int destinationY = 0;
-    private float accumulateTime;
+
+    private bool isControlCursor;
     private Vector2 cursorPos;
     private void Start()
     {
         EventManager.Instance.AddEventRegister(EventDefinition.eventDialogEvent, EventDialogEvent);
     }
-    private void Update()
-    {
-         cursorPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-         UnityEngine.Debug.Log(cursorPos);
-    }
     private IEnumerator UpdateCursorPos()
     {
         isControlCursor = true;
+        cursorPos = new Vector2(Input.mousePosition.x, 1080 - Input.mousePosition.y);
         while (isControlCursor)
         {
-            float t = accumulateTime / moveTime;
-            cursorPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-            destinationX = (int)Mathf.Lerp(cursorPos.x, 960, t);
-            destinationY = (int)Mathf.Lerp(cursorPos.y, 420, t);
-            SetCursorPos(destinationX, destinationY);
-            accumulateTime += Time.deltaTime;
-            UnityEngine.Debug.Log(cursorPos);
+            if (cursorPos.x > 920)
+            {
+                if (cursorPos.y > 420)
+                    SetCursorPos((int)--cursorPos.x, (int)--cursorPos.y);
+            }
             yield return null;
         }
     }
