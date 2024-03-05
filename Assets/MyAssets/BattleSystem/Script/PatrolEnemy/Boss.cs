@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 
 public class Boss : PatrolEnemy
 {
+    [SerializeField]
+    private GameObject anotherCollision;
     [Header("怒吼")]
     [SerializeField]
     private UnityEngine.Rendering.Volume mainVolumeProfile;
@@ -13,11 +15,10 @@ public class Boss : PatrolEnemy
     private float roarIntensity;
     [SerializeField]
     private float roarOnceDuration;
-    protected override void UpdateState()
+    protected override void AdditionalAttack()
     {
-        base.UpdateState();
-        if (Input.GetKeyDown(KeyCode.Space))
-            StartCoroutine(Roar());
+        meleeAttackCount = 3;
+        base.AdditionalAttack();
     }
     private IEnumerator Roar()
     {
@@ -26,5 +27,13 @@ public class Boss : PatrolEnemy
         myImpulse.GenerateImpulse();
         yield return new WaitForSeconds(roarOnceDuration);
         radialBlur.intensity.Override(0);
+    }
+    public override void ColliderSwitch(int switchCount)
+    {
+        base.ColliderSwitch(switchCount);
+        if (switchCount == 1)
+            anotherCollision.SetActive(true);
+        else
+            anotherCollision.SetActive(false);
     }
 }

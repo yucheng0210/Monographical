@@ -84,7 +84,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private bool isOnGrounded;
 
     [SerializeField]
-    private bool shutDown;
+    private bool shutDown = true;
 
     public bool Warning { get; set; }
 
@@ -154,6 +154,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private int playerAttackLayer;
     private float direction;
     private float forward;
+    protected int meleeAttackCount;
     public GameObject Player { get; private set; }
     public Collider MyCollider { get; private set; }
     public GameObject RockBreak
@@ -329,7 +330,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             CurrentCoolDown -= Time.deltaTime;
     }
 
-    protected virtual void AdditionalAttack() { }
+    protected virtual void AdditionalAttack()
+    {
+        if (!IsAttacking)
+        {
+            IsAttacking = true;
+            int randomIndex = UnityEngine.Random.Range(1, meleeAttackCount + 1);
+            Ani.SetInteger("MeleeAttackType", randomIndex);
+            Ani.SetInteger("AttackMode", 0);
+        }
+    }
 
     protected virtual void UpdateAttackValue()
     {
@@ -346,8 +356,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         {
             IsAttacking = false;
             Ani.ResetTrigger(isHited);
-            Ani.ResetTrigger("isMeleeAttack1");
-            Ani.ResetTrigger("isMeleeAttack2");
+            /* Ani.ResetTrigger("isMeleeAttack1");
+             Ani.ResetTrigger("isMeleeAttack2");*/
+            Ani.SetInteger("MeleeAttackType", 0);
             CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
         }
     }
@@ -411,7 +422,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Chase:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                if (!Warning)
+                if (!Warning || navMeshAgent.isStopped)
                 {
                     AudioManager.Instance.BattleAudio();
                     Warning = true;
@@ -593,7 +604,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             lookAtIK.solver.SetIKPositionWeight(0);
     }*/
 
-    public void ColliderSwitch(int switchCount)
+    public virtual void ColliderSwitch(int switchCount)
     {
         if (switchCount == 1)
             collision.SetActive(true);

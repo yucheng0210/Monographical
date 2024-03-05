@@ -40,17 +40,8 @@ public class Knight : PatrolEnemy
 
     protected override void AdditionalAttack()
     {
+        meleeAttackCount = 2;
         base.AdditionalAttack();
-        if (!IsAttacking)
-        {
-            IsAttacking = true;
-            int randomIndex = UnityEngine.Random.Range(1, 3);
-            if (randomIndex == 1)
-                Ani.SetTrigger("isMeleeAttack1");
-            if (randomIndex == 2)
-                Ani.SetTrigger("isMeleeAttack2");
-            Ani.SetInteger("AttackMode", 0);
-        }
     }
 
     public void ChangeAnimationSpeed(int count)

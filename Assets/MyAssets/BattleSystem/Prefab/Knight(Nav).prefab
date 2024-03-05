@@ -2776,7 +2776,9 @@ MonoBehaviour:
   navRunSpeed: 3
   visionAngle: 5
   wanderRadius: 15
-  navPointList: []
+  navPointList:
+  - {fileID: 0}
+  - {fileID: 0}
   chaseRadius: 8
   strafeRadius: 6.5
   attackRadius: 4.5
@@ -2799,7 +2801,7 @@ MonoBehaviour:
     type: 3}
   currentAI: 1
   currentState: 0
-  cantStrafe: 0
+  cantStrafe: 1
   enemyID: 2001
   collision: {fileID: 2142591553028016222}
   healthSlider: {fileID: 1623643460466991958}
@@ -2930,11 +2932,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
