@@ -11,10 +11,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 {
     public Animator Ani { get; set; }
     public AnimatorStateInfo MyAnimatorStateInfo { get; set; }
-    private Rigidbody myBody;
+    public Rigidbody MyBody { get; set; }
     private CapsuleCollider capsuleCollider;
     private Canvas myCamera;
-    private NavMeshAgent navMeshAgent;
+    public NavMeshAgent myNavMeshAgent { get; set; }
     //private LookAtIK lookAtIK;
 
     [Header("移動參數")]
@@ -157,10 +157,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     protected int meleeAttackCount;
     public GameObject Player { get; private set; }
     public Collider MyCollider { get; private set; }
-    public GameObject RockBreak
-    {
-        get { return rockBreak; }
-    }
     public float Distance
     {
         get { return distance; }
@@ -223,7 +219,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if (shutDown)
             return;
         if (isOnGrounded)
-            myBody.velocity = movement * Time.fixedDeltaTime;
+            MyBody.velocity = movement * Time.fixedDeltaTime;
     }
     private IEnumerator InitialRegister()
     {
@@ -232,25 +228,25 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         AudioManager.Instance.MainAudio();
         Player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         shutDown = false;
-        //navMeshAgent.SetDestination(navPointList[1].position);
+        //myNavMeshAgent.SetDestination(navPointList[1].position);
     }
     private IEnumerator InitialState()
     {
         yield return null;
         movement = Vector3.zero;
         Ani = GetComponent<Animator>();
-        myBody = GetComponent<Rigidbody>();
+        MyBody = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         MyCollider = GetComponent<Collider>();
         startPos = transform.position;
         myCamera = GetComponentInChildren<Canvas>();
         myCamera.worldCamera = Camera.main;
         myImpulse = GetComponent<CinemachineImpulseSource>();
-        CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+        RecoverAttackCoolDown();
         EnemyData = DataManager.Instance.CharacterList[enemyID].Clone();
         EnemyData.CurrentHealth = EnemyData.MaxHealth;
         playerAttackLayer = LayerMask.NameToLayer("PlayerAttack");
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        myNavMeshAgent = GetComponent<NavMeshAgent>();
         switch (currentAI)
         {
             case EnemyAI.Wander:
@@ -352,17 +348,20 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         else
             movement = Vector3.zero;
-        if (MyAnimatorStateInfo.normalizedTime > 0.9f && IsAttacking)
+        if (MyAnimatorStateInfo.normalizedTime > 0.8f && IsAttacking)
         {
             IsAttacking = false;
             Ani.ResetTrigger(isHited);
             /* Ani.ResetTrigger("isMeleeAttack1");
              Ani.ResetTrigger("isMeleeAttack2");*/
             Ani.SetInteger("MeleeAttackType", 0);
-            CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+            RecoverAttackCoolDown();
         }
     }
-
+    protected virtual void RecoverAttackCoolDown()
+    {
+        CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
+    }
     private void OnGrounded()
     {
         float radius = capsuleCollider.radius;
@@ -391,23 +390,23 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 movement = transform.forward * walkSpeed;
                 break;
             case EnemyState.Nav:
-                if (navMeshAgent.destination == null)
+                if (myNavMeshAgent.destination == null)
                 {
-                    navMeshAgent.SetDestination(navPointList[1].position);
+                    myNavMeshAgent.SetDestination(navPointList[1].position);
                     currentNavPoint = 0;
                 }
-                navMeshAgent.speed = navWalkSpeed;
-                if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                myNavMeshAgent.speed = navWalkSpeed;
+                if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
                 {
                     if (currentNavPoint == 0)
                     {
-                        navMeshAgent.SetDestination(navPointList[1].position);
+                        myNavMeshAgent.SetDestination(navPointList[1].position);
                         currentNavPoint = 1;
                     }
                     else
                     {
                         //transform.DOLocalRotateQuaternion(navPointList[0].rotation, 0.5f);
-                        navMeshAgent.SetDestination(navPointList[0].position);
+                        myNavMeshAgent.SetDestination(navPointList[0].position);
                         currentNavPoint = 0;
                     }
                 }
@@ -422,14 +421,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Chase:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                if (!Warning || navMeshAgent.isStopped)
+                if (!Warning || myNavMeshAgent.isStopped)
                 {
                     AudioManager.Instance.BattleAudio();
                     Warning = true;
-                    navMeshAgent.SetDestination(Player.transform.position);
+                    myNavMeshAgent.SetDestination(Player.transform.position);
                 }
-                navMeshAgent.speed = navRunSpeed;
-                navMeshAgent.isStopped = false;
+                myNavMeshAgent.speed = navRunSpeed;
+                myNavMeshAgent.isStopped = false;
                 direction = 0;
                 forward = 2;
                 //movement = transform.forward * runSpeed;
@@ -441,20 +440,21 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 forward = 0.5f;
                 if (cantStrafe)
                 {
-                    navMeshAgent.isStopped = false;
-                    navMeshAgent.speed = navWalkSpeed;
-                    navMeshAgent.SetDestination(Player.transform.position);
+                    myNavMeshAgent.isStopped = false;
+                    myNavMeshAgent.speed = navWalkSpeed;
+                    myNavMeshAgent.SetDestination(Player.transform.position);
                 }
                 else
                 {
-                    navMeshAgent.isStopped = true;
+                    myNavMeshAgent.isStopped = true;
                     movement = (transform.forward + transform.right * 0.5f) * strafeSpeed;
                 }
                 break;
             case EnemyState.Attack:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                navMeshAgent.isStopped = true;
+                if (myNavMeshAgent.enabled)
+                    myNavMeshAgent.isStopped = true;
                 if (isMeleeAttack)
                 {
                     Ani.SetInteger(attack, 1);
@@ -466,7 +466,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                navMeshAgent.isStopped = true;
+                myNavMeshAgent.isStopped = true;
                 direction = 0;
                 forward = -1;
                 movement = -transform.forward * walkSpeed;
@@ -479,7 +479,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Look(Player.transform.position);
                 Vector3 dir = Player.transform.position - transform.position;
                 Vector3 cross = Vector3.Cross(transform.forward, dir);
-                navMeshAgent.isStopped = true;
+                myNavMeshAgent.isStopped = true;
                 if (cross.y >= 0)
                 {
                     direction = 2;
@@ -498,7 +498,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     AudioManager.Instance.MainAudio();
                 }
                 Warning = false;
-                navMeshAgent.isStopped = false;
+                myNavMeshAgent.isStopped = false;
                 switch (currentAI)
                 {
                     case EnemyAI.Wander:
@@ -513,16 +513,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                         }
                         break;
                     case EnemyAI.Nav:
-                        navMeshAgent.SetDestination(navPointList[0].position);
+                        myNavMeshAgent.SetDestination(navPointList[0].position);
                         currentNavPoint = 1;
                         direction = 0;
                         forward = 2;
-                        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                        if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
                             currentState = EnemyState.Nav;
                         break;
                     case EnemyAI.Stand:
-                        navMeshAgent.SetDestination(startPos);
-                        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                        myNavMeshAgent.SetDestination(startPos);
+                        if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
                             currentState = EnemyState.Stand;
                         break;
                 }
@@ -540,7 +540,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         //BeakBack();
         Warning = false;
         Ani.SetBool("isDead", true);
-        myBody.velocity = Vector3.zero;
+        MyBody.velocity = Vector3.zero;
         shutDown = true;
         AudioManager.Instance.PlayerDied();
         collision.SetActive(false);
@@ -567,7 +567,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Vector3 beakBackDirection = (transform.position - Player.transform.position).normalized;
         lockMove = true;
         Warning = true;
-        myBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
+        MyBody.AddForce(beakBackDirection * beakBackForce, ForceMode.Impulse);
     }
 
     private IEnumerator LosePoise()
@@ -639,7 +639,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 //Ani.SetFloat("BeakBackMode", 2);
                 EnemyData.CurrentPoise = EnemyData.MaxPoise;
                 StartCoroutine(LosePoise());
-                //myBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
+                //MyBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
             {
