@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Ilumisoft.Minesweeper;
 
 [RequireComponent(typeof(ParticleSystem))]
 public class RFX4_ParticleTrail : MonoBehaviour
@@ -31,19 +32,19 @@ public class RFX4_ParticleTrail : MonoBehaviour
     public Vector3 Force = new Vector3(0, 0.01f, 0);
     public float InheritVelocity = 0;
     public float Drag = 0.01f;
-     [Range(0.001f, 10)]
+    [Range(0.001f, 10)]
     public float Frequency = 1;
-     [Range(0.001f, 10)]
+    [Range(0.001f, 10)]
     public float OffsetSpeed = 0.5f;
     public bool RandomTurbulenceOffset = false;
-     [Range(0.001f, 10)]
+    [Range(0.001f, 10)]
     public float Amplitude = 2;
     public float TurbulenceStrength = 0.1f;
     public AnimationCurve VelocityByDistance = AnimationCurve.EaseInOut(0, 1, 1, 1);
     public float AproximatedFlyDistance = -1;
     public bool SmoothCurves = true;
 
-    private Dictionary<int, LineRenderer> dict = new Dictionary<int, LineRenderer>(); 
+    private Dictionary<int, LineRenderer> dict = new Dictionary<int, LineRenderer>();
     ParticleSystem ps;
     ParticleSystem.Particle[] particles;
     TrailRenderer[] trails;
@@ -56,9 +57,13 @@ public class RFX4_ParticleTrail : MonoBehaviour
 
     void OnEnable()
     {
+        #region Revise
+        if (Target == null)
+            Target = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
+        #endregion
         if (Target != null) targetT = Target.transform;
         ps = GetComponent<ParticleSystem>();
-       // ps.startRotation3D = new Vector3(100000, 100000, 100000);
+        // ps.startRotation3D = new Vector3(100000, 100000, 100000);
 
         t = transform;
 #if !UNITY_5_5_OR_NEWER
@@ -68,8 +73,9 @@ public class RFX4_ParticleTrail : MonoBehaviour
         isLocalSpace = ps.main.simulationSpace == ParticleSystemSimulationSpace.Local;
         particles = new ParticleSystem.Particle[ps.main.maxParticles];
 #endif
-        if (TrailMaterial!=null) {
-            psColor = TrailMaterial.GetColor(TrailMaterial.HasProperty("_TintColor") ? "_TintColor" : "_Color"); 
+        if (TrailMaterial != null)
+        {
+            psColor = TrailMaterial.GetColor(TrailMaterial.HasProperty("_TintColor") ? "_TintColor" : "_Color");
         }
 
 
@@ -82,8 +88,9 @@ public class RFX4_ParticleTrail : MonoBehaviour
 
     void ClearTrails()
     {
-        foreach (var trailRenderer in trails) {
-            if(trailRenderer!=null) Destroy(trailRenderer.gameObject);
+        foreach (var trailRenderer in trails)
+        {
+            if (trailRenderer != null) Destroy(trailRenderer.gameObject);
         }
         trails = null;
 
@@ -100,15 +107,17 @@ public class RFX4_ParticleTrail : MonoBehaviour
             RemoveEmptyTrails();
 
         int count = ps.GetParticles(particles);
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             var hash = (particles[i].rotation3D).GetHashCode();
-            if (!dict.ContainsKey(hash)) {
+            if (!dict.ContainsKey(hash))
+            {
                 var go = new GameObject(hash.ToString());
                 go.transform.parent = transform;
                 //go.hideFlags = HideFlags.HideAndDontSave;
                 go.transform.position = ps.transform.position;
 
-                if(TrailLifeTime> 0.00001f) Destroy(go, TrailLifeTime + VertexLifeTime);
+                if (TrailLifeTime > 0.00001f) Destroy(go, TrailLifeTime + VertexLifeTime);
                 go.layer = layer;
 
                 var lineRenderer = go.AddComponent<LineRenderer>();
@@ -121,7 +130,8 @@ public class RFX4_ParticleTrail : MonoBehaviour
                 lineRenderer.sharedMaterial = TrailMaterial;
                 lineRenderer.useWorldSpace = false;
 
-                if (UseColorOverLifeTime) {
+                if (UseColorOverLifeTime)
+                {
                     var shaderColor = go.AddComponent<RFX4_ShaderColorGradient>();
                     shaderColor.Color = ColorOverLifeTime;
                     shaderColor.TimeMultiplier = ColorLifeTime;
@@ -139,41 +149,45 @@ public class RFX4_ParticleTrail : MonoBehaviour
 
                 dict.Add(hash, lineRenderer);
             }
-            else {
+            else
+            {
                 var trail = dict[hash];
                 if (trail == null) continue;
 
-               
-                if (!trail.useWorldSpace) {
-                    trail.useWorldSpace = true; 
+
+                if (!trail.useWorldSpace)
+                {
+                    trail.useWorldSpace = true;
                     InitTrailRenderer(trail.gameObject);
                 }
                 var size = DefaultSizeMultiplayer * particles[i].GetCurrentSize(ps);
-               
+
 #if !UNITY_5_5_OR_NEWER
                 trail.SetWidth(size.y, size.x);
 #else
                 trail.startWidth = size.y;
                 trail.endWidth = size.x;
 #endif
-                if (Target!=null) {
+                if (Target != null)
+                {
 
 #if !UNITY_5_5_OR_NEWER
                     var time = 1 - particles[i].lifetime / particles[i].startLifetime;
 #else
-                     var time = 1 - particles[i].remainingLifetime / particles[i].startLifetime;
+                    var time = 1 - particles[i].remainingLifetime / particles[i].startLifetime;
 #endif
                     var pos = Vector3.Lerp(particles[i].position, targetT.position, time);
                     trail.transform.position = Vector3.Lerp(pos, targetT.position, Time.deltaTime * time);
                 }
-                else {
+                else
+                {
                     trail.transform.position = isLocalSpace ? ps.transform.TransformPoint(particles[i].position) : particles[i].position;
                 }
                 trail.transform.rotation = t.rotation;
                 var particleColor = particles[i].GetCurrentColor(ps);
                 var color = psColor * particleColor;
                 //if (!UseShaderMaterial) trail.material.SetColor("_TintColor", color); 
-               
+
 #if !UNITY_5_5_OR_NEWER
                 trail.SetColors(color, color);
 #else
@@ -183,7 +197,7 @@ public class RFX4_ParticleTrail : MonoBehaviour
             }
         }
         ps.SetParticles(particles, count);
-       
+
     }
 
     private void InitTrailRenderer(GameObject go)
@@ -209,17 +223,19 @@ public class RFX4_ParticleTrail : MonoBehaviour
 
     private void RemoveEmptyTrails()
     {
-        for (int i = 0; i < dict.Count; i++) {
+        for (int i = 0; i < dict.Count; i++)
+        {
             var element = dict.ElementAt(i);
-            if (element.Value==null)
+            if (element.Value == null)
                 dict.Remove(element.Key);
         }
     }
 
     void OnDisable()
     {
-        foreach (var trailRenderer in dict) {
-            if(trailRenderer.Value!=null) Destroy(trailRenderer.Value.gameObject);
+        foreach (var trailRenderer in dict)
+        {
+            if (trailRenderer.Value != null) Destroy(trailRenderer.Value.gameObject);
         }
         dict.Clear();
     }

@@ -120,6 +120,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private EnemyState currentState;
     [SerializeField]
     private bool cantStrafe;
+    [Header("變速攻擊")]
+    [SerializeField]
+    private float minAniSpeed = 0.8f;
+
+    [SerializeField]
+    private float maxAniSpeed = 1.5f;
 
     [Header("其他")]
     [SerializeField]
@@ -155,13 +161,18 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private float direction;
     private float forward;
     protected int meleeAttackCount;
+    protected int longDistanceAttackCount;
     public GameObject Player { get; private set; }
     public Collider MyCollider { get; private set; }
     public float Distance
     {
         get { return distance; }
     }
-
+    public GameObject RockBreak
+    {
+        get { return rockBreak; }
+        set { rockBreak = value; }
+    }
     private enum EnemyState
     {
         Wander,
@@ -336,7 +347,16 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             Ani.SetInteger("AttackMode", 0);
         }
     }
-
+    protected virtual void AdditionalLongDistanceAttack()
+    {
+        if (!IsAttacking)
+        {
+            IsAttacking = true;
+            int randomIndex = UnityEngine.Random.Range(1, longDistanceAttackCount + 1);
+            Ani.SetInteger("LongDistanceAttackType", randomIndex);
+            Ani.SetInteger("AttackMode", 0);
+        }
+    }
     protected virtual void UpdateAttackValue()
     {
         Ani.SetInteger(attack, 0);
@@ -355,6 +375,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             /* Ani.ResetTrigger("isMeleeAttack1");
              Ani.ResetTrigger("isMeleeAttack2");*/
             Ani.SetInteger("MeleeAttackType", 0);
+            Ani.SetInteger("LongDistanceAttackType", 0);
             RecoverAttackCoolDown();
         }
     }
@@ -421,7 +442,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Chase:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                if (!Warning || myNavMeshAgent.isStopped)
+                if ((!Warning && myNavMeshAgent.enabled) || myNavMeshAgent.isStopped)
                 {
                     AudioManager.Instance.BattleAudio();
                     Warning = true;
@@ -444,7 +465,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     myNavMeshAgent.speed = navWalkSpeed;
                     myNavMeshAgent.SetDestination(Player.transform.position);
                 }
-                else
+                else if (myNavMeshAgent.enabled)
                 {
                     myNavMeshAgent.isStopped = true;
                     movement = (transform.forward + transform.right * 0.5f) * strafeSpeed;
@@ -461,7 +482,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     AdditionalAttack();
                 }
                 else
+                {
                     Ani.SetInteger(attack, 2);
+                    AdditionalLongDistanceAttack();
+                }
                 break;
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
@@ -581,7 +605,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         collision.SetActive(false);
     }
 
-    private void Look(Vector3 target)
+    protected void Look(Vector3 target)
     {
         if (lockMove)
             return;
@@ -669,6 +693,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         HitEffect(transform.position + new Vector3(0, 0.75f, 0));
         EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
+    }
+    public void ChangeAnimationSpeed(int count)
+    {
+        Ani.speed = count == 1 ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f : 1;
+    }
+    public void AdjustAnimationSpeed(float count)
+    {
+        Ani.speed = count;
     }
     private void AnimationRealTime(bool realTimeBool)
     {

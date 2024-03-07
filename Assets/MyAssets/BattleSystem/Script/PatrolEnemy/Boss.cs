@@ -12,6 +12,8 @@ public class Boss : PatrolEnemy
     [Header("戰鬥額外特效")]
     [SerializeField]
     private GameObject rockExplosionEffect;
+    [SerializeField]
+    private GameObject sprintEffect;
     [Header("跳砍攻擊")]
     [SerializeField]
     private float axThrowingOnceDuration;
@@ -30,6 +32,13 @@ public class Boss : PatrolEnemy
     private float maxStagnantTime;
     [SerializeField]
     private float chopOnceDuration;
+    [SerializeField]
+    private float chopDownImpulseForce;
+    [Header("衝刺攻擊")]
+    [SerializeField]
+    private float sprintOffsetZ;
+    [SerializeField]
+    private float sprintOnceDuration;
     [Header("怒吼")]
     [SerializeField]
     private UnityEngine.Rendering.Volume mainVolumeProfile;
@@ -42,6 +51,11 @@ public class Boss : PatrolEnemy
     {
         meleeAttackCount = 3;
         base.AdditionalAttack();
+    }
+    protected override void AdditionalLongDistanceAttack()
+    {
+        longDistanceAttackCount = 3;
+        base.AdditionalLongDistanceAttack();
     }
     private IEnumerator Roar()
     {
@@ -59,19 +73,35 @@ public class Boss : PatrolEnemy
         else
             anotherCollision.SetActive(false);
     }
-    public void RockExplosion()
+    public void SprintAttack()
     {
-        Instantiate(rockExplosionEffect, anotherCollision.transform);
+        Look(Player.transform.position);
+        transform.DOMove(Player.transform.position, sprintOnceDuration);
+        GameObject effect = Instantiate(sprintEffect, transform);
+        effect.transform.localPosition += new Vector3(0, 0, sprintOffsetZ);
+        StartCoroutine(SetParentNull(effect));
+    }
+    private IEnumerator SetParentNull(GameObject effect)
+    {
+        yield return new WaitForSeconds(sprintOnceDuration);
+        effect.transform.SetParent(null);
     }
     public void AxThrowing()
     {
         leftAxe = Instantiate(anotherCollision.transform.parent.gameObject,
         anotherCollision.transform.parent.parent);
-        anotherCollision.transform.parent.gameObject.SetActive(false);
         leftAxe.transform.SetParent(null);
-        leftAxe.transform.DORotate(leftAxe.transform.eulerAngles + rotateDirection, axThrowingOnceDuration,
-         RotateMode.FastBeyond360);
+        anotherCollision.transform.parent.gameObject.SetActive(false);
+        leftAxe.transform.DORotate(leftAxe.transform.eulerAngles + new Vector3(0, rotateDirection.y, rotateDirection.z), 0);
+        leftAxe.transform.DORotate(leftAxe.transform.eulerAngles + rotateDirection, axThrowingOnceDuration
+        , RotateMode.FastBeyond360);
         leftAxe.transform.DOMove(Player.transform.position + transform.up * heightOffset, axThrowingOnceDuration);
+        StartCoroutine(GenerateRockBreak());
+    }
+    private IEnumerator GenerateRockBreak()
+    {
+        yield return new WaitForSeconds(axThrowingOnceDuration);
+        Destroy(Instantiate(RockBreak, leftAxe.transform.position, Quaternion.identity), 5);
     }
     public void Jump()
     {
@@ -95,5 +125,11 @@ public class Boss : PatrolEnemy
         myNavMeshAgent.enabled = true;
         Destroy(leftAxe);
         anotherCollision.transform.parent.gameObject.SetActive(true);
+        Ani.speed = 1;
+    }
+    public void GenerateRockExplosion()
+    {
+        myImpulse.GenerateImpulse(chopDownImpulseForce);
+        Destroy(Instantiate(rockExplosionEffect, transform.position, Quaternion.identity), 5);
     }
 }

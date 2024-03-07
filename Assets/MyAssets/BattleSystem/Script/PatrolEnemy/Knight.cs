@@ -9,12 +9,6 @@ public class Knight : PatrolEnemy
     [SerializeField]
     private Vector3 jumpAttackSize;
 
-    [SerializeField]
-    private float minAniSpeed;
-
-    [SerializeField]
-    private float maxAniSpeed;
-
     public void JumpAttackColliderSwitch()
     {
         //攻击者位置指向目标位置的向量
@@ -42,11 +36,6 @@ public class Knight : PatrolEnemy
     {
         meleeAttackCount = 2;
         base.AdditionalAttack();
-    }
-
-    public void ChangeAnimationSpeed(int count)
-    {
-        Ani.speed = count == 0 ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f : 1;
     }
 
     protected override void UpdateState()
