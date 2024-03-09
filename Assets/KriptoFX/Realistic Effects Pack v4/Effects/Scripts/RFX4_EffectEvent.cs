@@ -3,6 +3,8 @@ using System.Collections;
 
 public class RFX4_EffectEvent : MonoBehaviour
 {
+    [SerializeField]
+    private int bossSkillID;
     public GameObject CharacterEffect;
     public Transform CharacterAttachPoint;
     public float CharacterEffect_DestroyTime = 10;
@@ -23,9 +25,17 @@ public class RFX4_EffectEvent : MonoBehaviour
     public float AdditionalEffect_DestroyTime = 10;
 
     [HideInInspector] public bool IsMobile;
+    private Animator ani;
+    private void Awake()
+    {
+        ani = GetComponent<Animator>();
+    }
     public void ActivateEffect()
     {
-        if(MainEffect == null) return;
+        int id = ani.GetInteger("LongDistanceAttackType");
+        if (bossSkillID != id)
+            return;
+        if (MainEffect == null) return;
         var instance = Instantiate(MainEffect, AttachPoint.transform.position, AttachPoint.transform.rotation);
         UpdateEffectForMobileIsNeed(instance);
         if (Effect_DestroyTime > 0.01f) Destroy(instance, Effect_DestroyTime);
@@ -45,12 +55,15 @@ public class RFX4_EffectEvent : MonoBehaviour
 
     public void ActivateCharacterEffect()
     {
+        int id = ani.GetInteger("LongDistanceAttackType");
+        if (bossSkillID != id)
+            return;
         if (CharacterEffect == null) return;
         var instance = Instantiate(CharacterEffect, CharacterAttachPoint.transform.position, CharacterAttachPoint.transform.rotation, CharacterAttachPoint.transform);
         UpdateEffectForMobileIsNeed(instance);
         if (CharacterEffect_DestroyTime > 0.01f) Destroy(instance, CharacterEffect_DestroyTime);
     }
-    
+
     public void ActivateCharacterEffect2()
     {
         if (CharacterEffect2 == null) return;

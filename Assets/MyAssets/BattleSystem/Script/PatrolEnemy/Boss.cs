@@ -14,6 +14,8 @@ public class Boss : PatrolEnemy
     private GameObject rockExplosionEffect;
     [SerializeField]
     private GameObject sprintEffect;
+    [SerializeField]
+    private GameObject magicCircle;
     [Header("跳砍攻擊")]
     [SerializeField]
     private float axThrowingOnceDuration;
@@ -39,6 +41,20 @@ public class Boss : PatrolEnemy
     private float sprintOffsetZ;
     [SerializeField]
     private float sprintOnceDuration;
+    [Header("魔法攻擊")]
+    [SerializeField]
+    private Transform golemPoint;
+    [SerializeField]
+    private Transform fireBallPoint;
+    [SerializeField]
+    private float fireBallHeightOffset;
+    [SerializeField]
+    private float magicCircleCount;
+    [SerializeField]
+    private float magicCircleRadius;
+    [SerializeField]
+    private float magicCircleMinimumSpacing;
+
     [Header("怒吼")]
     [SerializeField]
     private UnityEngine.Rendering.Volume mainVolumeProfile;
@@ -47,15 +63,68 @@ public class Boss : PatrolEnemy
     [SerializeField]
     private float roarOnceDuration;
     private GameObject leftAxe;
+    private int bossStage;
+    protected override void Awake()
+    {
+        base.Awake();
+        meleeAttackCount = 3;
+        longDistanceAttackCount = 3;
+    }
     protected override void AdditionalAttack()
     {
-        meleeAttackCount = 3;
         base.AdditionalAttack();
     }
     protected override void AdditionalLongDistanceAttack()
     {
-        longDistanceAttackCount = 3;
         base.AdditionalLongDistanceAttack();
+    }
+    protected override void UpdateValue()
+    {
+        base.UpdateValue();
+        golemPoint.localPosition = new Vector3(golemPoint.localPosition.x, Distance / 10, golemPoint.localPosition.z);
+        fireBallPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
+    }
+    protected override void UpdateState()
+    {
+        base.UpdateState();
+        UpdateStage();
+    }
+    private void UpdateStage()
+    {
+        if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
+            TheFirstStage_2();
+        else if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.7f)
+            TheFirstStage_1();
+        if (Input.GetKeyDown(KeyCode.E))
+            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
+    }
+    private void TheFirstStage_1()
+    {
+        if (bossStage != 0 || MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+            return;
+        bossStage++;
+        Ani.SetInteger("AttackMode", 2);
+        if (!IsAttacking)
+        {
+            IsAttacking = true;
+            Ani.SetInteger("LongDistanceAttackType", 4);
+            Ani.SetInteger("AttackMode", 0);
+            longDistanceAttackCount++;
+        }
+    }
+    private void TheFirstStage_2()
+    {
+        if (bossStage != 1 || MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+            return;
+        bossStage++;
+        Ani.SetInteger("AttackMode", 2);
+        if (!IsAttacking)
+        {
+            IsAttacking = true;
+            Ani.SetInteger("LongDistanceAttackType", 5);
+            Ani.SetInteger("AttackMode", 0);
+            longDistanceAttackCount++;
+        }
     }
     private IEnumerator Roar()
     {
@@ -73,6 +142,37 @@ public class Boss : PatrolEnemy
         else
             anotherCollision.SetActive(false);
     }
+    public void Move(float duration)
+    {
+        transform.DOMove(Player.transform.position, duration);
+    }
+    public void MagicCircleAttack()
+    {
+        List<Vector3> currentMagicCircleList = new List<Vector3>();
+        for (int i = 0; i < magicCircleCount; i++)
+        {
+            Vector3 randomPosition = Random.insideUnitSphere * magicCircleCount;
+            randomPosition += transform.position;
+            randomPosition.y = transform.position.y;
+            bool isValidPosition = true;
+            for (int j = 0; j < currentMagicCircleList.Count; j++)
+            {
+                if (Vector3.Distance(currentMagicCircleList[j], randomPosition) < magicCircleMinimumSpacing)
+                {
+                    isValidPosition = false;
+                    break;
+                }
+            }
+            if (isValidPosition)
+            {
+                GameObject newEffect = Instantiate(magicCircle, randomPosition, Quaternion.identity);
+                currentMagicCircleList.Add(newEffect.transform.position);
+            }
+            else
+                i--;
+        }
+    }
+
     public void SprintAttack()
     {
         Look(Player.transform.position);
@@ -85,6 +185,7 @@ public class Boss : PatrolEnemy
     {
         yield return new WaitForSeconds(sprintOnceDuration);
         effect.transform.SetParent(null);
+        Destroy(effect, 5);
     }
     public void AxThrowing()
     {
@@ -101,6 +202,7 @@ public class Boss : PatrolEnemy
     private IEnumerator GenerateRockBreak()
     {
         yield return new WaitForSeconds(axThrowingOnceDuration);
+        myImpulse.GenerateImpulse();
         Destroy(Instantiate(RockBreak, leftAxe.transform.position, Quaternion.identity), 5);
     }
     public void Jump()

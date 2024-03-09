@@ -442,7 +442,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.Chase:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
-                if ((!Warning && myNavMeshAgent.enabled) || myNavMeshAgent.isStopped)
+                if (!myNavMeshAgent.enabled)
+                    return;
+                if (!Warning || myNavMeshAgent.isStopped)
                 {
                     AudioManager.Instance.BattleAudio();
                     Warning = true;
@@ -696,7 +698,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     public void ChangeAnimationSpeed(int count)
     {
-        Ani.speed = count == 1 ? Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f : 1;
+        if (count == 1)
+            Ani.speed *= Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f;
+        else
+            Ani.speed = 1;
     }
     public void AdjustAnimationSpeed(float count)
     {
