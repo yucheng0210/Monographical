@@ -368,7 +368,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         else
             movement = Vector3.zero;
-        if (MyAnimatorStateInfo.normalizedTime > 0.8f && IsAttacking)
+        if (MyAnimatorStateInfo.normalizedTime > 0.8f && IsAttacking && !Ani.GetBool("isRepeat"))
         {
             IsAttacking = false;
             Ani.ResetTrigger(isHited);

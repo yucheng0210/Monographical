@@ -45,9 +45,15 @@ public class Boss : PatrolEnemy
     [SerializeField]
     private Transform golemPoint;
     [SerializeField]
-    private Transform fireBallPoint;
+    private Transform fireBallPointGroup;
     [SerializeField]
     private float fireBallHeightOffset;
+    [SerializeField]
+    private float fireBallAngleOffset;
+    [SerializeField]
+    private int fireBallMaxRepeatChance;
+    [SerializeField]
+    private int fireBallRepeatChanceAttenuation;
     [SerializeField]
     private float magicCircleCount;
     [SerializeField]
@@ -63,6 +69,9 @@ public class Boss : PatrolEnemy
     [SerializeField]
     private float roarOnceDuration;
     private GameObject leftAxe;
+    private int currentChance;
+    private int chanceAttenuation;
+    private int maxChance;
     private int bossStage;
     protected override void Awake()
     {
@@ -70,19 +79,18 @@ public class Boss : PatrolEnemy
         meleeAttackCount = 3;
         longDistanceAttackCount = 3;
     }
-    protected override void AdditionalAttack()
-    {
-        base.AdditionalAttack();
-    }
-    protected override void AdditionalLongDistanceAttack()
-    {
-        base.AdditionalLongDistanceAttack();
-    }
     protected override void UpdateValue()
     {
         base.UpdateValue();
         golemPoint.localPosition = new Vector3(golemPoint.localPosition.x, Distance / 10, golemPoint.localPosition.z);
-        fireBallPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
+        Transform fireBallTrans = fireBallPointGroup.GetChild(0);
+        fireBallTrans.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
+        fireBallPointGroup.GetChild(1).localEulerAngles
+        = new Vector3(
+        fireBallTrans.localEulerAngles.x, fireBallTrans.localEulerAngles.y + fireBallAngleOffset, fireBallTrans.localEulerAngles.z);
+        fireBallPointGroup.GetChild(2).localEulerAngles
+        = new Vector3(
+        fireBallTrans.localEulerAngles.x, fireBallTrans.localEulerAngles.y - fireBallAngleOffset, fireBallTrans.localEulerAngles.z);
     }
     protected override void UpdateState()
     {
@@ -141,6 +149,31 @@ public class Boss : PatrolEnemy
             anotherCollision.SetActive(true);
         else
             anotherCollision.SetActive(false);
+    }
+    public void RepeatAttack()
+    {
+        int randomIndex = Random.Range(1, 100);
+        if (!Ani.GetBool("isRepeat"))
+        {
+            switch (Ani.GetInteger("LongDistanceAttackType"))
+            {
+                case 3:
+                    maxChance = fireBallMaxRepeatChance;
+                    currentChance = maxChance;
+                    chanceAttenuation = fireBallRepeatChanceAttenuation;
+                    break;
+            }
+        }
+        if (currentChance >= randomIndex)
+        {
+            Ani.SetBool("isRepeat", true);
+            currentChance -= chanceAttenuation;
+        }
+        else
+        {
+            Ani.SetBool("isRepeat", false);
+            currentChance = maxChance;
+        }
     }
     public void Move(float duration)
     {
