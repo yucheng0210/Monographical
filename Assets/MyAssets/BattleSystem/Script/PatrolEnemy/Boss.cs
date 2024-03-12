@@ -44,6 +44,10 @@ public class Boss : PatrolEnemy
     [Header("魔法攻擊")]
     [SerializeField]
     private Transform golemPoint;
+     [SerializeField]
+    private int golemMaxRepeatChance;
+    [SerializeField]
+    private int golemRepeatChanceAttenuation;
     [SerializeField]
     private Transform fireBallPointGroup;
     [SerializeField]
@@ -54,6 +58,8 @@ public class Boss : PatrolEnemy
     private int fireBallMaxRepeatChance;
     [SerializeField]
     private int fireBallRepeatChanceAttenuation;
+    [SerializeField]
+    private int fireBallAdditionalChance;
     [SerializeField]
     private float magicCircleCount;
     [SerializeField]
@@ -68,6 +74,8 @@ public class Boss : PatrolEnemy
     private float roarIntensity;
     [SerializeField]
     private float roarOnceDuration;
+    [SerializeField]
+    private CanvasGroup transitionCanvas;
     private GameObject leftAxe;
     private int currentChance;
     private int chanceAttenuation;
@@ -76,21 +84,36 @@ public class Boss : PatrolEnemy
     protected override void Awake()
     {
         base.Awake();
-        meleeAttackCount = 3;
+        meleeAttackCount = 2;
         longDistanceAttackCount = 3;
+    }
+    protected override void AdditionalAttack()
+    {
+        if (!IsAttacking)
+        ComboAttack();
+        base.AdditionalAttack();
+    }
+    protected override void AdditionalLongDistanceAttack()
+    {
+        if (!IsAttacking)
+        {
+            ComboAttack();
+            int randomIndex = Random.Range(1, 100);
+            if (fireBallAdditionalChance >= randomIndex)
+            {
+                IsAttacking = true;
+                Ani.SetInteger("LongDistanceAttackType", 3);
+                Ani.SetInteger("AttackMode", 0);
+            }
+        }
+        base.AdditionalLongDistanceAttack();
+
     }
     protected override void UpdateValue()
     {
         base.UpdateValue();
-        golemPoint.localPosition = new Vector3(golemPoint.localPosition.x, Distance / 10, golemPoint.localPosition.z);
-        Transform fireBallTrans = fireBallPointGroup.GetChild(0);
-        fireBallTrans.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
-        fireBallPointGroup.GetChild(1).localEulerAngles
-        = new Vector3(
-        fireBallTrans.localEulerAngles.x, fireBallTrans.localEulerAngles.y + fireBallAngleOffset, fireBallTrans.localEulerAngles.z);
-        fireBallPointGroup.GetChild(2).localEulerAngles
-        = new Vector3(
-        fireBallTrans.localEulerAngles.x, fireBallTrans.localEulerAngles.y - fireBallAngleOffset, fireBallTrans.localEulerAngles.z);
+        golemPoint.localPosition = new Vector3(golemPoint.localPosition.x, Distance / 15, golemPoint.localPosition.z);
+        fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
     }
     protected override void UpdateState()
     {
@@ -134,6 +157,16 @@ public class Boss : PatrolEnemy
             longDistanceAttackCount++;
         }
     }
+    /*protected override IEnumerator Death()
+    {
+        if(bossStage==2)
+        {
+            UIManager.Instance.FadeOutIn(transitionCanvas,0,1,false,0.5f);
+
+        }
+       StartCoroutine( base.Death());
+
+    }*/
     private IEnumerator Roar()
     {
         if (mainVolumeProfile.profile.TryGet(out RadialBlur radialBlur))
@@ -150,6 +183,13 @@ public class Boss : PatrolEnemy
         else
             anotherCollision.SetActive(false);
     }
+    public void SetRighttAxe(int count)
+    {
+        if (count == 1 && !Ani.GetBool("isRepeat"))
+            Collision.transform.parent.gameObject.SetActive(true);
+        else
+            Collision.transform.parent.gameObject.SetActive(false);
+    }
     public void RepeatAttack()
     {
         int randomIndex = Random.Range(1, 100);
@@ -162,6 +202,11 @@ public class Boss : PatrolEnemy
                     currentChance = maxChance;
                     chanceAttenuation = fireBallRepeatChanceAttenuation;
                     break;
+                case 4:
+                maxChance=golemMaxRepeatChance;
+                currentChance=maxChance;
+                chanceAttenuation=golemRepeatChanceAttenuation;
+                break;
             }
         }
         if (currentChance >= randomIndex)
@@ -174,6 +219,14 @@ public class Boss : PatrolEnemy
             Ani.SetBool("isRepeat", false);
             currentChance = maxChance;
         }
+    }
+    private void ComboAttack()
+    {
+        int randomIndex = Random.Range(1, 100);
+        if(randomIndex>=50)
+        Ani.SetBool("isCombo",true);
+        else
+         Ani.SetBool("isCombo",false);
     }
     public void Move(float duration)
     {

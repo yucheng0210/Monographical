@@ -26,15 +26,21 @@ public class RFX4_EffectEvent : MonoBehaviour
 
     [HideInInspector] public bool IsMobile;
     private Animator ani;
+    [SerializeField]
+    private bool isNotBossSkill;
     private void Awake()
     {
-        ani = GetComponent<Animator>();
+        if (!isNotBossSkill)
+            ani = GetComponent<Animator>();
     }
     public void ActivateEffect()
     {
-        int id = ani.GetInteger("LongDistanceAttackType");
-        if (bossSkillID != id)
-            return;
+        if (!isNotBossSkill)
+        {
+            int id = ani.GetInteger("LongDistanceAttackType");
+            if (bossSkillID != id)
+                return;
+        }
         if (MainEffect == null) return;
         var instance = Instantiate(MainEffect, AttachPoint.transform.position, AttachPoint.transform.rotation);
         UpdateEffectForMobileIsNeed(instance);

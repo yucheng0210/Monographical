@@ -62,14 +62,19 @@ public class RFX4_PhysicsMotion : MonoBehaviour
         if (effectSettings.UseCollisionDetection)
         {
             collid = gameObject.AddComponent<SphereCollider>();
+            collid.isTrigger=true;
             collid.radius = ColliderRadius;
         }
 
         isInitializedForce = false;
-
+        StartCoroutine(ResetTrigger());
 
     }
-
+    private IEnumerator ResetTrigger()
+    {
+        yield return new WaitForSeconds(0.05f);
+        collid.isTrigger=false;
+    }
     void InitializeForce()
     {
         rigid = gameObject.AddComponent<Rigidbody>();

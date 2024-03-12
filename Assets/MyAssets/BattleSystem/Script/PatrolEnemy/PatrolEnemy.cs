@@ -173,6 +173,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         get { return rockBreak; }
         set { rockBreak = value; }
     }
+    public GameObject Collision
+    {
+        get { return collision; }
+        set { collision = value; }
+    }
     private enum EnemyState
     {
         Wander,
@@ -376,7 +381,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
              Ani.ResetTrigger("isMeleeAttack2");*/
             Ani.SetInteger("MeleeAttackType", 0);
             Ani.SetInteger("LongDistanceAttackType", 0);
+            Ani.SetBool("isCombo",false);
             RecoverAttackCoolDown();
+
         }
     }
     protected virtual void RecoverAttackCoolDown()
@@ -492,6 +499,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
                 Look(Player.transform.position);
+                if (myNavMeshAgent.enabled)
                 myNavMeshAgent.isStopped = true;
                 direction = 0;
                 forward = -1;
@@ -505,6 +513,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Look(Player.transform.position);
                 Vector3 dir = Player.transform.position - transform.position;
                 Vector3 cross = Vector3.Cross(transform.forward, dir);
+                if (myNavMeshAgent.enabled)
                 myNavMeshAgent.isStopped = true;
                 if (cross.y >= 0)
                 {
@@ -561,7 +570,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
     }
 
-    private IEnumerator Death()
+    protected virtual IEnumerator Death()
     {
         //BeakBack();
         Warning = false;
