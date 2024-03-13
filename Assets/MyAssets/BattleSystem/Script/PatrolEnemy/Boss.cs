@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering;
 
@@ -44,7 +45,7 @@ public class Boss : PatrolEnemy
     [Header("魔法攻擊")]
     [SerializeField]
     private Transform golemPoint;
-     [SerializeField]
+    [SerializeField]
     private int golemMaxRepeatChance;
     [SerializeField]
     private int golemRepeatChanceAttenuation;
@@ -76,6 +77,8 @@ public class Boss : PatrolEnemy
     private float roarOnceDuration;
     [SerializeField]
     private CanvasGroup transitionCanvas;
+    [SerializeField]
+    private PlayableDirector theSecondStageTimeLine;
     private GameObject leftAxe;
     private int currentChance;
     private int chanceAttenuation;
@@ -90,7 +93,7 @@ public class Boss : PatrolEnemy
     protected override void AdditionalAttack()
     {
         if (!IsAttacking)
-        ComboAttack();
+            ComboAttack();
         base.AdditionalAttack();
     }
     protected override void AdditionalLongDistanceAttack()
@@ -157,16 +160,18 @@ public class Boss : PatrolEnemy
             longDistanceAttackCount++;
         }
     }
-    /*protected override IEnumerator Death()
+    protected override IEnumerator Death()
     {
-        if(bossStage==2)
+        if (bossStage == 2)
         {
-            UIManager.Instance.FadeOutIn(transitionCanvas,0,1,false,0.5f);
-
+            ShutDown = true;
+            StartCoroutine(UIManager.Instance.FadeOutIn(transitionCanvas, 0, 1, false, 0.5f));
+            yield return new WaitForSeconds(1.2f);
+            theSecondStageTimeLine.Play();
+            yield return theSecondStageTimeLine.state != PlayState.Playing;
+            StartCoroutine(UIManager.Instance.FadeOutIn(transitionCanvas, 0, 1, false, 0.5f));
         }
-       StartCoroutine( base.Death());
-
-    }*/
+    }
     private IEnumerator Roar()
     {
         if (mainVolumeProfile.profile.TryGet(out RadialBlur radialBlur))
@@ -203,10 +208,10 @@ public class Boss : PatrolEnemy
                     chanceAttenuation = fireBallRepeatChanceAttenuation;
                     break;
                 case 4:
-                maxChance=golemMaxRepeatChance;
-                currentChance=maxChance;
-                chanceAttenuation=golemRepeatChanceAttenuation;
-                break;
+                    maxChance = golemMaxRepeatChance;
+                    currentChance = maxChance;
+                    chanceAttenuation = golemRepeatChanceAttenuation;
+                    break;
             }
         }
         if (currentChance >= randomIndex)
@@ -223,10 +228,10 @@ public class Boss : PatrolEnemy
     private void ComboAttack()
     {
         int randomIndex = Random.Range(1, 100);
-        if(randomIndex>=50)
-        Ani.SetBool("isCombo",true);
+        if (randomIndex >= 50)
+            Ani.SetBool("isCombo", true);
         else
-         Ani.SetBool("isCombo",false);
+            Ani.SetBool("isCombo", false);
     }
     public void Move(float duration)
     {

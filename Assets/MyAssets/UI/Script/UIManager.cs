@@ -145,7 +145,7 @@ public class UIManager : Singleton<UIManager>, IObserver
     public IEnumerator FadeOutIn(CanvasGroup canvasGroup,
         float firstWaitTime,
         float secondWaitTime,
-        bool nextMainLineBool,
+        bool destroyFadeMenuBool,
         float fadeTime
     )
     {
@@ -161,9 +161,8 @@ public class UIManager : Singleton<UIManager>, IObserver
             canvasGroup.alpha -= Time.deltaTime / fadeTime;
             yield return null;
         }
-        if (nextMainLineBool)
-            EventManager.Instance.DispatchEvent(EventDefinition.eventNextMainLine, this);
-        Destroy(canvasGroup.gameObject);
+        if (destroyFadeMenuBool)
+            Destroy(canvasGroup.gameObject);
     }
 
     public void EndNotify()

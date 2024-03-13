@@ -157,6 +157,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     public Character EnemyData { get; private set; }
     public CharacterState EnemyCharacterState { get; set; }
     public CharacterState AttackerCharacterState { get; set; }
+    public bool ShutDown
+    {
+        get { return shutDown; }
+        set { shutDown = value; }
+    }
     private int playerAttackLayer;
     private float direction;
     private float forward;
@@ -381,7 +386,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
              Ani.ResetTrigger("isMeleeAttack2");*/
             Ani.SetInteger("MeleeAttackType", 0);
             Ani.SetInteger("LongDistanceAttackType", 0);
-            Ani.SetBool("isCombo",false);
+            Ani.SetBool("isCombo", false);
             RecoverAttackCoolDown();
 
         }
@@ -500,7 +505,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 AnimationRealTime(false);
                 Look(Player.transform.position);
                 if (myNavMeshAgent.enabled)
-                myNavMeshAgent.isStopped = true;
+                    myNavMeshAgent.isStopped = true;
                 direction = 0;
                 forward = -1;
                 movement = -transform.forward * walkSpeed;
@@ -514,7 +519,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Vector3 dir = Player.transform.position - transform.position;
                 Vector3 cross = Vector3.Cross(transform.forward, dir);
                 if (myNavMeshAgent.enabled)
-                myNavMeshAgent.isStopped = true;
+                    myNavMeshAgent.isStopped = true;
                 if (cross.y >= 0)
                 {
                     direction = 2;
