@@ -67,6 +67,9 @@ public class Boss : PatrolEnemy
     private float magicCircleRadius;
     [SerializeField]
     private float magicCircleMinimumSpacing;
+    [Header("第二階段")]
+    [SerializeField]
+    private bool isSecondStage;
 
     [Header("怒吼")]
     [SerializeField]
@@ -89,6 +92,8 @@ public class Boss : PatrolEnemy
         base.Awake();
         meleeAttackCount = 2;
         longDistanceAttackCount = 3;
+        if (isSecondStage)
+            longDistanceAttackCount = 5;
     }
     protected override void AdditionalAttack()
     {
@@ -134,9 +139,11 @@ public class Boss : PatrolEnemy
     }
     private void TheFirstStage_1()
     {
-        if (bossStage != 0 || MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+        if (bossStage != 0)
             return;
         bossStage++;
+        if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+            return;
         Ani.SetInteger("AttackMode", 2);
         if (!IsAttacking)
         {
@@ -148,9 +155,11 @@ public class Boss : PatrolEnemy
     }
     private void TheFirstStage_2()
     {
-        if (bossStage != 1 || MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+        if (bossStage != 1)
             return;
         bossStage++;
+        if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+            return;
         Ani.SetInteger("AttackMode", 2);
         if (!IsAttacking)
         {
@@ -162,14 +171,14 @@ public class Boss : PatrolEnemy
     }
     protected override IEnumerator Death()
     {
-        if (bossStage == 2)
+        if (bossStage <= 2)
         {
-            ShutDown = true;
+            bossStage = 3;
             StartCoroutine(UIManager.Instance.FadeOutIn(transitionCanvas, 0, 1, false, 0.5f));
-            yield return new WaitForSeconds(1.2f);
+            yield return new WaitForSecondsRealtime(1.2f);
             theSecondStageTimeLine.Play();
-            yield return theSecondStageTimeLine.state != PlayState.Playing;
-            StartCoroutine(UIManager.Instance.FadeOutIn(transitionCanvas, 0, 1, false, 0.5f));
+            yield return new WaitForSecondsRealtime(0.8f);
+            gameObject.SetActive(false);
         }
     }
     private IEnumerator Roar()
