@@ -19,6 +19,7 @@ public class UIManager : Singleton<UIManager>, IObserver
         base.Awake();
         UIDict = new Dictionary<string, UIBase>();
         MenuIsOpen = false;
+        //DontDestroyOnLoad(this);
     }
 
     private void Start()
@@ -139,7 +140,6 @@ public class UIManager : Singleton<UIManager>, IObserver
             canvasGroup.alpha -= Time.unscaledDeltaTime / fadeTime;
             yield return null;
         }
-        Destroy(gameObject);
     }
 
     public IEnumerator FadeOutIn(CanvasGroup canvasGroup,

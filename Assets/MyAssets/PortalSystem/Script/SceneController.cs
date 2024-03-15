@@ -21,7 +21,7 @@ public class SceneController : Singleton<SceneController>, ISavable
     private GameObject progressCanvas;
 
     [SerializeField]
-    private SceneFader sceneFaderPrefab;
+    private CanvasGroup fadeMenu;
     private Dictionary<int, string> sceneNameDic = new Dictionary<int, string>();
 
     protected override void Awake()
@@ -34,6 +34,7 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         ISavable savable = this;
         savable.AddSavableRegister();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventDialogEvent, EventDialogEvent);
         AddSceneName();
     }
     /*private void Update()
@@ -55,9 +56,7 @@ public class SceneController : Singleton<SceneController>, ISavable
         switch (transitionPoint.Type)
         {
             case TransitionPoint.TransitionType.SameScene:
-                StartCoroutine(
-                    PortalTransition(SceneManager.GetActiveScene().name, transitionPoint.Tag)
-                );
+                StartCoroutine(PortalTransition(SceneManager.GetActiveScene().name, transitionPoint.Tag));
                 break;
             case TransitionPoint.TransitionType.DifferentScene:
                 StartCoroutine(PortalTransition(transitionPoint.SceneName, transitionPoint.Tag));
@@ -68,13 +67,12 @@ public class SceneController : Singleton<SceneController>, ISavable
     private IEnumerator PortalTransition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
         Main.Manager.GameManager.Instance.LoadingNotify(true);
-        SceneFader fade = Instantiate(sceneFaderPrefab);
         player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         progressSlider.value = 0.0f;
         if (SceneManager.GetActiveScene().name != sceneName)
         {
             DontDestroyOnLoad(player);
-            yield return StartCoroutine(fade.FadeOut());
+            yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
             progressCanvas.SetActive(true);
             AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
             async.allowSceneActivation = false;
@@ -99,17 +97,17 @@ public class SceneController : Singleton<SceneController>, ISavable
                 GetDestination(destinationTag).transform.rotation
             );
             Main.Manager.GameManager.Instance.LoadingNotify(false);
-            yield return StartCoroutine(fade.FadeIn());
+            yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
         }
         else
         {
-            yield return StartCoroutine(fade.FadeOut());
+            yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
             player.transform.SetPositionAndRotation(
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
             Main.Manager.GameManager.Instance.LoadingNotify(false);
-            yield return StartCoroutine(fade.FadeIn());
+            yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
             yield return null;
         }
     }
@@ -129,11 +127,11 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         //Main.Manager.GameManager.Instance.LoadingNotify(true);
         EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
-        SceneFader fade = Instantiate(sceneFaderPrefab);
         progressSlider.value = 0.0f;
-        yield return StartCoroutine(fade.FadeOut());
+        yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
         progressCanvas.SetActive(true);
         progressText.text = (int)(progressSlider.value * 100) + "%";
+        yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
         while (progressSlider.value < 0.99f)
@@ -146,13 +144,15 @@ public class SceneController : Singleton<SceneController>, ISavable
             progressText.text = (int)(progressSlider.value * 100) + "%";
             yield return null;
         }
+        yield return async.isDone;
         progressSlider.value = 1.0f;
         progressText.text = (int)(progressSlider.value * 100) + "%";
-        yield return new WaitForSecondsRealtime(1f);
+        AudioManager.Instance.ClearAllAudioClip();
+        yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
         progressCanvas.SetActive(false);
         async.allowSceneActivation = true;
+        yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
         // Main.Manager.GameManager.Instance.LoadingNotify(false);
-        yield return StartCoroutine(fade.FadeIn());
     }
 
     public void AddSavableRegister()
@@ -179,5 +179,10 @@ public class SceneController : Singleton<SceneController>, ISavable
     public void RestoreGameData(GameSaveData gameSaveData)
     {
         StartCoroutine(Transition(gameSaveData.currentScene));
+    }
+    private void EventDialogEvent(params object[] args)
+    {
+        if ((string)args[0] == "CHANGESCENE")
+            StartCoroutine(Transition("ChapterOne"));
     }
 }

@@ -19,6 +19,12 @@ public class DeadMenu : UIBase
 
     private void EventGameOver(params object[] args)
     {
-        StartCoroutine(UIManager.Instance.FadeOutIn(canvasGroup, 2, 3, false, 1));
+        StartCoroutine(UIManager.Instance.FadeOutIn(canvasGroup, 2, 3, false, 0.5f));
+        StartCoroutine(WaitForChangeScene());
+    }
+    private IEnumerator WaitForChangeScene()
+    {
+        yield return new WaitForSecondsRealtime(6.5f);
+        StartCoroutine(SceneController.Instance.Transition("StartMenu"));
     }
 }

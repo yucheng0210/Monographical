@@ -41,17 +41,21 @@ namespace Main.Manager
                 gameTime = 0;
             else
                 gameTime += Time.unscaledDeltaTime;
-            if (Input.GetKeyDown(KeyCode.Escape) && !PlayerCantMove)
+            if (SceneManager.GetActiveScene().name != "StartMenu" &&
+            SceneManager.GetActiveScene().name != "Prologue_1" && SceneManager.GetActiveScene().name != "Prologue_2")
             {
-                if (!UIManager.Instance.MenuIsOpen)
-                    UIManager.Instance.ShowUI("MainMenu");
-                else
-                    UIManager.Instance.HideAllUI();
+                if (Input.GetKeyDown(KeyCode.Escape) && !PlayerCantMove)
+                {
+                    if (!UIManager.Instance.MenuIsOpen)
+                        UIManager.Instance.ShowUI("MainMenu");
+                    else
+                        UIManager.Instance.HideAllUI();
+                }
+                if (Input.GetMouseButtonDown(0) && !(Time.timeScale == 0 && IsTalking))
+                    Cursor.visible = false;
+                if (Input.GetKeyDown(KeyCode.Escape) || Time.timeScale == 0 || IsTalking || UIManager.Instance.MenuIsOpen)
+                    Cursor.visible = true;
             }
-            if (Input.GetMouseButtonDown(0) && !(Time.timeScale == 0 && IsTalking))
-                Cursor.visible = false;
-            if (Input.GetKeyDown(KeyCode.Escape) || Time.timeScale == 0 || IsTalking || UIManager.Instance.MenuIsOpen)
-                Cursor.visible = true;
         }
         private void InitializeData()
         {

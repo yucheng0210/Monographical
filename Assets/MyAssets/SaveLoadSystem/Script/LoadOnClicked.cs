@@ -9,7 +9,7 @@ public class LoadOnClicked : MonoBehaviour
     private Text dataName;
     private Text dataTime;
     private int loadID;
-#region "SaveManager"
+    #region "SaveManager"
     /*    private void Awake()
     {
         button = GetComponent<Button>();
@@ -37,8 +37,8 @@ public class LoadOnClicked : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
-        dataName = gameObject.transform.GetChild(0).GetComponent<Text>();
-        dataTime = gameObject.transform.GetChild(1).GetComponent<Text>();
+        dataName = transform.GetChild(0).GetComponent<Text>();
+        dataTime = transform.GetChild(1).GetComponent<Text>();
     }
 
     private void Start()
@@ -48,7 +48,7 @@ public class LoadOnClicked : MonoBehaviour
 
     private void OnEnable()
     {
-        loadID = gameObject.transform.GetSiblingIndex();
+        loadID = transform.GetSiblingIndex();
         dataName.text = SaveLoadManager.Instance.GetDataName(loadID);
         dataTime.text = SaveLoadManager.Instance.GetDataTime(loadID);
     }

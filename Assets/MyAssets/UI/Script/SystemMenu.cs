@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SystemMenu : UIBase
@@ -44,7 +45,8 @@ public class SystemMenu : UIBase
         if (backToStartMenuButton != null)
             backToStartMenuButton.onClick.AddListener(() => StartCoroutine(SceneController.Instance.Transition("StartMenu")));
         audioButton.onClick.AddListener(() => audioMenu.SetActive(true));
-        AudioManager.Instance.MainAudio();
+        if (SceneManager.GetActiveScene().name == "StartMenu")
+            AudioManager.Instance.MainAudio();
     }
 
     private void UpdateValue()

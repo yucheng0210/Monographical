@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,10 +35,10 @@ public abstract class UIBase : MonoBehaviour, IObserver
     }
     protected virtual void Update()
     {
-        if (escCloseBool && openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
-            Hide();
         if (escOpenBool && !openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             Show();
+        else if (escCloseBool && openMenu.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+            Hide();
     }
     private void AddOnClickListener()
     {
@@ -56,13 +57,18 @@ public abstract class UIBase : MonoBehaviour, IObserver
     {
         if (shutDown)
             return;
-        UIManager.Instance.MenuIsOpen = true;
-        EventSystem.current.SetSelectedGameObject(null);
-        AudioManager.Instance.MenuEnterAudio();
-        Time.timeScale = 0;
-        openMenu.SetActive(true);
-        OpenBool = true;
-        openMenu.transform.SetAsLastSibling();
+        try
+        {
+            UIManager.Instance.MenuIsOpen = true;
+            //EventSystem.current.SetSelectedGameObject(null);
+            AudioManager.Instance.MenuEnterAudio();
+            Time.timeScale = 0;
+            openMenu.SetActive(true);
+            OpenBool = true;
+            openMenu.transform.SetAsLastSibling();
+        }
+        catch (Exception e)
+        { }
     }
 
     public virtual void Hide()
