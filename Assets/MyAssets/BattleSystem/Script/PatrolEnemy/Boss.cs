@@ -17,6 +17,8 @@ public class Boss : PatrolEnemy
     private GameObject sprintEffect;
     [SerializeField]
     private GameObject magicCircle;
+    [SerializeField]
+    private GameObject fireTornadoEffect;
     [Header("跳砍攻擊")]
     [SerializeField]
     private float axThrowingOnceDuration;
@@ -67,6 +69,13 @@ public class Boss : PatrolEnemy
     private float magicCircleRadius;
     [SerializeField]
     private float magicCircleMinimumSpacing;
+    [SerializeField]
+    private float fireTornadoCount;
+    [SerializeField]
+    private float fireTornadoMaxSpeed;
+    [SerializeField]
+    private float fireTornadoRadius;
+    private List<Transform> fireTornadoList = new List<Transform>();
     [Header("第二階段")]
     [SerializeField]
     private bool isSecondStage;
@@ -93,7 +102,10 @@ public class Boss : PatrolEnemy
         meleeAttackCount = 2;
         longDistanceAttackCount = 3;
         if (isSecondStage)
+        {
+            meleeAttackCount = 3;
             longDistanceAttackCount = 5;
+        }
     }
     protected override void AdditionalAttack()
     {
@@ -130,10 +142,18 @@ public class Boss : PatrolEnemy
     }
     private void UpdateStage()
     {
-        if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
-            TheFirstStage_2();
-        else if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.7f)
-            TheFirstStage_1();
+        if (!isSecondStage)
+        {
+            if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
+                TheFirstStage_2();
+            else if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.7f)
+                TheFirstStage_1();
+        }
+        else
+        {
+            TheSecondStage_1();
+            UpdateFireTornadoPos();
+        }
         if (Input.GetKeyDown(KeyCode.E))
             EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
     }
@@ -169,9 +189,35 @@ public class Boss : PatrolEnemy
             longDistanceAttackCount++;
         }
     }
+    private void TheSecondStage_1()
+    {
+        if (bossStage != 0)
+            return;
+        bossStage++;
+        if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+            return;
+        for (int i = 0; i < fireTornadoCount; i++)
+        {
+            Vector3 randomPos = Random.insideUnitSphere * fireTornadoRadius;
+            randomPos += transform.position;
+            randomPos.y = transform.position.y;
+            Transform fireTornado = Instantiate(fireTornadoEffect, randomPos, Quaternion.identity).transform;
+            fireTornadoList.Add(fireTornado);
+        }
+    }
+    private void UpdateFireTornadoPos()
+    {
+        for (int i = 0; i < fireTornadoList.Count; i++)
+        {
+            Vector3 direction = Random.insideUnitSphere.normalized;
+            direction.y = 0;
+            float currentSpeed = Random.Range(0, fireTornadoMaxSpeed);
+            fireTornadoList[i].position += direction * currentSpeed;
+        }
+    }
     protected override IEnumerator Death()
     {
-        if (bossStage <= 2)
+        if (!isSecondStage)
         {
             bossStage = 3;
             StartCoroutine(UIManager.Instance.FadeOutIn(transitionCanvas, 0, 1, false, 0.5f));
@@ -180,6 +226,8 @@ public class Boss : PatrolEnemy
             yield return new WaitForSecondsRealtime(0.8f);
             gameObject.SetActive(false);
         }
+        else
+            StartCoroutine(base.Death());
     }
     private IEnumerator Roar()
     {
@@ -251,7 +299,7 @@ public class Boss : PatrolEnemy
         List<Vector3> currentMagicCircleList = new List<Vector3>();
         for (int i = 0; i < magicCircleCount; i++)
         {
-            Vector3 randomPosition = Random.insideUnitSphere * magicCircleCount;
+            Vector3 randomPosition = Random.insideUnitSphere * magicCircleRadius;
             randomPosition += transform.position;
             randomPosition.y = transform.position.y;
             bool isValidPosition = true;
