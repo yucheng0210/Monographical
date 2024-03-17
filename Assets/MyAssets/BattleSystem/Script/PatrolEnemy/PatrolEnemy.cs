@@ -380,15 +380,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             movement = Vector3.zero;
         if (MyAnimatorStateInfo.normalizedTime > 0.8f && IsAttacking && !Ani.GetBool("isRepeat"))
         {
-            IsAttacking = false;
-            Ani.ResetTrigger(isHited);
             /* Ani.ResetTrigger("isMeleeAttack1");
              Ani.ResetTrigger("isMeleeAttack2");*/
+            IsAttacking = false;
+            Ani.ResetTrigger(isHited);
             Ani.SetInteger("MeleeAttackType", 0);
             Ani.SetInteger("LongDistanceAttackType", 0);
-            Ani.SetBool("isCombo", false);
+            //Ani.SetBool("isCombo", false);
             RecoverAttackCoolDown();
-
         }
     }
     protected virtual void RecoverAttackCoolDown()
@@ -553,17 +552,23 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                         }
                         break;
                     case EnemyAI.Nav:
-                        myNavMeshAgent.SetDestination(navPointList[0].position);
-                        currentNavPoint = 1;
-                        direction = 0;
-                        forward = 2;
-                        if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
-                            currentState = EnemyState.Nav;
+                        if (myNavMeshAgent.enabled)
+                        {
+                            myNavMeshAgent.SetDestination(navPointList[0].position);
+                            currentNavPoint = 1;
+                            direction = 0;
+                            forward = 2;
+                            if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
+                                currentState = EnemyState.Nav;
+                        }
                         break;
                     case EnemyAI.Stand:
-                        myNavMeshAgent.SetDestination(startPos);
-                        if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
-                            currentState = EnemyState.Stand;
+                        if (myNavMeshAgent.enabled)
+                        {
+                            myNavMeshAgent.SetDestination(startPos);
+                            if (myNavMeshAgent.remainingDistance <= myNavMeshAgent.stoppingDistance)
+                                currentState = EnemyState.Stand;
+                        }
                         break;
                 }
                 break;

@@ -46,11 +46,11 @@ public class Boss : PatrolEnemy
     private float sprintOnceDuration;
     [Header("魔法攻擊")]
     [SerializeField]
-    private Transform golemPoint;
+    private Transform fireSlashPoint;
     [SerializeField]
-    private int golemMaxRepeatChance;
+    private int fireSlashMaxRepeatChance;
     [SerializeField]
-    private int golemRepeatChanceAttenuation;
+    private int fireSlashRepeatChanceAttenuation;
     [SerializeField]
     private Transform fireBallPointGroup;
     [SerializeField]
@@ -75,11 +75,20 @@ public class Boss : PatrolEnemy
     private float fireTornadoMaxSpeed;
     [SerializeField]
     private float fireTornadoRadius;
+    [SerializeField]
+    private float teleportMaxAngle;
+    [SerializeField]
+    private float teleportCoolDown;
+    private bool canTeleport;
     private List<Transform> fireTornadoList = new List<Transform>();
     [Header("第二階段")]
     [SerializeField]
     private bool isSecondStage;
 
+    [SerializeField]
+    private CanvasGroup transitionCanvas;
+    [SerializeField]
+    private PlayableDirector theSecondStageTimeLine;
     [Header("怒吼")]
     [SerializeField]
     private UnityEngine.Rendering.Volume mainVolumeProfile;
@@ -87,10 +96,6 @@ public class Boss : PatrolEnemy
     private float roarIntensity;
     [SerializeField]
     private float roarOnceDuration;
-    [SerializeField]
-    private CanvasGroup transitionCanvas;
-    [SerializeField]
-    private PlayableDirector theSecondStageTimeLine;
     private GameObject leftAxe;
     private int currentChance;
     private int chanceAttenuation;
@@ -105,6 +110,7 @@ public class Boss : PatrolEnemy
         {
             meleeAttackCount = 3;
             longDistanceAttackCount = 5;
+            canTeleport = true;
         }
     }
     protected override void AdditionalAttack()
@@ -132,8 +138,8 @@ public class Boss : PatrolEnemy
     protected override void UpdateValue()
     {
         base.UpdateValue();
-        golemPoint.localPosition = new Vector3(golemPoint.localPosition.x, Distance / 15, golemPoint.localPosition.z);
         fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
+        Ani.SetBool("CanTeleport", canTeleport);
     }
     protected override void UpdateState()
     {
@@ -265,9 +271,9 @@ public class Boss : PatrolEnemy
                     chanceAttenuation = fireBallRepeatChanceAttenuation;
                     break;
                 case 4:
-                    maxChance = golemMaxRepeatChance;
+                    maxChance = fireSlashMaxRepeatChance;
                     currentChance = maxChance;
-                    chanceAttenuation = golemRepeatChanceAttenuation;
+                    chanceAttenuation = fireSlashRepeatChanceAttenuation;
                     break;
             }
         }
@@ -381,5 +387,27 @@ public class Boss : PatrolEnemy
     {
         myImpulse.GenerateImpulse(chopDownImpulseForce);
         Destroy(Instantiate(rockExplosionEffect, transform.position, Quaternion.identity), 5);
+    }
+    public void Teleport()
+    {
+        canTeleport = false;
+        Ani.SetBool("CanTeleport", canTeleport);
+        transform.LookAt(Player.transform);
+        float randomAngle = Random.Range(-teleportMaxAngle, teleportMaxAngle);
+        transform.DORotate
+        (new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + randomAngle, transform.eulerAngles.z), 0);
+        transform.DOMove(transform.position + transform.forward * 12.5f, 0.2f);
+        IsAttacking = false;
+        Ani.ResetTrigger("isHited");
+        Ani.SetInteger("MeleeAttackType", 0);
+        Ani.SetInteger("LongDistanceAttackType", 0);
+        //CurrentCoolDown = 0f;
+        StartCoroutine(RecoverTeleportCoolDown());
+        Debug.Log("teleport");
+    }
+    private IEnumerator RecoverTeleportCoolDown()
+    {
+        yield return new WaitForSecondsRealtime(teleportCoolDown);
+        canTeleport = true;
     }
 }

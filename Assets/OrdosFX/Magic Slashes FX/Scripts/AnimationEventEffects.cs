@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationEventEffects : MonoBehaviour {
+public class AnimationEventEffects : MonoBehaviour
+{
     //public GameObject EffectPrefab;
     //public Transform EffectStartPosition;
     //public float DestroyAfter = 10;
@@ -12,6 +13,10 @@ public class AnimationEventEffects : MonoBehaviour {
     //public float DestroyAfterWorld = 10;
 
     public EffectInfo[] Effects;
+    [SerializeField]
+    private int bossSkillID;
+
+    private Animator ani;
 
     [System.Serializable]
 
@@ -36,13 +41,19 @@ public class AnimationEventEffects : MonoBehaviour {
 
     //       Destroy(effectOBJ, DestroyAfterWorld);
     //   }
-    void Start() {
+    void Start()
+    {
+        ani = GetComponent<Animator>();
     }
-            
+
     void InstantiateEffect(int EffectNumber)
     {
-        if(Effects == null || Effects.Length <= EffectNumber)
+        int id = ani.GetInteger("LongDistanceAttackType");
+        if (bossSkillID != id)
+            return;
+        if (Effects == null || Effects.Length <= EffectNumber)
         {
+            return;
             Debug.LogError("Incorrect effect number or effect is null");
         }
 
