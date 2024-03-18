@@ -102,7 +102,7 @@ public class ParkourPlayer : MonoBehaviour
     private void FixedUpdate()
     {
         animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (isOnGrounded && !isDead)
+        if (isOnGrounded && !isDead && !isClimb)
         {
             runImpulse.GenerateImpulse();
             if (canMove)
@@ -124,6 +124,8 @@ public class ParkourPlayer : MonoBehaviour
     }
     private void SwitchStateValue()
     {
+        if (isDead)
+            return;
         movement = transform.forward * moveSpeed;
         if (myBody.velocity.y < -2f)
             animator.SetBool("isFall", true);
@@ -304,7 +306,7 @@ public class ParkourPlayer : MonoBehaviour
                 {
                     animator.speed = 1;
                     animationCount++;
-                    sliderFollow.Height += 0.75f;
+                    sliderFollow.Height += 0.73f;
                 }
             }
             if (animator.speed == 1)
@@ -316,6 +318,12 @@ public class ParkourPlayer : MonoBehaviour
             }
             animator.SetBool("isClimb", isClimb);
             OutOfTime();
+            if (outOfTime)
+            {
+                myBody.useGravity = true;
+                StartCoroutine(Death("Dead"));
+                StopAllCoroutines();
+            }
             yield return null;
         }
         baffle.ClueCanvas.SetActive(false);
@@ -440,6 +448,8 @@ public class ParkourPlayer : MonoBehaviour
 
     private IEnumerator Death(string tag)
     {
+        AudioManager.Instance.PlayerSource.Stop();
+        AudioManager.Instance.SESource.Stop();
         EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
         StopAllCoroutines();
         isDead = true;

@@ -43,7 +43,10 @@ public class SystemMenu : UIBase
         if (exitButton != null)
             exitButton.onClick.AddListener(ExitGame);
         if (backToStartMenuButton != null)
+        {
             backToStartMenuButton.onClick.AddListener(() => StartCoroutine(SceneController.Instance.Transition("StartMenu")));
+            backToStartMenuButton.onClick.AddListener(() => openMenu.SetActive(false));
+        }
         audioButton.onClick.AddListener(() => audioMenu.SetActive(true));
         if (SceneManager.GetActiveScene().name == "StartMenu")
             AudioManager.Instance.MainAudio();

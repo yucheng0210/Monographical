@@ -128,30 +128,36 @@ public class SceneController : Singleton<SceneController>, ISavable
         //Main.Manager.GameManager.Instance.LoadingNotify(true);
         EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         progressSlider.value = 0.0f;
+        UIManager.Instance.UIDict.Clear();
         yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
         progressCanvas.SetActive(true);
         progressText.text = (int)(progressSlider.value * 100) + "%";
         yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
-        while (progressSlider.value < 0.99f)
+        async.completed += operation => { StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f)); };
+        while (!async.isDone)
         {
-            progressSlider.value = Mathf.Lerp(
-                progressSlider.value,
-                async.progress / 9 * 10,
-                Time.unscaledDeltaTime
-            );
-            progressText.text = (int)(progressSlider.value * 100) + "%";
+            if (progressSlider.value < 0.99f)
+            {
+                progressSlider.value = Mathf.Lerp(
+                    progressSlider.value,
+                    async.progress / 9 * 10,
+                    Time.unscaledDeltaTime
+                );
+                progressText.text = (int)(progressSlider.value * 100) + "%";
+            }
+            else if (!async.allowSceneActivation)
+            {
+                progressSlider.value = 1.0f;
+                progressText.text = (int)(progressSlider.value * 100) + "%";
+                AudioManager.Instance.ClearAllAudioClip();
+                yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));//等待淡出(這時畫面淡出是黑屏，避免提早出現下個場景畫面)
+                progressCanvas.SetActive(false);//隱藏加載畫面
+                async.allowSceneActivation = true;//允許場景轉換
+            }
             yield return null;
         }
-        yield return async.isDone;
-        progressSlider.value = 1.0f;
-        progressText.text = (int)(progressSlider.value * 100) + "%";
-        AudioManager.Instance.ClearAllAudioClip();
-        yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
-        progressCanvas.SetActive(false);
-        async.allowSceneActivation = true;
-        yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
         // Main.Manager.GameManager.Instance.LoadingNotify(false);
     }
 
