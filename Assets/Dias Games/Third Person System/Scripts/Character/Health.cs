@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using System;
 using UnityEngine.UI;
+using Ilumisoft.Minesweeper;
 
 namespace DiasGames.ThirdPersonSystem
 {
@@ -142,26 +143,26 @@ namespace DiasGames.ThirdPersonSystem
         private void OnTriggerEnter(Collider other)
         {
             bool otherLayerBool = other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer
-            || other.gameObject.layer == LayerMask.NameToLayer("Trap");
+            || other.gameObject.layer == LayerMask.NameToLayer("Trap") || other.gameObject.layer == LayerMask.NameToLayer("Attack");
             Character enemyData = null;
             if (otherLayerBool && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
             {
-
+                if (isInvincible)
+                    return;
+                isInvincible = true;
                 if (other.gameObject.layer == arrowAttackLayer)
                     enemyData = other.GetComponent<Arrow>().EnemyData;
                 else if (other.gameObject.layer == LayerMask.NameToLayer("Trap"))
                     enemyData = other.transform.root.GetComponent<DungeonTrap>().TrapData;
-                else
+                else if (other.gameObject.layer == enemyAttackLayer)
                     enemyData = other.transform.root.GetComponent<PatrolEnemy>().EnemyData;
+                else
+                    enemyData = other.GetComponent<AttackID>().AttackData;
                 IsHited(other, enemyData);
             }
         }
-
         private void IsHited(params object[] other)
         {
-            if (isInvincible)
-                return;
-            isInvincible = true;
             Debug.Log("damage");
             Collider newOther = (Collider)other[0];
             Character enemyData = (Character)other[1];

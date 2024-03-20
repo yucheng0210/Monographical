@@ -58090,9 +58090,11 @@ GameObject:
   - component: {fileID: 7164057280831580399}
   - component: {fileID: 7164057280831580396}
   - component: {fileID: 7164057280831580397}
-  m_Layer: 0
+  - component: {fileID: 4635900461713345643}
+  - component: {fileID: 7497284849320666682}
+  m_Layer: 6
   m_Name: SprintEffect
-  m_TagString: Untagged
+  m_TagString: Fire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62885,6 +62887,32 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!65 &4635900461713345643
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164057280831580386}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 1, z: 5}
+  m_Center: {x: -5, y: 0, z: 0}
+--- !u!114 &7497284849320666682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164057280831580386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd63981a14fc2844b784447add73b8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 2005
 --- !u!1 &8883791884450813338
 GameObject:
   m_ObjectHideFlags: 0

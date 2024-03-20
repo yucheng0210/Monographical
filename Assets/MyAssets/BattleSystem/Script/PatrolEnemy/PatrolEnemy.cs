@@ -720,7 +720,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if (count == 1)
             Ani.speed *= Mathf.Round(UnityEngine.Random.Range(minAniSpeed, maxAniSpeed) * 10) / 10.0f;
         else
+        {
             Ani.speed = 1;
+            ColliderSwitch(1);
+        }
     }
     public void AdjustAnimationSpeed(float count)
     {

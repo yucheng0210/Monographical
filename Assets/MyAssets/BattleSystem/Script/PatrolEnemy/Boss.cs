@@ -5,11 +5,16 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class Boss : PatrolEnemy
 {
     [SerializeField]
     private GameObject anotherCollision;
+    [SerializeField]
+    private Transform groundTrans;
+    [SerializeField]
+    private float groundOffsetY;
     [Header("戰鬥額外特效")]
     [SerializeField]
     private GameObject rockExplosionEffect;
@@ -364,6 +369,7 @@ public class Boss : PatrolEnemy
     {
         yield return new WaitForSeconds(sprintOnceDuration);
         effect.transform.SetParent(null);
+        effect.GetComponent<BoxCollider>().enabled = false;
         Destroy(effect, 5);
     }
     public void AxThrowing()
@@ -372,6 +378,8 @@ public class Boss : PatrolEnemy
         anotherCollision.transform.parent.parent);
         leftAxe.transform.SetParent(null);
         anotherCollision.transform.parent.gameObject.SetActive(false);
+        leftAxe.GetComponentInChildren<BoxCollider>().gameObject.SetActive(true);
+        leftAxe.GetComponentInChildren<BoxCollider>().gameObject.layer = LayerMask.NameToLayer("Attack");
         leftAxe.transform.DORotate(leftAxe.transform.eulerAngles + new Vector3(0, rotateDirection.y, rotateDirection.z), 0);
         leftAxe.transform.DORotate(leftAxe.transform.eulerAngles + rotateDirection, axThrowingOnceDuration
         , RotateMode.FastBeyond360);
@@ -382,7 +390,8 @@ public class Boss : PatrolEnemy
     {
         yield return new WaitForSeconds(axThrowingOnceDuration);
         myImpulse.GenerateImpulse();
-        Destroy(Instantiate(RockBreak, leftAxe.transform.position, Quaternion.identity), 5);
+        Vector3 pos = new Vector3(leftAxe.transform.position.x, groundTrans.position.y + groundOffsetY, leftAxe.transform.position.z);
+        Destroy(Instantiate(RockBreak, pos, Quaternion.identity), 5);
     }
     public void Jump()
     {
@@ -411,7 +420,11 @@ public class Boss : PatrolEnemy
     public void GenerateRockExplosion()
     {
         myImpulse.GenerateImpulse(chopDownImpulseForce);
-        Destroy(Instantiate(rockExplosionEffect, transform.position, Quaternion.identity), 5);
+        Vector3 pos =
+        new Vector3(Collision.transform.position.x, groundTrans.position.y + groundOffsetY, Collision.transform.position.z);
+        GameObject effect = Instantiate(rockExplosionEffect, pos, Quaternion.identity);
+        //Destroy(effect.GetComponentInChildren<BoxCollider>(), 0.5f);
+        Destroy(effect, 5);
     }
     public void Teleport()
     {
