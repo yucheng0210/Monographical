@@ -47,7 +47,6 @@ public class Zawarudo : MonoBehaviour
     private void Initialize()
     {
         transform.localScale = new Vector3(scale, scale, scale);
-        maxScaleX = Camera.main.transform.position.magnitude - 0.1f;
         for (int i = 0; i < waveList.Count; ++i)
         {
             waveExpandingList.Add(false);
@@ -66,6 +65,7 @@ public class Zawarudo : MonoBehaviour
             Time.timeScale = 1;
         if (Input.GetKeyDown(KeyCode.O) && !isExpanding && !isShrinking && Time.timeScale > 0)
         {
+            maxScaleX = Vector3.Distance(Camera.main.transform.position, transform.position) / 2 * 3.14f;
             Invoke(nameof(Expand), delayTime);
             for (int i = 0; i < waveList.Count; i++)
             {
@@ -109,9 +109,9 @@ public class Zawarudo : MonoBehaviour
             {
                 float s = waveList[i].transform.localScale.x;
                 s -= waveShrinkSpeed * Time.deltaTime;
-                if (s <= waveMaxScale)
+                if (s <= 0)
                     waveShrinkingList[i] = false;
-                waveList[i].transform.localScale = new Vector3(Mathf.Min(s, 0), 1, Mathf.Min(s, 0));
+                waveList[i].transform.localScale = new Vector3(Mathf.Max(s, 0), 1, Mathf.Max(s, 0));
             }
         }
 

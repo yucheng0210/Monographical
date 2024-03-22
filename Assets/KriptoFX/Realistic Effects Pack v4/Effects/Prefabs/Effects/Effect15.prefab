@@ -778,7 +778,7 @@ GameObject:
   - component: {fileID: 459516}
   - component: {fileID: 114472266000501952}
   - component: {fileID: 8290594633955942736}
-  - component: {fileID: 4500365471889474589}
+  - component: {fileID: 1116722034381892739}
   m_Layer: 6
   m_Name: Collision
   m_TagString: Fire
@@ -833,7 +833,7 @@ MonoBehaviour:
     type: 3}
   CollisionEffectInWorldSpace: 1
   LookAtNormal: 1
-  CollisionEffectDestroyAfter: 5
+  CollisionEffectDestroyAfter: 0.5
   DeactivateObjectsAfterCollision:
   - {fileID: 192358}
   - {fileID: 131838}
@@ -851,8 +851,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 2006
---- !u!65 &4500365471889474589
-BoxCollider:
+--- !u!135 &1116722034381892739
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -862,7 +862,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &169804
 GameObject:

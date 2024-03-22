@@ -7,7 +7,7 @@ public class AttackID : MonoBehaviour
     [SerializeField]
     private int id;
     public Character AttackData { get; private set; }
-    private void Start()
+    private void OnEnable()
     {
         AttackData = DataManager.Instance.CharacterList[id];
     }

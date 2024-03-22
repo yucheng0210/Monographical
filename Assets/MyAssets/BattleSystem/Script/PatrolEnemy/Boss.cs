@@ -11,6 +11,8 @@ public class Boss : PatrolEnemy
 {
     [SerializeField]
     private GameObject anotherCollision;
+    /* [SerializeField]
+     private GameObject elbowCollision;*/
     [SerializeField]
     private Transform groundTrans;
     [SerializeField]
@@ -74,6 +76,8 @@ public class Boss : PatrolEnemy
     private float magicCircleRadius;
     [SerializeField]
     private float magicCircleMinimumSpacing;
+    private List<GameObject> currentMagicCircleList = new List<GameObject>();
+
     [SerializeField]
     private float fireTornadoCount;
     [SerializeField]
@@ -146,6 +150,7 @@ public class Boss : PatrolEnemy
     {
         base.UpdateValue();
         fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
+        fireSlashPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         if (isSecondStage)
             Ani.SetBool("CanTeleport", canTeleport);
     }
@@ -168,7 +173,7 @@ public class Boss : PatrolEnemy
             if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
                 TheSecondStage_2();
             TheSecondStage_1();
-            UpdateFireTornadoPos();
+            //UpdateFireTornadoPos();
         }
         if (Input.GetKeyDown(KeyCode.E))
             EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
@@ -177,12 +182,13 @@ public class Boss : PatrolEnemy
     {
         if (bossStage != 0)
             return;
-        bossStage++;
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             return;
-        Ani.SetInteger("AttackMode", 2);
         if (!IsAttacking)
         {
+            bossStage++;
+            CurrentCoolDown = 0;
+            Ani.SetInteger("AttackMode", 2);
             IsAttacking = true;
             Ani.SetInteger("LongDistanceAttackType", 4);
             Ani.SetInteger("AttackMode", 0);
@@ -193,12 +199,13 @@ public class Boss : PatrolEnemy
     {
         if (bossStage != 1)
             return;
-        bossStage++;
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             return;
-        Ani.SetInteger("AttackMode", 2);
         if (!IsAttacking)
         {
+            bossStage++;
+            CurrentCoolDown = 0;
+            Ani.SetInteger("AttackMode", 2);
             IsAttacking = true;
             Ani.SetInteger("LongDistanceAttackType", 5);
             Ani.SetInteger("AttackMode", 0);
@@ -212,14 +219,14 @@ public class Boss : PatrolEnemy
         bossStage++;
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             return;
-        for (int i = 0; i < fireTornadoCount; i++)
-        {
-            Vector3 randomPos = Random.insideUnitSphere * fireTornadoRadius;
-            randomPos += transform.position;
-            randomPos.y = transform.position.y;
-            Transform fireTornado = Instantiate(fireTornadoEffect, randomPos, Quaternion.identity).transform;
-            fireTornadoList.Add(fireTornado);
-        }
+        /* for (int i = 0; i < fireTornadoCount; i++)
+         {
+             Vector3 randomPos = Random.insideUnitSphere * fireTornadoRadius;
+             randomPos += transform.position + transform.forward * 5;
+             randomPos.y = transform.position.y;
+             Transform fireTornado = Instantiate(fireTornadoEffect, randomPos, Quaternion.identity).transform;
+             fireTornadoList.Add(fireTornado);
+         }*/
     }
     private void TheSecondStage_2()
     {
@@ -281,6 +288,14 @@ public class Boss : PatrolEnemy
         else
             anotherCollision.SetActive(false);
     }
+    /*public void ElbowsColliderSwitch(int id)
+    {
+        if (id == 1)
+            elbowCollision.SetActive(true);
+        else
+            elbowCollision.SetActive(false);
+
+    }*/
     public void SetRighttAxe(int count)
     {
         if (count == 1 && !Ani.GetBool("isRepeat"))
@@ -332,7 +347,7 @@ public class Boss : PatrolEnemy
     }
     public void MagicCircleAttack()
     {
-        List<Vector3> currentMagicCircleList = new List<Vector3>();
+        currentMagicCircleList.Clear();
         for (int i = 0; i < magicCircleCount; i++)
         {
             Vector3 randomPosition = Random.insideUnitSphere * magicCircleRadius;
@@ -341,7 +356,7 @@ public class Boss : PatrolEnemy
             bool isValidPosition = true;
             for (int j = 0; j < currentMagicCircleList.Count; j++)
             {
-                if (Vector3.Distance(currentMagicCircleList[j], randomPosition) < magicCircleMinimumSpacing)
+                if (Vector3.Distance(currentMagicCircleList[j].transform.position, randomPosition) < magicCircleMinimumSpacing)
                 {
                     isValidPosition = false;
                     break;
@@ -350,13 +365,24 @@ public class Boss : PatrolEnemy
             if (isValidPosition)
             {
                 GameObject newEffect = Instantiate(magicCircle, randomPosition, Quaternion.identity);
-                currentMagicCircleList.Add(newEffect.transform.position);
+                currentMagicCircleList.Add(newEffect);
             }
             else
                 i--;
         }
+        StartCoroutine(WaitForMagicCircleAttack());
     }
-
+    private IEnumerator WaitForMagicCircleAttack()
+    {
+        yield return new WaitForSeconds(6);
+        for (int i = 0; i < currentMagicCircleList.Count; i++)
+        {
+            BoxCollider myCollider = currentMagicCircleList[i].AddComponent<BoxCollider>();
+            myCollider.center = Vector3.zero;
+            myCollider.size = new Vector3(5, 1, 5);
+            myCollider.isTrigger = true;
+        }
+    }
     public void SprintAttack()
     {
         Look(Player.transform.position);
@@ -391,6 +417,7 @@ public class Boss : PatrolEnemy
         yield return new WaitForSeconds(axThrowingOnceDuration);
         myImpulse.GenerateImpulse();
         Vector3 pos = new Vector3(leftAxe.transform.position.x, groundTrans.position.y + groundOffsetY, leftAxe.transform.position.z);
+        Destroy(leftAxe.GetComponentInChildren<BoxCollider>(), 0.1f);
         Destroy(Instantiate(RockBreak, pos, Quaternion.identity), 5);
     }
     public void Jump()
@@ -423,7 +450,7 @@ public class Boss : PatrolEnemy
         Vector3 pos =
         new Vector3(Collision.transform.position.x, groundTrans.position.y + groundOffsetY, Collision.transform.position.z);
         GameObject effect = Instantiate(rockExplosionEffect, pos, Quaternion.identity);
-        //Destroy(effect.GetComponentInChildren<BoxCollider>(), 0.5f);
+        Destroy(effect.GetComponentInChildren<BoxCollider>(), 0.5f);
         Destroy(effect, 5);
     }
     public void Teleport()

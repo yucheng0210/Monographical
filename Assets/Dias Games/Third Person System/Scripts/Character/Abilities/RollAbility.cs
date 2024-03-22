@@ -5,6 +5,7 @@
 
 /*-----------------------------------------------------------------------------*/
 
+using System.Collections;
 using UnityEngine;
 
 namespace DiasGames.ThirdPersonSystem
@@ -21,7 +22,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             return m_System.IsGrounded
                 && m_InputManager.RelativeInput.magnitude > 0
-                && DiasGames.ThirdPersonSystem.ThirdPersonSystem.canRoll;
+                && ThirdPersonSystem.canRoll;
         }
 
         public override void OnEnterAbility()
@@ -39,6 +40,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             base.FixedUpdateAbility();
             AddSpeedToRoll();
+            Debug.Log("roll");
         }
 
         /// <summary>
@@ -55,12 +57,22 @@ namespace DiasGames.ThirdPersonSystem
             if (FreeOnMove(vel.normalized))
                 m_System.m_Rigidbody.velocity = vel;
         }
-
+        bool isExit = false;
         public override bool TryExitAbility()
         {
-            return !m_System.IsGrounded;
+            return !m_System.IsGrounded || isExit;
         }
-
+        public void ResetRoll()
+        {
+            StartCoroutine(WaitForExitRoll());
+        }
+        private IEnumerator WaitForExitRoll()
+        {
+            yield return new WaitForSeconds(0.5f);
+            isExit = true;
+            yield return null;
+            isExit = false;
+        }
         private void Reset()
         {
             m_EnterState = "Roll";

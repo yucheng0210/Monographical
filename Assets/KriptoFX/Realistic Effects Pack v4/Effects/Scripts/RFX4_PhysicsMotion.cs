@@ -62,7 +62,7 @@ public class RFX4_PhysicsMotion : MonoBehaviour
         if (effectSettings.UseCollisionDetection)
         {
             collid = gameObject.AddComponent<SphereCollider>();
-            collid.isTrigger=true;
+            collid.isTrigger = true;
             collid.radius = ColliderRadius;
         }
 
@@ -73,7 +73,7 @@ public class RFX4_PhysicsMotion : MonoBehaviour
     private IEnumerator ResetTrigger()
     {
         yield return new WaitForSeconds(0.05f);
-        collid.isTrigger=false;
+        collid.isTrigger = false;
     }
     void InitializeForce()
     {
@@ -90,7 +90,8 @@ public class RFX4_PhysicsMotion : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if ((isCollided && !effectSettings.UseCollisionDetection) || collision.gameObject.CompareTag("EnemyAttack")) return;
+        if ((isCollided && !effectSettings.UseCollisionDetection)
+        || collision.gameObject.layer == LayerMask.NameToLayer("Attack")) return;
         foreach (ContactPoint contact in collision.contacts)
         {
             if (!isCollided)
@@ -125,7 +126,7 @@ public class RFX4_PhysicsMotion : MonoBehaviour
                 if (LookAtNormal) instance.transform.LookAt(contact.point + contact.normal);
                 else instance.transform.rotation = transform.rotation;
                 if (!CollisionEffectInWorldSpace) instance.transform.parent = contact.otherCollider.transform.parent;
-                Destroy(instance, CollisionEffectDestroyAfter);
+                Destroy(gameObject, CollisionEffectDestroyAfter);
             }
         }
 

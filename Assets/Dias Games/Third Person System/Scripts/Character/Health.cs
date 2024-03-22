@@ -145,11 +145,18 @@ namespace DiasGames.ThirdPersonSystem
             bool otherLayerBool = other.gameObject.layer == enemyAttackLayer || other.gameObject.layer == arrowAttackLayer
             || other.gameObject.layer == LayerMask.NameToLayer("Trap") || other.gameObject.layer == LayerMask.NameToLayer("Attack");
             Character enemyData = null;
-            if (otherLayerBool && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth >= 0 && !animatorStateInfo.IsName("StandUp"))
+            if (otherLayerBool && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth >= 0
+             && !animatorStateInfo.IsName("StandUp"))
             {
+                Debug.Log("damage");
                 if (isInvincible)
                     return;
                 isInvincible = true;
+                if (isInvincible)
+                {
+                    StopCoroutine(ResetInvincible());
+                    StartCoroutine(ResetInvincible());
+                }
                 if (other.gameObject.layer == arrowAttackLayer)
                     enemyData = other.GetComponent<Arrow>().EnemyData;
                 else if (other.gameObject.layer == LayerMask.NameToLayer("Trap"))
@@ -163,7 +170,6 @@ namespace DiasGames.ThirdPersonSystem
         }
         private void IsHited(params object[] other)
         {
-            Debug.Log("damage");
             Collider newOther = (Collider)other[0];
             Character enemyData = (Character)other[1];
             Main.Manager.GameManager.Instance.TakeDamage(enemyData, Main.Manager.GameManager.Instance.PlayerData);
@@ -191,7 +197,11 @@ namespace DiasGames.ThirdPersonSystem
                 OnCharacterDamage?.Invoke();
             }
         }
-
+        private IEnumerator ResetInvincible()
+        {
+            yield return new WaitForSecondsRealtime(0.5f);
+            isInvincible = false;
+        }
         private void HitEffect(Vector3 hitPoint, Collider other)
         {
             GetComponent<HitStop>().StopTime(0.1f, 0.2f);
@@ -236,7 +246,7 @@ namespace DiasGames.ThirdPersonSystem
             // Play sound
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PlayerDied();
-
+            EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
             if (m_RestartSceneAfterDie)
                 StartCoroutine(RestartCharacter());
         }
@@ -312,6 +322,11 @@ namespace DiasGames.ThirdPersonSystem
         private void EventInvincible(params object[] args)
         {
             isInvincible = (bool)args[0];
+            if (isInvincible)
+            {
+                StopCoroutine(ResetInvincible());
+                StartCoroutine(ResetInvincible());
+            }
         }
 
     }

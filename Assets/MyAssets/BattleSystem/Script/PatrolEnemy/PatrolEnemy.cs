@@ -191,6 +191,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Chase,
         Strafe,
         Attack,
+        Attacking,
         BackWalk,
         Turn,
         TurnBack,
@@ -311,6 +312,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 currentState = EnemyState.TurnBack;
             /*else if (angle > visionAngle)
                 currentState = EnemyState.Turn;*/
+            else if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
+                currentState = EnemyState.Attacking;
             else if (distance <= attackRadius && CurrentCoolDown <= 0)
                 currentState = EnemyState.Attack;
             else if (distance <= backWalkRadius || isBack)
@@ -322,10 +325,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         else if (distance <= chaseRadius && angle < visionAngle)
             currentState = EnemyState.Chase;
-        if (distance <= meleeAttackRadius)
-            isMeleeAttack = true;
-        else if (isMeleeAttack)
-            isMeleeAttack = false;
         Ani.SetFloat("Direction", Mathf.Lerp(Ani.GetFloat("Direction"), direction, Time.deltaTime * 2));
         Ani.SetFloat("Forward", Mathf.Lerp(Ani.GetFloat("Forward"), forward, Time.deltaTime * 2));
         //float dot = Vector3.Dot(transform.forward, Player.transform.position - transform.position);
@@ -341,9 +340,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             canExecution = false;
             lockMove = false;
         }
-        if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
-            UpdateAttackValue();
-        else if (CurrentCoolDown >= 0 && Warning)
+        if (currentState != EnemyState.Attacking && Warning)
             CurrentCoolDown -= Time.deltaTime;
     }
 
@@ -489,6 +486,10 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 Look(Player.transform.position);
                 if (myNavMeshAgent.enabled)
                     myNavMeshAgent.isStopped = true;
+                if (distance <= meleeAttackRadius)
+                    isMeleeAttack = true;
+                else if (isMeleeAttack)
+                    isMeleeAttack = false;
                 if (isMeleeAttack)
                 {
                     Ani.SetInteger(attack, 1);
@@ -499,6 +500,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     Ani.SetInteger(attack, 2);
                     AdditionalLongDistanceAttack();
                 }
+                break;
+            case EnemyState.Attacking:
+                AnimationRealTime(false);
+                Look(Player.transform.position);
+                if (myNavMeshAgent.enabled)
+                    myNavMeshAgent.isStopped = true;
+                UpdateAttackValue();
                 break;
             case EnemyState.BackWalk:
                 AnimationRealTime(false);
@@ -537,7 +545,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     AudioManager.Instance.MainAudio();
                 }
                 Warning = false;
-                myNavMeshAgent.isStopped = false;
+                if (myNavMeshAgent.enabled)
+                    myNavMeshAgent.isStopped = false;
                 switch (currentAI)
                 {
                     case EnemyAI.Wander:

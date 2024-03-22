@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DeadMenu : UIBase
 {
@@ -19,12 +20,15 @@ public class DeadMenu : UIBase
 
     private void EventGameOver(params object[] args)
     {
-        StartCoroutine(WaitForChangeScene());
+        if (SceneManager.GetActiveScene().name == "ChapterOne")
+            StartCoroutine(WaitForChangeScene("ChapterOne"));
+        else
+            StartCoroutine(WaitForChangeScene("StartMenu"));
     }
-    private IEnumerator WaitForChangeScene()
+    private IEnumerator WaitForChangeScene(string sceneName)
     {
         yield return new WaitForSecondsRealtime(3f);
         yield return StartCoroutine(UIManager.Instance.FadeOutIn(canvasGroup, 2, 3, false, 0.5f));
-        StartCoroutine(SceneController.Instance.Transition("StartMenu"));
+        StartCoroutine(SceneController.Instance.Transition(sceneName));
     }
 }

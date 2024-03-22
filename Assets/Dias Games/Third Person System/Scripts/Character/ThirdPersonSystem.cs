@@ -209,7 +209,12 @@ namespace DiasGames.ThirdPersonSystem
 
         public bool ShutDown { get; set; }
         private AnimatorStateInfo animatorStateInfo;
+        public AnimatorStateInfo StateInfo
+        {
+            get { return animatorStateInfo; }
+        }
         private AnimatorTransitionInfo animatorTransitionInfo;
+
 
         [SerializeField]
         private bool isRunning;
