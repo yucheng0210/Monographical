@@ -21,7 +21,7 @@ namespace DiasGames.ThirdPersonSystem
         public override bool TryEnterAbility()
         {
             return m_System.IsGrounded
-                && m_InputManager.RelativeInput.magnitude > 0
+                //&& m_InputManager.RelativeInput.magnitude > 0
                 && ThirdPersonSystem.canRoll;
         }
 
@@ -40,7 +40,6 @@ namespace DiasGames.ThirdPersonSystem
         {
             base.FixedUpdateAbility();
             AddSpeedToRoll();
-            Debug.Log("roll");
         }
 
         /// <summary>
@@ -57,7 +56,8 @@ namespace DiasGames.ThirdPersonSystem
             if (FreeOnMove(vel.normalized))
                 m_System.m_Rigidbody.velocity = vel;
         }
-        bool isExit = false;
+        [SerializeField]
+        private bool isExit = false;
         public override bool TryExitAbility()
         {
             return !m_System.IsGrounded || isExit;
@@ -70,7 +70,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             yield return new WaitForSeconds(0.5f);
             isExit = true;
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
             isExit = false;
         }
         private void Reset()

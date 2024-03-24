@@ -94,6 +94,8 @@ public class Boss : PatrolEnemy
     private List<Transform> fireTornadoList = new List<Transform>();
     [Header("第二階段")]
     [SerializeField]
+    private int bossStage;
+    [SerializeField]
     private bool isSecondStage;
 
     [SerializeField]
@@ -111,7 +113,6 @@ public class Boss : PatrolEnemy
     private int currentChance;
     private int chanceAttenuation;
     private int maxChance;
-    private int bossStage;
     protected override void Awake()
     {
         base.Awake();
@@ -126,12 +127,14 @@ public class Boss : PatrolEnemy
     }
     protected override void AdditionalAttack()
     {
+        UpdateStage();
         if (!IsAttacking)
             ComboAttack();
         base.AdditionalAttack();
     }
     protected override void AdditionalLongDistanceAttack()
     {
+        UpdateStage();
         if (!IsAttacking)
         {
             ComboAttack();
@@ -149,15 +152,12 @@ public class Boss : PatrolEnemy
     protected override void UpdateValue()
     {
         base.UpdateValue();
+        if (Input.GetKeyDown(KeyCode.E))
+            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
         fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         fireSlashPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         if (isSecondStage)
             Ani.SetBool("CanTeleport", canTeleport);
-    }
-    protected override void UpdateState()
-    {
-        base.UpdateState();
-        UpdateStage();
     }
     private void UpdateStage()
     {
@@ -175,8 +175,6 @@ public class Boss : PatrolEnemy
             TheSecondStage_1();
             //UpdateFireTornadoPos();
         }
-        if (Input.GetKeyDown(KeyCode.E))
-            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
     }
     private void TheFirstStage_1()
     {
@@ -184,7 +182,7 @@ public class Boss : PatrolEnemy
             return;
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             return;
-        if (!IsAttacking)
+        if (!IsAttacking && Ani.GetInteger("AttackMode") == 2)
         {
             bossStage++;
             CurrentCoolDown = 0;
@@ -232,21 +230,20 @@ public class Boss : PatrolEnemy
     {
         if (bossStage != 0)
             return;
-        bossStage++;
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             return;
-        Ani.SetInteger("AttackMode", 1);
         if (!IsAttacking)
         {
+            CurrentCoolDown = 0;
+            bossStage++;
             IsAttacking = true;
-            Ani.SetInteger("MeleeAttackType", 4);
-            Ani.SetInteger("AttackMode", 0);
-            meleeAttackCount++;
+            Ani.SetBool("isZawarudo", true);
         }
     }
     public void CreateZawarudo()
     {
         Instantiate(zawarudoEffect, zawarudoTrans);
+        Ani.SetBool("isZawarudo", false);
     }
     private void UpdateFireTornadoPos()
     {
@@ -475,4 +472,5 @@ public class Boss : PatrolEnemy
         yield return new WaitForSecondsRealtime(teleportCoolDown);
         canTeleport = true;
     }
+
 }

@@ -688,7 +688,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             HitEffect(hitPoint);
             if (shutDown || canExecution || IsAttacking)
                 return;
-            if (EnemyData.CurrentPoise <= 0)
+            /*if (EnemyData.CurrentPoise <= 0)
             {
                 //Ani.SetFloat("BeakBackMode", 2);
                 EnemyData.CurrentPoise = EnemyData.MaxPoise;
@@ -696,11 +696,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 //MyBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
             }
             else
-            {
-                //Ani.SetFloat("BeakBackMode", 1);
-                Ani.SetTrigger(isHited);
-                currentState = EnemyState.BeakBack;
-            }
+            {*/
+            //Ani.SetFloat("BeakBackMode", 1);
+            Ani.SetTrigger(isHited);
+            currentState = EnemyState.BeakBack;
+            // }
         }
     }
 
@@ -756,9 +756,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
         //VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
-        GetComponent<HitStop>().StopTime(0.1f, 0.2f);
+        GetComponent<HitStop>().StopTime(0.1f, 0.1f);
         AudioManager.Instance.Impact();
-        AudioManager.Instance.PlayerHurted();
+        //AudioManager.Instance.PlayerHurted();
         myImpulse.GenerateImpulse();
         GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
     }

@@ -36,6 +36,9 @@ public class Zawarudo : MonoBehaviour
     private bool isShrinking = false;
     [SerializeField]
     private float maxScaleX;
+    [SerializeField]
+    private AudioClip dio;
+    private AudioSource audioSource;
     private void Start()
     {
         Initialize();
@@ -47,10 +50,19 @@ public class Zawarudo : MonoBehaviour
     private void Initialize()
     {
         transform.localScale = new Vector3(scale, scale, scale);
+        audioSource = GetComponent<AudioSource>();
         for (int i = 0; i < waveList.Count; ++i)
         {
             waveExpandingList.Add(false);
             waveShrinkingList.Add(false);
+        }
+        audioSource.PlayOneShot(dio);
+        maxScaleX = Vector3.Distance(Camera.main.transform.position, transform.position) / 2 * 3.14f;
+        Invoke(nameof(Expand), delayTime);
+        for (int i = 0; i < waveList.Count; i++)
+        {
+            StartCoroutine(ExpandWave(i, waveExpandDelayList[i]));
+            StartCoroutine(ShrinkWave(i, waveShrinkDelayList[i]));
         }
     }
     private void FacingCamera()
@@ -61,10 +73,11 @@ public class Zawarudo : MonoBehaviour
     private void UpdateState()
     {
         FacingCamera();
-        if (Input.GetKeyDown(KeyCode.P))
-            Time.timeScale = 1;
-        if (Input.GetKeyDown(KeyCode.O) && !isExpanding && !isShrinking && Time.timeScale > 0)
+        /*  if (Input.GetKeyDown(KeyCode.P))
+              Time.timeScale = 1;*/
+        /*if (Input.GetKeyDown(KeyCode.O) && !isExpanding && !isShrinking && Time.timeScale > 0)
         {
+            audioSource.PlayOneShot(dio);
             maxScaleX = Vector3.Distance(Camera.main.transform.position, transform.position) / 2 * 3.14f;
             Invoke(nameof(Expand), delayTime);
             for (int i = 0; i < waveList.Count; i++)
@@ -72,7 +85,7 @@ public class Zawarudo : MonoBehaviour
                 StartCoroutine(ExpandWave(i, waveExpandDelayList[i]));
                 StartCoroutine(ShrinkWave(i, waveShrinkDelayList[i]));
             }
-        }
+        }*/
         if (isExpanding)
         {
             scale += expandSpeed * Time.deltaTime;

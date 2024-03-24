@@ -24648,6 +24648,7 @@ GameObject:
   - component: {fileID: 4862423274284122}
   - component: {fileID: 2770763793452654796}
   - component: {fileID: 8602545267702942985}
+  - component: {fileID: 8191569445885890268}
   m_Layer: 6
   m_Name: Eff12
   m_TagString: Fire
@@ -24684,8 +24685,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5, y: 1, z: 13}
-  m_Center: {x: 0, y: 0, z: 7}
+  m_Size: {x: 5, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8602545267702942985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24699,6 +24700,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 2007
+--- !u!114 &8191569445885890268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1543153927702632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf2e4955800861429a27452a36cd676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destinationSize: {x: 5, y: 1, z: 10}
+  duration: 0.45
 --- !u!1 &1630484500080796
 GameObject:
   m_ObjectHideFlags: 0

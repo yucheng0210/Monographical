@@ -242,7 +242,7 @@ namespace DiasGames.ThirdPersonSystem
             OnDie.Invoke();
             OnCharacterDie?.Invoke();
             Main.Manager.GameManager.Instance.EndNotifyObservers();
-
+            m_System.collision.SetActive(false);
             // Play sound
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PlayerDied();
