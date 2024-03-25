@@ -84,6 +84,16 @@ namespace Main.Manager
             defender.CurrentPoise -= attacker.PoiseAttack;
             Debug.Log(damage);
         }
+        public void TakeDamage(float damage, Character defender)
+        {
+            /*float weaponDamage = PlayerEquipWeapon.WeaponAttack;
+            float playerMinAttack=attacker.MinAttack + weaponDamage;
+            float playerMaxAttack= attacker.MaxAttack + weaponDamage;
+            float playerCriticalMultiplier=attacker.CriticalMultiplier + PlayerEquipWeapon.WeaponCriticalMultiplier;
+            */
+            defender.CurrentHealth -= (int)damage;
+            Debug.Log(damage);
+        }
         public void AddObservers(IObserver observer)
         {
             observerList.Add(observer);

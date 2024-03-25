@@ -6,9 +6,6 @@ public class IncreaseHealthEffect : IEffect
 {
     public void ApplyEffect(int value, string target)
     {
-       /* DataManager.Instance.CharacterList[target].TakeDamage(
-            DataManager.Instance.CharacterList[target],
-            -value
-        );*/
+        Main.Manager.GameManager.Instance.TakeDamage(-value, Main.Manager.GameManager.Instance.PlayerData);
     }
 }

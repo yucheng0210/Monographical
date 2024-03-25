@@ -83,6 +83,10 @@ namespace DiasGames.ThirdPersonSystem
         private int playerID;
         [SerializeField]
         private GameObject onfireEffect;
+        [SerializeField]
+        private GameObject shield;
+        [SerializeField]
+        private GameObject potion;
         private AnimatorStateInfo animatorStateInfo;
         //private Rigidbody rigidbody;
 
@@ -121,6 +125,18 @@ namespace DiasGames.ThirdPersonSystem
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
+            if (animatorStateInfo.IsName("Drink"))
+            {
+                if (!shield.activeSelf)
+                    return;
+                shield.SetActive(false);
+                potion.SetActive(true);
+            }
+            else if (!shield.activeSelf)
+            {
+                shield.SetActive(true);
+                potion.SetActive(false);
+            }
         }
         private IEnumerator OnFire()
         {
