@@ -92,7 +92,7 @@ public class Boss : PatrolEnemy
     [SerializeField]
     private Transform zawarudoTrans;
     private List<Transform> fireTornadoList = new List<Transform>();
-    [Header("第二階段")]
+    [Header("階段")]
     [SerializeField]
     private int bossStage;
     [SerializeField]
@@ -100,6 +100,8 @@ public class Boss : PatrolEnemy
 
     [SerializeField]
     private CanvasGroup transitionCanvas;
+    [SerializeField]
+    private PlayableDirector theFirstStageTimeLine;
     [SerializeField]
     private PlayableDirector theSecondStageTimeLine;
     [Header("怒吼")]
@@ -113,6 +115,7 @@ public class Boss : PatrolEnemy
     private int currentChance;
     private int chanceAttenuation;
     private int maxChance;
+    private bool isStartAttack;
     protected override void Awake()
     {
         base.Awake();
@@ -152,8 +155,8 @@ public class Boss : PatrolEnemy
     protected override void UpdateValue()
     {
         base.UpdateValue();
-        if (Input.GetKeyDown(KeyCode.E))
-            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
+        /*if (Input.GetKeyDown(KeyCode.E))
+            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);*/
         fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         fireSlashPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         if (isSecondStage)
@@ -163,6 +166,13 @@ public class Boss : PatrolEnemy
     {
         if (!isSecondStage)
         {
+            if (theFirstStageTimeLine.state != PlayState.Playing && !isStartAttack && IsAttacking)
+            {
+                isStartAttack = true;
+                IsAttacking = true;
+                Ani.SetInteger("LongDistanceAttackType", 1);
+                Ani.SetInteger("AttackMode", 2);
+            }
             if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
                 TheFirstStage_2();
             else if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.7f)
