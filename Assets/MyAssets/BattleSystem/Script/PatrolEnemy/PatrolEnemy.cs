@@ -247,7 +247,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         yield return null;
         Main.Manager.GameManager.Instance.EnemyList.Add(EnemyData);
-        AudioManager.Instance.MainAudio();
+        //AudioManager.Instance.MainAudio();
         Player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         shutDown = false;
         //myNavMeshAgent.SetDestination(navPointList[1].position);
@@ -608,6 +608,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     QuestManager.Instance.AddQuestCurrentKill(enemyID);
             }
         }
+        healthSlider.value = (float)EnemyData.CurrentHealth / (float)EnemyData.MaxHealth;
         yield return new WaitForSeconds(4);
         int randomIndex = UnityEngine.Random.Range(0, dropItemList.Count);
         Instantiate(dropItemList[randomIndex], transform.position, Quaternion.identity);

@@ -22,7 +22,8 @@ namespace DiasGames.ThirdPersonSystem
         {
             return m_System.IsGrounded
                 //&& m_InputManager.RelativeInput.magnitude > 0
-                && ThirdPersonSystem.canRoll;
+                && ThirdPersonSystem.canRoll
+                && !isExit;
         }
 
         public override void OnEnterAbility()

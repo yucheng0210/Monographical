@@ -288,7 +288,7 @@ namespace DiasGames.ThirdPersonSystem
             if (m_ActiveAbility != null)
                 m_ActiveAbility.FixedUpdateAbility();
             // ----------------------------------------------------------------- //
-            if (currentEndurance < maxEndurance && !animatorStateInfo.IsTag("Attack"))
+            if (currentEndurance < maxEndurance && !animatorStateInfo.IsTag("Attack") && !animatorStateInfo.IsName("Roll"))
                 currentEndurance++;
         }
 
@@ -330,7 +330,6 @@ namespace DiasGames.ThirdPersonSystem
             currentEndurance = maxEndurance;
             //combo = 0;
         }
-
         private void AttackState()
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
@@ -347,7 +346,10 @@ namespace DiasGames.ThirdPersonSystem
                 ReduceEndurance(attackConsume);
             }
         }
-
+        public void SlashAudio(int count)
+        {
+            AudioManager.Instance.SlashAudio(count);
+        }
         public void ReduceEndurance(float consume)
         {
             currentEndurance -= consume;

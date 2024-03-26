@@ -14,11 +14,8 @@ public class HealthController : MonoBehaviour
 
     private Slider healthSlider;
     public Image fillImage;
-    public float r,
-        g,
-        b;
-    public RectTransform LifePoint,
-        Hurt;
+    public float r, g, b;
+    public RectTransform LifePoint, Hurt;
 
     [SerializeField]
     private bool isDiscolor;

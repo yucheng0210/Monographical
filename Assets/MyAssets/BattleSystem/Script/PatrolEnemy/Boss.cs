@@ -48,6 +48,13 @@ public class Boss : PatrolEnemy
     private float chopOnceDuration;
     [SerializeField]
     private float chopDownImpulseForce;
+    [Header("後跳")]
+    [SerializeField]
+    private float backJumpHeight;
+    [SerializeField]
+    private float backJumpOnceDuration;
+    [SerializeField]
+    private float backJumpDistance;
     [Header("衝刺攻擊")]
     [SerializeField]
     private float sprintOffsetZ;
@@ -119,11 +126,11 @@ public class Boss : PatrolEnemy
     protected override void Awake()
     {
         base.Awake();
-        meleeAttackCount = 2;
+        meleeAttackCount = 3;
         longDistanceAttackCount = 3;
         if (isSecondStage)
         {
-            meleeAttackCount = 3;
+            meleeAttackCount = 4;
             longDistanceAttackCount = 5;
             canTeleport = true;
         }
@@ -155,8 +162,23 @@ public class Boss : PatrolEnemy
     protected override void UpdateValue()
     {
         base.UpdateValue();
-        /*if (Input.GetKeyDown(KeyCode.E))
-            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);*/
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
+        /*if (theFirstStageTimeLine.state == PlayState.Playing || theSecondStageTimeLine.state == PlayState.Playing)
+        {
+            if (!Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
+                EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 1);
+        }
+        else if (Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
+            EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);*/
+        if (theFirstStageTimeLine.state != PlayState.Playing && !isStartAttack && !IsAttacking && !isSecondStage)
+        {
+            isStartAttack = true;
+            IsAttacking = true;
+            CurrentCoolDown = 0;
+            Ani.SetInteger("LongDistanceAttackType", 1);
+            Ani.SetInteger("AttackMode", 2);
+        }
         fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         fireSlashPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         if (isSecondStage)
@@ -166,13 +188,6 @@ public class Boss : PatrolEnemy
     {
         if (!isSecondStage)
         {
-            if (theFirstStageTimeLine.state != PlayState.Playing && !isStartAttack && IsAttacking)
-            {
-                isStartAttack = true;
-                IsAttacking = true;
-                Ani.SetInteger("LongDistanceAttackType", 1);
-                Ani.SetInteger("AttackMode", 2);
-            }
             if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
                 TheFirstStage_2();
             else if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.7f)
@@ -180,10 +195,10 @@ public class Boss : PatrolEnemy
         }
         else if (theSecondStageTimeLine.state != PlayState.Playing)
         {
-            if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
-                TheSecondStage_2();
+            /*if (EnemyData.CurrentHealth <= EnemyData.MaxHealth * 0.4f)
+                TheSecondStage_2();*/
             TheSecondStage_1();
-            //UpdateFireTornadoPos();
+            UpdateFireTornadoPos();
         }
     }
     private void TheFirstStage_1()
@@ -270,6 +285,7 @@ public class Boss : PatrolEnemy
         if (!isSecondStage)
         {
             bossStage = 3;
+            AudioManager.Instance.BGMSource.Stop();
             StartCoroutine(UIManager.Instance.FadeOutIn(transitionCanvas, 0, 1, false, 0.5f));
             yield return new WaitForSecondsRealtime(1.2f);
             theSecondStageTimeLine.Play();
@@ -432,6 +448,29 @@ public class Boss : PatrolEnemy
         MyBody.useGravity = false;
         myNavMeshAgent.enabled = false;
         transform.DOMoveY(transform.position.y + jumpHeight, jumpOnceDuration);
+    }
+    public void BackJump(int count)
+    {
+        if (count == 1)
+        {
+            MyBody.useGravity = false;
+            myNavMeshAgent.enabled = false;
+            StartCoroutine(CalculateBackJump());
+        }
+        else
+        {
+            MyBody.useGravity = true;
+            myNavMeshAgent.enabled = true;
+        }
+    }
+    private IEnumerator CalculateBackJump()
+    {
+        transform.DOMove
+        (transform.position + -transform.forward * backJumpDistance / 2 + transform.up * backJumpDistance, backJumpOnceDuration / 2);
+        yield return new WaitForSecondsRealtime(backJumpOnceDuration / 2);
+        transform.DOMove
+        (transform.position + -transform.forward * backJumpDistance / 2 + -transform.up * backJumpDistance, backJumpOnceDuration / 2);
+
     }
     public void StopAnimation()
     {
