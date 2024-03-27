@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LoadMenu : UIBase
@@ -17,6 +18,7 @@ public class LoadMenu : UIBase
 
     private void EventSceneLoading(params object[] args)
     {
-        gameObject.SetActive(false);
+        if (SceneManager.GetActiveScene().name == "StartMenu")
+            gameObject.SetActive(false);
     }
 }

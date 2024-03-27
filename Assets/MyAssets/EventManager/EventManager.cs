@@ -6,6 +6,11 @@ public class EventManager : Singleton<EventManager>
 {
     public delegate void EventHandler(params object[] args);
     private Dictionary<string, EventHandler> eventListenters = new Dictionary<string, EventHandler>();
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(this);
+    }
 
     public void AddEventRegister(string eventName, EventHandler handler)
     {

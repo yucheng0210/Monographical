@@ -165,6 +165,8 @@ public class DialogSystem : MonoBehaviour
             case "EVENT":
                 EventManager.Instance.DispatchEvent(EventDefinition.eventDialogEvent
                 , DataManager.Instance.DialogList[DialogName][index].Order);
+                Debug.Log("event");
+                gameObject.SetActive(false);
                 index++;
                 break;
         }
