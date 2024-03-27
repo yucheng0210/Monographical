@@ -188,7 +188,10 @@ public class SceneController : Singleton<SceneController>, ISavable
     }
     private void EventDialogEvent(params object[] args)
     {
+        Debug.Log("change");
         if ((string)args[0] == "CHANGESCENE")
+        {
             StartCoroutine(Transition("ChapterOne"));
+        }
     }
 }

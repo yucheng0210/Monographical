@@ -159,6 +159,12 @@ public class Boss : PatrolEnemy
         base.AdditionalLongDistanceAttack();
 
     }
+    protected override void UpdateState()
+    {
+        if (theSecondStageTimeLine.state == PlayState.Playing)
+            return;
+        base.UpdateState();
+    }
     protected override void UpdateValue()
     {
         base.UpdateValue();
@@ -242,14 +248,14 @@ public class Boss : PatrolEnemy
         bossStage++;
         if (MyAnimatorStateInfo.tagHash == Animator.StringToHash("Attack"))
             return;
-        /* for (int i = 0; i < fireTornadoCount; i++)
-         {
-             Vector3 randomPos = Random.insideUnitSphere * fireTornadoRadius;
-             randomPos += transform.position + transform.forward * 5;
-             randomPos.y = transform.position.y;
-             Transform fireTornado = Instantiate(fireTornadoEffect, randomPos, Quaternion.identity).transform;
-             fireTornadoList.Add(fireTornado);
-         }*/
+        for (int i = 0; i < fireTornadoCount; i++)
+        {
+            Vector3 randomPos = Random.insideUnitSphere * fireTornadoRadius;
+            randomPos += transform.position + transform.forward * 5;
+            randomPos.y = transform.position.y;
+            Transform fireTornado = Instantiate(fireTornadoEffect, randomPos, Quaternion.identity).transform;
+            fireTornadoList.Add(fireTornado);
+        }
     }
     private void TheSecondStage_2()
     {

@@ -62,7 +62,7 @@ public abstract class UIBase : MonoBehaviour, IObserver
             UIManager.Instance.MenuIsOpen = true;
             //EventSystem.current.SetSelectedGameObject(null);
             AudioManager.Instance.MenuEnterAudio();
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
             openMenu.SetActive(true);
             OpenBool = true;
             openMenu.transform.SetAsLastSibling();
