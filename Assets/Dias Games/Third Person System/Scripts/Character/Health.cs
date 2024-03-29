@@ -120,8 +120,18 @@ namespace DiasGames.ThirdPersonSystem
 
         private void Update()
         {
-            healthSlider.value = (float)Main.Manager.GameManager.Instance.PlayerData.CurrentHealth
-            / (float)Main.Manager.GameManager.Instance.PlayerData.MaxHealth;
+            if (healthSlider.value < (float)Main.Manager.GameManager.Instance.PlayerData.CurrentHealth
+            / (float)Main.Manager.GameManager.Instance.PlayerData.MaxHealth)
+            {
+                float value = Mathf.Lerp(healthSlider.value, (float)Main.Manager.GameManager.Instance.PlayerData.CurrentHealth
+                / (float)Main.Manager.GameManager.Instance.PlayerData.MaxHealth, Time.deltaTime);
+                healthSlider.value = value;
+            }
+            else
+            {
+                healthSlider.value = (float)Main.Manager.GameManager.Instance.PlayerData.CurrentHealth
+                / (float)Main.Manager.GameManager.Instance.PlayerData.MaxHealth;
+            }
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");

@@ -28,10 +28,17 @@ public class RFX4_EffectEvent : MonoBehaviour
     private Animator ani;
     [SerializeField]
     private bool isNotBossSkill;
+    [SerializeField]
+    private bool isStartUse;
     private void Awake()
     {
         if (!isNotBossSkill)
             ani = GetComponent<Animator>();
+        if (isStartUse)
+        {
+            ActivateCharacterEffect();
+            ActivateCharacterEffect2();
+        }
     }
     public void ActivateEffect()
     {
@@ -61,9 +68,12 @@ public class RFX4_EffectEvent : MonoBehaviour
 
     public void ActivateCharacterEffect()
     {
-        int id = ani.GetInteger("LongDistanceAttackType");
-        if (bossSkillID != id)
-            return;
+        if (!isNotBossSkill)
+        {
+            int id = ani.GetInteger("LongDistanceAttackType");
+            if (bossSkillID != id)
+                return;
+        }
         if (CharacterEffect == null) return;
         var instance = Instantiate(CharacterEffect, CharacterAttachPoint.transform.position, CharacterAttachPoint.transform.rotation, CharacterAttachPoint.transform);
         UpdateEffectForMobileIsNeed(instance);

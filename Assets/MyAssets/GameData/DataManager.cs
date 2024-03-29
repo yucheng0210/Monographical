@@ -48,10 +48,10 @@ public class DataManager : Singleton<DataManager>, ISavable
         ISavable savable = this;
         savable.AddSavableRegister();
         BackpackManager.Instance.AddMoney(1000);
-        for (int i = 0; i < 5; i++)
+       /* for (int i = 0; i < 5; i++)
         {
             BackpackManager.Instance.AddItem(1001, Backpack);
-        }
+        }*/
     }
 
     private void LoadData()

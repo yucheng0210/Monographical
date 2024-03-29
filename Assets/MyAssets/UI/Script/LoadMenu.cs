@@ -14,6 +14,7 @@ public class LoadMenu : UIBase
     {
         base.Start();
         EventManager.Instance.AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
+        gameObject.SetActive(true);
     }
 
     private void EventSceneLoading(params object[] args)

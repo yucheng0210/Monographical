@@ -170,6 +170,11 @@ public class Boss : PatrolEnemy
         base.UpdateValue();
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
             EnemyData.CurrentHealth -= (int)(EnemyData.MaxHealth * 0.35f);
+        if (Input.GetKeyDown(KeyCode.RightControl))
+        {
+            theFirstStageTimeLine.time = theFirstStageTimeLine.duration;
+            theSecondStageTimeLine.time = theSecondStageTimeLine.duration;
+        }
         /*if (theFirstStageTimeLine.state == PlayState.Playing || theSecondStageTimeLine.state == PlayState.Playing)
         {
             if (!Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
@@ -177,13 +182,17 @@ public class Boss : PatrolEnemy
         }
         else if (Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
             EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);*/
-        if (theFirstStageTimeLine.state != PlayState.Playing && !isStartAttack && !IsAttacking && !isSecondStage)
+        if (!isStartAttack)
         {
-            isStartAttack = true;
-            IsAttacking = true;
             CurrentCoolDown = 0;
-            Ani.SetInteger("LongDistanceAttackType", 1);
-            Ani.SetInteger("AttackMode", 2);
+            if (theFirstStageTimeLine.state != PlayState.Playing && !IsAttacking && !isSecondStage)
+            {
+                isStartAttack = true;
+                IsAttacking = true;
+                Ani.SetInteger("LongDistanceAttackType", 1);
+                Ani.SetInteger("AttackMode", 2);
+            }
+
         }
         fireBallPointGroup.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
         fireSlashPoint.LookAt(Player.transform.position + Player.transform.up * fireBallHeightOffset);
@@ -256,6 +265,7 @@ public class Boss : PatrolEnemy
             Transform fireTornado = Instantiate(fireTornadoEffect, randomPos, Quaternion.identity).transform;
             fireTornadoList.Add(fireTornado);
         }
+        AudioManager.Instance.BattleAudio();
     }
     private void TheSecondStage_2()
     {

@@ -44,7 +44,7 @@ namespace Main.Manager
             if (SceneManager.GetActiveScene().name != "StartMenu" &&
             SceneManager.GetActiveScene().name != "Prologue_1" && SceneManager.GetActiveScene().name != "Prologue_2")
             {
-                if (Input.GetKeyDown(KeyCode.Escape) && !PlayerCantMove)
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     if (!UIManager.Instance.MenuIsOpen)
                         UIManager.Instance.ShowUI("MainMenu");

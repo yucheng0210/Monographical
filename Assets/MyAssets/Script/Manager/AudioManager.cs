@@ -27,7 +27,10 @@ public class AudioManager : Singleton<AudioManager>
 
     [SerializeField]
     private AudioClip impact;
-
+    [SerializeField]
+    private AudioClip openDoorClip;
+    [SerializeField]
+    private AudioClip deathClueClip;
     [SerializeField]
     private List<AudioClip> heavyAttackClips;
 
@@ -156,6 +159,16 @@ public class AudioManager : Singleton<AudioManager>
                 Instance.SESource.clip = Instance.swordSlashClip_2;
                 break;
         }
+        Instance.SESource.Play();
+    }
+    public void OpenDoor()
+    {
+        Instance.SESource.clip = Instance.openDoorClip;
+        Instance.SESource.Play();
+    }
+    public void DeathClue()
+    {
+        Instance.SESource.clip = Instance.deathClueClip;
         Instance.SESource.Play();
     }
     public void ChanageAudioVolume(string sourceName, float value)
