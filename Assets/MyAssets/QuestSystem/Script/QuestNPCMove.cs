@@ -10,6 +10,8 @@ public class QuestNPCMove : MonoBehaviour
     private Transform destinationTrans;
     [SerializeField]
     private int questID;
+    [SerializeField]
+    private bool arriveDestinationDestroy;
     private Quaternion initialRotation;
     private void Awake()
     {
@@ -27,6 +29,11 @@ public class QuestNPCMove : MonoBehaviour
         {
             ani.SetBool("isWalk", false);
             transform.rotation = initialRotation;
+            if (arriveDestinationDestroy)
+            {
+                arriveDestinationDestroy = false;
+                Destroy(gameObject);
+            }
         }
     }
     private void EventQuestNPCMove(params object[] args)

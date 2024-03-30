@@ -126,10 +126,10 @@ public class SceneController : Singleton<SceneController>, ISavable
     public IEnumerator Transition(string sceneName)
     {
         //Main.Manager.GameManager.Instance.LoadingNotify(true);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         progressSlider.value = 0.0f;
         UIManager.Instance.UIDict.Clear();
         yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
+        EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         progressCanvas.SetActive(true);
         progressText.text = (int)(progressSlider.value * 100) + "%";
         yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
@@ -188,7 +188,6 @@ public class SceneController : Singleton<SceneController>, ISavable
     }
     private void EventDialogEvent(params object[] args)
     {
-        Debug.Log("change");
         if ((string)args[0] == "CHANGESCENE")
         {
             StartCoroutine(Transition("ChapterOne"));

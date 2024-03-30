@@ -61,8 +61,10 @@ public class QuestMenu : UIBase
         if (quest.Status == Quest.QuestState.Completed)
         {
             receiveRewardButton.onClick.AddListener(() => QuestManager.Instance.GetRewards(quest.ID));
+            receiveRewardButton.onClick.AddListener(() =>
+             UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.QuestList));
+            receiveRewardButton.onClick.AddListener(() => ClearAllItemInfo());
             receiveRewardButton.onClick.AddListener(() => receiveRewardButton.onClick.RemoveAllListeners());
-            quest.Status = Quest.QuestState.Rewarded;
         }
         for (int i = 0; i < quest.TargetList.Count; i++)
         {
@@ -87,5 +89,6 @@ public class QuestMenu : UIBase
             GameObject reward = Instantiate(questRewardPrefab, questRewardTrans);
             reward.GetComponent<Image>().sprite = DataManager.Instance.ItemList[quest.RewardList[i].Item1].ItemImage;
         }
+        UIManager.Instance.RefreshItem(slotPrefab, slotGroupTrans, DataManager.Instance.QuestList);
     }
 }

@@ -20,6 +20,9 @@ public class LoadMenu : UIBase
     private void EventSceneLoading(params object[] args)
     {
         if (SceneManager.GetActiveScene().name == "StartMenu")
-            gameObject.SetActive(false);
+        {
+            openMenu.SetActive(false);
+            EventManager.Instance.RemoveEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
+        }
     }
 }

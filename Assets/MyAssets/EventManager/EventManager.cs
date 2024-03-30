@@ -9,9 +9,9 @@ public class EventManager : Singleton<EventManager>
     protected override void Awake()
     {
         base.Awake();
+        AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
         DontDestroyOnLoad(this);
     }
-
     public void AddEventRegister(string eventName, EventHandler handler)
     {
         if (handler == null)
@@ -49,5 +49,9 @@ public class EventManager : Singleton<EventManager>
     {
         if (eventListenters.ContainsKey(eventName))
             eventListenters.Remove(eventName);
+    }
+    private void EventSceneLoading(params object[] args)
+    {
+        eventListenters.Clear();
     }
 }

@@ -37,7 +37,7 @@ public class QuestManager : Singleton<QuestManager>
     {
         for (int i = 0; i < ActiveQuestList.Count; i++)
         {
-            if (DataManager.Instance.GetQuest(ActiveQuestList[i].ID).Status == Quest.QuestState.Completed)
+            if (DataManager.Instance.GetQuest(ActiveQuestList[i].ID).Status == Quest.QuestState.Rewarded)
                 ActiveQuestList.Remove(ActiveQuestList[i]);
         }
     }
@@ -71,10 +71,7 @@ public class QuestManager : Singleton<QuestManager>
                 targetEnemyCount--;
         }
         if (targetCount == 0 && targetEnemyCount == 0)
-        {
-            FinishQuest(questID);
             quest.Status = Quest.QuestState.Completed;
-        }
     }
 
     public void FinishQuest(int questID)
@@ -90,11 +87,11 @@ public class QuestManager : Singleton<QuestManager>
             }
         }
         QuestCurrentKill.Clear();
-        Debug.Log("finish");
     }
 
     public void GetRewards(int questID)
     {
+        FinishQuest(questID);
         Quest quest = DataManager.Instance.GetQuest(questID);
         for (int i = 0; i < quest.RewardList.Count; i++)
         {
@@ -105,6 +102,6 @@ public class QuestManager : Singleton<QuestManager>
                 BackpackManager.Instance.AddItem(rewardIndex, DataManager.Instance.Backpack);
             }
         }
-        Debug.Log("getreward");
+        quest.Status = Quest.QuestState.Rewarded;
     }
 }

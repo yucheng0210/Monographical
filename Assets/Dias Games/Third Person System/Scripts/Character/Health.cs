@@ -88,6 +88,7 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private GameObject potion;
         private AnimatorStateInfo animatorStateInfo;
+        private bool isDrink;
         //private Rigidbody rigidbody;
 
         private void Awake()
@@ -135,15 +136,15 @@ namespace DiasGames.ThirdPersonSystem
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
-            if (animatorStateInfo.IsName("Drink"))
+            if (animatorStateInfo.IsName("Drink") && !isDrink)
             {
-                if (!shield.activeSelf)
-                    return;
+                isDrink = true;
                 shield.SetActive(false);
                 potion.SetActive(true);
             }
-            else if (!shield.activeSelf)
+            else if (isDrink)
             {
+                isDrink = false;
                 shield.SetActive(true);
                 potion.SetActive(false);
             }
@@ -174,7 +175,6 @@ namespace DiasGames.ThirdPersonSystem
             if (otherLayerBool && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth >= 0
              && !animatorStateInfo.IsName("StandUp"))
             {
-                Debug.Log("damage");
                 if (isInvincible)
                     return;
                 isInvincible = true;
@@ -196,9 +196,13 @@ namespace DiasGames.ThirdPersonSystem
         }
         private void IsHited(params object[] other)
         {
+            Debug.Log("damage");
             Collider newOther = (Collider)other[0];
-            Character enemyData = (Character)other[1];
-            Main.Manager.GameManager.Instance.TakeDamage(enemyData, Main.Manager.GameManager.Instance.PlayerData);
+            if (other.Length >= 2)
+            {
+                Character enemyData = (Character)other[1];
+                Main.Manager.GameManager.Instance.TakeDamage(enemyData, Main.Manager.GameManager.Instance.PlayerData);
+            }
             Vector3 hitPoint = new Vector3(
                 newOther.bounds.center.x,
                 newOther.ClosestPointOnBounds(transform.position).y,
@@ -348,7 +352,10 @@ namespace DiasGames.ThirdPersonSystem
         private void EventInvincible(params object[] args)
         {
             isInvincible = (bool)args[0];
-            if (isInvincible)
+            bool canReset = true;
+            if (args.Length >= 2)
+                canReset = (bool)args[1];
+            if (isInvincible && canReset)
             {
                 StopCoroutine(ResetInvincible());
                 StartCoroutine(ResetInvincible());

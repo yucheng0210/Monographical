@@ -14,6 +14,8 @@ public class AudioManager : Singleton<AudioManager>
 
     [SerializeField]
     private AudioClip battleClip;
+    [SerializeField]
+    private AudioClip danceClip;
 
     [Header("SE音效")]
     [SerializeField]
@@ -71,6 +73,11 @@ public class AudioManager : Singleton<AudioManager>
         PlayerSource = transform.GetChild(2).GetComponent<AudioSource>();
         BGMSource = transform.GetChild(3).GetComponent<AudioSource>();
         Instance.BGMSource.loop = true;
+    }
+    public void DanceAudio()
+    {
+        Instance.BGMSource.clip = Instance.danceClip;
+        Instance.BGMSource.Play();
     }
     public void ClearAllAudioClip()
     {

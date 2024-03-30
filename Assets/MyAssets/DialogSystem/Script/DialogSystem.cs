@@ -72,6 +72,7 @@ public class DialogSystem : MonoBehaviour
         Main.Manager.GameManager.Instance.IsTalking = true;
         textFinished = true;
         currentBranchID = DataManager.Instance.DialogList[DialogName][0].CurrentBranch;
+        Debug.Log(DataManager.Instance.DialogList[DialogName][0].CurrentBranch);
         //SetCharacterInfo();
         Initialize();
     }
@@ -241,6 +242,7 @@ public class DialogSystem : MonoBehaviour
         if (
             (
                 Input.GetKeyDown(KeyCode.KeypadEnter)
+                || Input.GetKey(KeyCode.LeftControl)
                 || Input.GetMouseButtonDown(0)
                 || Input.GetButtonDown("A")
                 || auto
@@ -260,4 +262,5 @@ public class DialogSystem : MonoBehaviour
         currentBranchID = "COMPLETED";
         DataManager.Instance.DialogList[DialogName][0].CurrentBranch = "COMPLETED";
     }
+    
 }

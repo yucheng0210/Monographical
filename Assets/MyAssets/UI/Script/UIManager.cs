@@ -97,12 +97,10 @@ public class UIManager : Singleton<UIManager>, IObserver
         {
             if (i.Value.Status == Quest.QuestState.Rewarded)
             {
-                /*inventory.Remove(i.Key);
-                RefreshItem(slotPrefab, slotGroupTrans, inventory);*/
-                CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
-                break;
+                QuestManager.Instance.UpdateActiveQuests();
+                continue;
             }
-            else if (i.Value.Status == Quest.QuestState.Active)
+            else if (QuestManager.Instance.ActiveQuestList.Contains(i.Value))
                 CreateNewItem(i.Value, slotPrefab, slotGroupTrans);
         }
     }
