@@ -15,6 +15,8 @@ public class AnimationEventEffects : MonoBehaviour
     public EffectInfo[] Effects;
     [SerializeField]
     private int bossSkillID;
+    [SerializeField]
+    private bool isNotBossSkill;
 
     private Animator ani;
 
@@ -48,9 +50,12 @@ public class AnimationEventEffects : MonoBehaviour
 
     void InstantiateEffect(int EffectNumber)
     {
-        int id = ani.GetInteger("LongDistanceAttackType");
-        if (bossSkillID != id)
-            return;
+        if (!isNotBossSkill)
+        {
+            int id = ani.GetInteger("LongDistanceAttackType");
+            if (bossSkillID != id)
+                return;
+        }
         if (Effects == null || Effects.Length <= EffectNumber)
         {
             return;

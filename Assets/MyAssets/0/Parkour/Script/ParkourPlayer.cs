@@ -321,8 +321,10 @@ public class ParkourPlayer : MonoBehaviour
             if (outOfTime)
             {
                 myBody.useGravity = true;
-                StartCoroutine(Death("Dead"));
+                animator.SetBool("isClimb", false);
                 StopAllCoroutines();
+                animator.speed = 1;
+                StartCoroutine(Death("Dead"));
             }
             yield return null;
         }

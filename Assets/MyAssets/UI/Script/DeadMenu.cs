@@ -24,6 +24,7 @@ public class DeadMenu : UIBase
             StartCoroutine(WaitForChangeScene("ChapterOne"));
         else
             StartCoroutine(WaitForChangeScene("StartMenu"));
+        EventManager.Instance.RemoveEventRegister(EventDefinition.eventGameOver, EventGameOver);
     }
     private IEnumerator WaitForChangeScene(string sceneName)
     {

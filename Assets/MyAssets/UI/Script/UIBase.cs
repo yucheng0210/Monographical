@@ -32,6 +32,7 @@ public abstract class UIBase : MonoBehaviour, IObserver
         UIManager.Instance.UIDict.Add(this.GetType().Name, this);
         if (touchButton != null)
             AddOnClickListener();
+        EventManager.Instance.AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
     }
     protected virtual void Update()
     {
@@ -98,5 +99,9 @@ public abstract class UIBase : MonoBehaviour, IObserver
         shutDown = loadingBool ? true : false;
         //openMenu.SetActive(false);
         //gameObject.SetActive(false);
+    }
+    private void EventSceneLoading(params object[] args)
+    {
+        shutDown = (bool)args[0];
     }
 }

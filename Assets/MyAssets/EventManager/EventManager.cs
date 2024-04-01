@@ -53,5 +53,7 @@ public class EventManager : Singleton<EventManager>
     private void EventSceneLoading(params object[] args)
     {
         eventListenters.Clear();
+        AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
+        Debug.Log(eventListenters.Count);
     }
 }

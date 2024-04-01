@@ -27,9 +27,7 @@ public class Knight : PatrolEnemy
         float rightProject = Vector3.Project(direction, transform.right).magnitude;
         //取绝对值与矩形宽度的一半进行比较
         if (Mathf.Abs(rightProject) <= jumpAttackSize.x * 0.5f)
-        {
             EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider, EnemyData);
-        }
     }
 
     protected override void AdditionalAttack()

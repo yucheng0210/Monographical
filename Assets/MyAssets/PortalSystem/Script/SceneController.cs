@@ -128,14 +128,15 @@ public class SceneController : Singleton<SceneController>, ISavable
         //Main.Manager.GameManager.Instance.LoadingNotify(true);
         progressSlider.value = 0.0f;
         UIManager.Instance.UIDict.Clear();
+        EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading, true);
         yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
-        EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading);
         progressCanvas.SetActive(true);
         progressText.text = (int)(progressSlider.value * 100) + "%";
         yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
         async.allowSceneActivation = false;
         async.completed += operation => { StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f)); };
+        async.completed += operation => { EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading, false); };
         while (!async.isDone)
         {
             if (progressSlider.value < 0.99f)
