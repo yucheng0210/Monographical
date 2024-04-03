@@ -243,7 +243,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if (isOnGrounded)
             MyBody.velocity = movement * Time.fixedDeltaTime;
     }
-    private IEnumerator InitialRegister()
+    protected virtual IEnumerator InitialRegister()
     {
         yield return null;
         Main.Manager.GameManager.Instance.EnemyList.Add(EnemyData);
@@ -252,7 +252,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         shutDown = false;
         //myNavMeshAgent.SetDestination(navPointList[1].position);
     }
-    private IEnumerator InitialState()
+    protected virtual IEnumerator InitialState()
     {
         yield return null;
         movement = Vector3.zero;

@@ -191,6 +191,8 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private float currentEndurance;
+        [SerializeField]
+        private float blockConsume;
 
         public float attackConsume;
 
@@ -345,6 +347,12 @@ namespace DiasGames.ThirdPersonSystem
                 m_Animator.SetTrigger("isAttack");
                 ReduceEndurance(attackConsume);
             }
+            if (Input.GetMouseButtonDown(2) && currentEndurance >= blockConsume)
+            {
+                m_Animator.SetTrigger("isBlock");
+                ReduceEndurance(blockConsume);
+            }
+
         }
         public void SlashAudio(int count)
         {
