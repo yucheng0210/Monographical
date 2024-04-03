@@ -11,6 +11,12 @@ public class DogMeat : PatrolEnemy
     [SerializeField]
     private float teleportCoolDown;
     private bool canTeleport;
+    protected override IEnumerator InitialRegister()
+    {
+        yield return StartCoroutine(base.InitialRegister());
+        ShutDown = true;
+        EventManager.Instance.AddEventRegister(EventDefinition.eventDialogEvent, EventDialogEvent);
+    }
     public override void ColliderSwitch(int switchCount)
     {
         base.ColliderSwitch(switchCount);
@@ -50,5 +56,10 @@ public class DogMeat : PatrolEnemy
     {
         yield return new WaitForSecondsRealtime(teleportCoolDown);
         canTeleport = true;
+    }
+    private void EventDialogEvent(params object[] args)
+    {
+        if ((string)args[0] == "BOSS")
+            ShutDown = false;
     }
 }
