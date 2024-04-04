@@ -87,6 +87,8 @@ namespace DiasGames.ThirdPersonSystem
         private GameObject shield;
         [SerializeField]
         private GameObject potion;
+        [SerializeField]
+        private GameObject blockCollision;
         private AnimatorStateInfo animatorStateInfo;
         private bool isDrink;
         //private Rigidbody rigidbody;
@@ -208,6 +210,7 @@ namespace DiasGames.ThirdPersonSystem
                 newOther.ClosestPointOnBounds(transform.position).y,
                 newOther.bounds.center.z
             );
+            blockCollision.SetActive(false);
             HitEffect(hitPoint, newOther);
             Vector3 direction = newOther.transform.forward + newOther.transform.up;
             if (Main.Manager.GameManager.Instance.PlayerData.CurrentPoise <= 0)

@@ -271,8 +271,8 @@ MonoBehaviour:
   meleeAttackRadius: 2.5
   backWalkRadius: 1
   turnBackRadius: 15
-  maxCoolDown: 8
-  minCoolDown: 5
+  maxCoolDown: 5
+  minCoolDown: 3
   isOnGrounded: 0
   shutDown: 1
   lockMove: 0
@@ -281,6 +281,7 @@ MonoBehaviour:
   distance: 0
   wanderDistance: 0
   currentNavPoint: 0
+  isBlock: 0
   rockBreak: {fileID: 1949624779417528, guid: e73124b5ba126cc499fb7e927b7a79ac, type: 3}
   hitSpark: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
   hitDistortion: {fileID: 4311849393234507680, guid: f1214296d26b483439e70c97a848776e,
@@ -298,6 +299,40 @@ MonoBehaviour:
   - {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0, type: 3}
   capsuleOffset: 0.3
   canExecution: 0
+  blockSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -14.666666
+      outSlope: -14.666666
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: -1.2
+      inSlope: -0.035975937
+      outSlope: -0.035975937
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.22125056
+    - serializedVersion: 3
+      time: 0.8
+      value: 0
+      inSlope: 1.846154
+      outSlope: 1.846154
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  blockcTimer: 0
   jumpAttackSize: {x: 1, y: 2, z: 13}
 --- !u!114 &-6879577369467040605
 MonoBehaviour:
@@ -872,6 +907,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7283214326004463950}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8068137752357889379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2913124628573378444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14c8f8f508917b541a7954ad4dc37ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7917210947021916867
 MonoBehaviour:
   m_ObjectHideFlags: 0

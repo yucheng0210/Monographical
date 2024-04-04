@@ -193,6 +193,8 @@ namespace DiasGames.ThirdPersonSystem
         private float currentEndurance;
         [SerializeField]
         private float blockConsume;
+        [SerializeField]
+        private GameObject blockCollision;
 
         public float attackConsume;
 
@@ -271,6 +273,7 @@ namespace DiasGames.ThirdPersonSystem
         private void Start()
         {
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerCantMove, EventPlayerCantMove);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerBlock, EventPlayerBlock);
         }
         private void FixedUpdate()
         {
@@ -375,9 +378,18 @@ namespace DiasGames.ThirdPersonSystem
                 );*/
             }
             else
+            {
                 collision.SetActive(false);
+                blockCollision.SetActive(false);
+            }
         }
-
+        public void BlockColliderSwitch(int switchCount)
+        {
+            if (switchCount > 0)
+                blockCollision.SetActive(true);
+            else
+                blockCollision.SetActive(false);
+        }
         private void TryZoom()
         {
             if (ActiveAbility == null)
@@ -1022,6 +1034,10 @@ namespace DiasGames.ThirdPersonSystem
                 ShutDown = false;
                 m_Animator.SetBool("Standby", false);
             }
+        }
+        private void EventPlayerBlock(params object[] args)
+        {
+            blockCollision.SetActive(false);
         }
     }
 }

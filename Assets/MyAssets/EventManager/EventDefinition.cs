@@ -26,6 +26,7 @@ public class EventDefinition
     public const string eventExecution = "EVENT_EXECUTION";
     public const string eventSceneLoading = "EVENT_SCENE_LOADING";
     public const string eventPlayerCantMove = "EVENT_PLAYER_CANT_MOVE";
+    public const string eventPlayerBlock = "EVENT_PLAYER_BLOCK";
     //對話
     public const string eventDialogEvent = "EVENT_DIALOG_EVENT";
 

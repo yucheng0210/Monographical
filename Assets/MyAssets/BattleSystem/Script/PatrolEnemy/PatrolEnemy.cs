@@ -104,6 +104,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private float wanderDistance;
     [SerializeField]
     private int currentNavPoint;
+    [SerializeField]
+    private bool isBlock;
 
     [Header("戰鬥特效")]
     [SerializeField]
@@ -144,6 +146,11 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
 
     [SerializeField]
     private bool canExecution;
+    [Header("盾反")]
+    [SerializeField]
+    private AnimationCurve blockSpeedCurve;
+    [SerializeField]
+    private float blockcTimer = 0;
     private PlayableDirector playableDirector;
     private Vector3 movement,
         startPos;
@@ -246,10 +253,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     protected virtual IEnumerator InitialRegister()
     {
         yield return null;
+        blockcTimer = 1;
         Main.Manager.GameManager.Instance.EnemyList.Add(EnemyData);
         //AudioManager.Instance.MainAudio();
         Player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         shutDown = false;
+        EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerBlock, EventPlayerBlock);
         //myNavMeshAgent.SetDestination(navPointList[1].position);
     }
     protected virtual IEnumerator InitialState()
@@ -298,6 +307,17 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
         healthSlider.value = (float)EnemyData.CurrentHealth / (float)EnemyData.MaxHealth;
         MyAnimatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
+        if (blockcTimer < 0.5f)
+        {
+            blockcTimer += Time.deltaTime;
+            SetBlockSpeed();
+        }
+        else if (isBlock)
+        {
+            isBlock = false;
+            Ani.SetTrigger("isBlock");
+            Ani.SetFloat("Speed", 1);
+        }
     }
 
     protected virtual void UpdateState()
@@ -675,7 +695,31 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         AudioManager.Instance.HeavyAttackAudio(0);
         Destroy(rock, 4);
     }
-
+    private void SetBlockSpeed()
+    {
+        isBlock = true;
+        Ani.SetFloat("Speed", blockSpeedCurve.Evaluate(blockcTimer));
+        collision.SetActive(false);
+    }
+    private void EventPlayerBlock(params object[] args)
+    {
+        if ((Transform)args[0] != transform)
+            return;
+        Vector3 hitPoint = (Vector3)args[1];
+        blockcTimer = 0;
+        Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
+        Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
+        AudioManager.Instance.Impact();
+        myImpulse.GenerateImpulse();
+        IsAttacking = false;
+        Ani.ResetTrigger(isHited);
+        Ani.SetInteger("MeleeAttackType", 0);
+        Ani.SetInteger("LongDistanceAttackType", 0);
+        //Ani.SetBool("isCombo", false);
+        RecoverAttackCoolDown();
+        collision.SetActive(false);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, true, true);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == playerAttackLayer)
