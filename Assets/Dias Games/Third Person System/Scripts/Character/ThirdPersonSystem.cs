@@ -12,6 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using DG.Tweening;
 
 namespace DiasGames.ThirdPersonSystem
 {
@@ -191,15 +192,25 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private float currentEndurance;
+        [Header("攻擊動作消耗值")]
         [SerializeField]
         private float blockConsume;
         [SerializeField]
         private GameObject blockCollision;
 
         public float attackConsume;
+        [SerializeField]
+        private float momentumConsume;
 
         [SerializeField]
         private float rollConsume;
+        [Header("重攻擊")]
+        [SerializeField]
+        private float heavyAttackJumpHeight;
+        [SerializeField]
+        private float heavyAttackJumpOnceDuration;
+        [SerializeField]
+        private bool isHeavyAttackJump;
 
         [SerializeField]
         private List<GameObject> slashEffectList = new List<GameObject>();
@@ -339,16 +350,29 @@ namespace DiasGames.ThirdPersonSystem
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
             animatorTransitionInfo = m_Animator.GetAnimatorTransitionInfo(0);
-            if (
-                (Input.GetMouseButtonDown(0) || Input.GetButtonDown("R"))
-                && free
-                && currentEndurance >= attackConsume
+            if (free && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
+                && !m_Animator.GetBool("isHeavyAttack")
                 && m_InputManager.enabled
             )
             {
-                m_Animator.SetTrigger("isAttack");
-                ReduceEndurance(attackConsume);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (Main.Manager.GameManager.Instance.PlayerData.Momentum >= momentumConsume)
+                        {
+                            m_Animator.SetTrigger("isHeavyAttack");
+                            ReduceMomentum(momentumConsume);
+                            ReduceEndurance(attackConsume);
+                        }
+                    }
+                    else
+                    {
+                        m_Animator.SetTrigger("isAttack");
+                        ReduceEndurance(attackConsume);
+                    }
+                }
             }
             if (Input.GetMouseButtonDown(2) && currentEndurance >= blockConsume)
             {
@@ -356,6 +380,15 @@ namespace DiasGames.ThirdPersonSystem
                 ReduceEndurance(blockConsume);
             }
 
+        }
+        public void HeavyAttackJump()
+        {
+            transform.DOMoveY(transform.position.y + heavyAttackJumpHeight, heavyAttackJumpOnceDuration);
+            isHeavyAttackJump = true;
+        }
+        public void HeavyAttackChop()
+        {
+            isHeavyAttackJump = false;
         }
         public void SlashAudio(int count)
         {
@@ -365,7 +398,10 @@ namespace DiasGames.ThirdPersonSystem
         {
             currentEndurance -= consume;
         }
-
+        private void ReduceMomentum(float value)
+        {
+            Main.Manager.GameManager.Instance.PlayerData.Momentum -= value;
+        }
         public void ColliderSwitch(int switchCount)
         {
             if (switchCount > 0)
@@ -769,7 +805,10 @@ namespace DiasGames.ThirdPersonSystem
                 }
             }
 
-            IsGrounded = false;
+            if (isHeavyAttackJump)
+                IsGrounded = true;
+            else
+                IsGrounded = false;
             GroundNormal = Vector3.up;
         }
 

@@ -59,6 +59,8 @@ namespace DiasGames.ThirdPersonSystem
 
         private float m_LastDamagedTime = 0;
         public Slider healthSlider;
+        [SerializeField]
+        private Slider momentumSlider;
 
         [SerializeField]
         private float recover;
@@ -135,6 +137,10 @@ namespace DiasGames.ThirdPersonSystem
                 healthSlider.value = (float)Main.Manager.GameManager.Instance.PlayerData.CurrentHealth
                 / (float)Main.Manager.GameManager.Instance.PlayerData.MaxHealth;
             }
+            if (Main.Manager.GameManager.Instance.PlayerData.Momentum > 100)
+                Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
+            float momentumValue = Main.Manager.GameManager.Instance.PlayerData.Momentum / 100f;
+            momentumSlider.value = momentumValue;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");

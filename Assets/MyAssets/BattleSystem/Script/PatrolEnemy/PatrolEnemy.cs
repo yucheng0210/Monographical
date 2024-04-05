@@ -718,6 +718,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         //Ani.SetBool("isCombo", false);
         RecoverAttackCoolDown();
         collision.SetActive(false);
+        Main.Manager.GameManager.Instance.PlayerData.Momentum += 50;
+        EnemyData.Momentum -= 40;
         EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerInvincible, true, true);
     }
     private void OnTriggerEnter(Collider other)

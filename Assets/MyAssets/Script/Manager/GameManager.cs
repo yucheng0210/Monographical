@@ -76,6 +76,8 @@ namespace Main.Manager
             float playerMaxAttack= attacker.MaxAttack + weaponDamage;
             float playerCriticalMultiplier=attacker.CriticalMultiplier + PlayerEquipWeapon.WeaponCriticalMultiplier;
             */
+            attacker.Momentum += 20;
+            defender.Momentum -= 10;
             float damage = Random.Range(attacker.MinAttack, attacker.MaxAttack);
             bool isCritical = Random.value < (attacker.CriticalChance + PlayerEquipWeapon.WeaponCriticalChance);
             if (isCritical)
