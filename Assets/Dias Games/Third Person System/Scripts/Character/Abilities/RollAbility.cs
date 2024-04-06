@@ -23,6 +23,7 @@ namespace DiasGames.ThirdPersonSystem
             return m_System.IsGrounded
                 //&& m_InputManager.RelativeInput.magnitude > 0
                 && ThirdPersonSystem.canRoll
+                && !m_System.m_Animator.GetBool("isDancing")
                 && !isExit;
         }
 

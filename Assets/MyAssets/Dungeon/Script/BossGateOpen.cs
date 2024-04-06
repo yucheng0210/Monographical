@@ -13,7 +13,6 @@ public class BossGateOpen : OpenDoor
     private PlayableDirector bossStage_1TimeLine;
     protected override IEnumerator Open()
     {
-        AudioManager.Instance.OpenDoor();
         StartCoroutine(base.Open());
         StartCoroutine(UIManager.Instance.FadeOutIn(fadeMenu, 0, 3, false, 4f));
         yield return new WaitForSecondsRealtime(4);

@@ -139,6 +139,8 @@ namespace DiasGames.ThirdPersonSystem
             }
             if (Main.Manager.GameManager.Instance.PlayerData.Momentum > 100)
                 Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
+            if (Main.Manager.GameManager.Instance.PlayerData.Momentum < 0)
+                Main.Manager.GameManager.Instance.PlayerData.Momentum = 0;
             float momentumValue = Main.Manager.GameManager.Instance.PlayerData.Momentum / 100f;
             momentumSlider.value = momentumValue;
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
@@ -156,6 +158,8 @@ namespace DiasGames.ThirdPersonSystem
                 shield.SetActive(true);
                 potion.SetActive(false);
             }
+            if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
+                Die();
         }
         private IEnumerator OnFire()
         {
@@ -164,8 +168,6 @@ namespace DiasGames.ThirdPersonSystem
                 Main.Manager.GameManager.Instance.TakeDamage(DataManager.Instance.CharacterList[3006]
                 , Main.Manager.GameManager.Instance.PlayerData);
                 //Debug.Log("OnFire");
-                if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
-                    Die();
                 yield return new WaitForSeconds(1);
             }
         }

@@ -22,6 +22,7 @@ public class OpenDoor : MonoBehaviour
     }
     protected virtual IEnumerator Open()
     {
+        AudioManager.Instance.OpenDoor();
         isOpen = true;
         Main.Manager.GameManager.Instance.PlayerTrans.position = lookTrans.position;
         Main.Manager.GameManager.Instance.PlayerTrans.rotation = lookTrans.rotation;

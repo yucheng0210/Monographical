@@ -350,6 +350,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
             animatorTransitionInfo = m_Animator.GetAnimatorTransitionInfo(0);
+            Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
             if (free && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
                 && !m_Animator.GetBool("isHeavyAttack")
