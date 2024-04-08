@@ -1,0 +1,49 @@
+1. Thanks for the purchase!
+
+2. Some general information, I left notes in every folder in case you get lost :)
+
+3. Ignore all compiler errors, they are from the third-party tools "Custom tree importer (CTI)". They generate at first import but everything should work fine, just clear them away. If you get pink previews just reimport all the prefabs.
+
+4. For more information regarding this asset pack, follow this thread: 
+https://forum.unity.com/threads/rocky-hills-environment-pack-development-thread.381438/
+
+or contact me via email: florianalexandru05@gmail.com
+
+For technical question regarding Custom Tree Importer (CTI) related issues go here: 
+
+https://forum.unity.com/threads/released-custom-tree-importer.263224/
+
+5. This pack/pipeline does not support older version of Unity but you have some resources for LWRP and a HDRP_7.2. You can find it in: Third Party Tools -> Custom Tree Importer v3 -> Pipeline Support.
+
+6. If "CTI wind from script" behaves strange, does not seem to work when you change the direction or strength of the wind, just delete it and add another wind zone with a new attached wind script! ("Terrain tree wind" only works with "wind from script").
+
+7. Enjoy making the marvelous nature scenes of your creative mind!
+---------------------
+
+Version updates fixes:
+
+- Rocky Hills Environment - Mega Pack V 4.0 
+
+* Complete cosmetic change; remade textures
+* Reduce file size and optimized textures
+* Updated Amplify shaders (fixed bugs and screen NaNs)
+* New "Toby foliage shaders" (TFS)
+
+  - Grass Foliage shader 
+
+       (Custom Amplify shader for grass): Physically-based lighting with translucency, simple wind, includes color variation, vertex Ao, and distance depth fade, supports mesh with custom normals. Wind and other parameters can be controlled globally through the (upcoming) wind script.
+
+  - Tree bark and leaf shader
+
+       (Custom Amplify shader for trees): Physically-based lighting with translucency, simple branch bending, wind, and leaf fluttering, supports trees with custom normals on leaves, includes color variation and vertex Ao. Wind and other parameters can be controlled globally through the (upcoming) wind script.
+
+(At the moment the wind is controlled directly through the shader so you will have to match both values of the bark and leaves together.)
+
+* New (TFS) demo scene for UPR and HDRP
+---------------------
+
+*CTI Instructions*
+
+Hi there and welcome to the Custom Tree Importer. 
+- For URP, make a new URP project and import this pack, no setup required. 
+- To set up HDRP, import the HDRP pack “RHE_Mega Pack - HDRP Setup” located in the root folder --> "Rocky Hills Environment - Mega Pack" and overwrite everything. This should overwrite all prefabs, shaders, and materials. You will get a new "Custom tree importer runtime components folder" for HDRP and a new “Scenes_HDRP” folder. After this you should delete the "CTI Runtime Components URP" folder and other folders marked as _URP.
