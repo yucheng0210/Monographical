@@ -26,6 +26,16 @@ public class MineSweaperMenu : UIBase
         wonQuitButton.onClick.AddListener(Hide);
         loseQuitButton.onClick.AddListener(Hide);
         mainCamera = Camera.main;
+        Show();
+        for (int y = 0; y < Main.Manager.GameManager.Instance.MinePosList.GetLength(0); y++)
+        {
+            for (int x = 0; x < Main.Manager.GameManager.Instance.MinePosList.GetLength(1); x++)
+            {
+                if (Main.Manager.GameManager.Instance.MinePosList[y, x])
+                    mineGroupTrans.GetChild(y).GetChild(x).gameObject.SetActive(true);
+            }
+        }
+        Hide();
     }
     public override void Show()
     {

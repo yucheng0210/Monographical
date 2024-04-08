@@ -4,7 +4,7 @@
 // Contact: rodrigoaadias@hotmail.com
 
 /*-----------------------------------------------------------------------------*/
-
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -211,9 +211,12 @@ namespace DiasGames.ThirdPersonSystem
         private float heavyAttackJumpOnceDuration;
         [SerializeField]
         private bool isHeavyAttackJump;
+        [SerializeField]
+        private GameObject rockExplosionEffect;
 
         [SerializeField]
         private List<GameObject> slashEffectList = new List<GameObject>();
+        private CinemachineImpulseSource myImpulse;
         private MeleeWeaponTrail trail;
 
         /*[SerializeField]
@@ -256,6 +259,7 @@ namespace DiasGames.ThirdPersonSystem
             m_InputManager = GetComponent<UnityInputManager>();
             m_AnimatorManager = GetComponent<AnimatorManager>();
             m_AudioSource = GetComponent<AudioSource>();
+            myImpulse = GetComponent<CinemachineImpulseSource>();
             // Get initial dimensions of capsule
             _capsuleOriginCenter = m_Capsule.center;
             _capsuleOriginHeight = m_Capsule.height;
@@ -350,7 +354,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
             animatorTransitionInfo = m_Animator.GetAnimatorTransitionInfo(0);
-            Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
+            //Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
             if (free && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
                 && !m_Animator.GetBool("isHeavyAttack")
@@ -384,12 +388,26 @@ namespace DiasGames.ThirdPersonSystem
         }
         public void HeavyAttackJump()
         {
+            IsInvincible(1);
             transform.DOMoveY(transform.position.y + heavyAttackJumpHeight, heavyAttackJumpOnceDuration);
             isHeavyAttackJump = true;
+            m_Rigidbody.useGravity = false;
+            m_Animator.speed = 0.5f;
         }
         public void HeavyAttackChop()
         {
+            m_Animator.speed = 1f;
+            transform.DOMoveY(transform.position.y - heavyAttackJumpHeight, heavyAttackJumpOnceDuration / 4);
+            StartCoroutine(WaitForChopDown());
+        }
+        private IEnumerator WaitForChopDown()
+        {
+            yield return new WaitForSecondsRealtime(heavyAttackJumpOnceDuration / 4);
+            myImpulse.GenerateImpulse();
+            Instantiate(rockExplosionEffect, transform.position + transform.up * 0.1f, Quaternion.identity);
+            m_Rigidbody.useGravity = true;
             isHeavyAttackJump = false;
+            IsInvincible(0);
         }
         public void SlashAudio(int count)
         {

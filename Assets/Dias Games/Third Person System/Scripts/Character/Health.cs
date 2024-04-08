@@ -146,7 +146,7 @@ namespace DiasGames.ThirdPersonSystem
             animatorStateInfo = ani.GetCurrentAnimatorStateInfo(0);
             if (animatorStateInfo.IsName("StandUp"))
                 ani.ResetTrigger("isHited");
-            if (animatorStateInfo.IsName("Drink") && !isDrink)
+            if (animatorStateInfo.IsName("Drink"))
             {
                 isDrink = true;
                 shield.SetActive(false);

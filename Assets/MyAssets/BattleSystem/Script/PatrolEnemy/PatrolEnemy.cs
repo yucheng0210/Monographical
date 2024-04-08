@@ -150,7 +150,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     [SerializeField]
     private AnimationCurve blockSpeedCurve;
     [SerializeField]
-    private float blockcTimer = 0;
+    private float blockTimer = 0;
     private PlayableDirector playableDirector;
     private Vector3 movement,
         startPos;
@@ -253,7 +253,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     protected virtual IEnumerator InitialRegister()
     {
         yield return null;
-        blockcTimer = 1;
+        blockTimer = 1;
         Main.Manager.GameManager.Instance.EnemyList.Add(EnemyData);
         //AudioManager.Instance.MainAudio();
         Player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
@@ -307,9 +307,9 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         angle = Vector3.Angle(transform.forward, Player.transform.position - transform.position);
         healthSlider.value = (float)EnemyData.CurrentHealth / (float)EnemyData.MaxHealth;
         MyAnimatorStateInfo = Ani.GetCurrentAnimatorStateInfo(0);
-        if (blockcTimer < 0.5f)
+        if (blockTimer < 0.5f)
         {
-            blockcTimer += Time.deltaTime;
+            blockTimer += Time.deltaTime;
             SetBlockSpeed();
         }
         else if (isBlock)
@@ -698,7 +698,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private void SetBlockSpeed()
     {
         isBlock = true;
-        Ani.SetFloat("Speed", blockSpeedCurve.Evaluate(blockcTimer));
+        Ani.SetFloat("Speed", blockSpeedCurve.Evaluate(blockTimer));
         collision.SetActive(false);
     }
     private void EventPlayerBlock(params object[] args)
@@ -706,7 +706,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         if ((Transform)args[0] != transform)
             return;
         Vector3 hitPoint = (Vector3)args[1];
-        blockcTimer = 0;
+        blockTimer = 0;
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
         AudioManager.Instance.Impact();
