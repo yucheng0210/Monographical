@@ -32,8 +32,9 @@ public class DeadArea : DungeonTrap
                     collider.GetComponent<Rigidbody>().AddForce(collider.transform.up * flyForce, ForceMode.Impulse);
                     break;
                 case DeadMode.Mine:
-                    Instantiate(explosionPrefab, transform);
-                    collider.GetComponent<Rigidbody>().AddExplosionForce(mineForce, collider.transform.position, 5);
+                    GameObject explosion = Instantiate(explosionPrefab, transform);
+                    explosion.transform.localScale *= 5;
+                    collider.GetComponent<Rigidbody>().AddExplosionForce(mineForce, collider.transform.position, 10);
                     break;
             }
         }

@@ -183,6 +183,10 @@ namespace DiasGames.ThirdPersonSystem
         public static bool free;
         private float mouse;
         public GameObject collision;
+        [SerializeField]
+        private MeleeWeaponTrail meleeWeaponTrail;
+        [SerializeField]
+        private GameObject weaponTrail;
 
         [SerializeField]
         private Slider enduranceSlider;
@@ -192,6 +196,7 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private float currentEndurance;
+
         [Header("攻擊動作消耗值")]
         [SerializeField]
         private float blockConsume;
@@ -217,7 +222,6 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private List<GameObject> slashEffectList = new List<GameObject>();
         private CinemachineImpulseSource myImpulse;
-        private MeleeWeaponTrail trail;
 
         /*[SerializeField]
         private int combo;*/
@@ -426,6 +430,8 @@ namespace DiasGames.ThirdPersonSystem
             if (switchCount > 0)
             {
                 collision.SetActive(true);
+                weaponTrail.SetActive(true);
+               // meleeWeaponTrail.Emit = true;
                 /*Instantiate(
                     slashEffectList[switchCount - 1],
                     collision.transform.position,
@@ -434,8 +440,10 @@ namespace DiasGames.ThirdPersonSystem
             }
             else
             {
+               // meleeWeaponTrail.Emit = false;
                 collision.SetActive(false);
                 blockCollision.SetActive(false);
+                weaponTrail.SetActive(false);
             }
         }
         public void BlockColliderSwitch(int switchCount)

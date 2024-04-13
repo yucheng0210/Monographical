@@ -24,7 +24,7 @@ public class TalkButton : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !talkUI.gameObject.activeSelf)
             button.SetActive(true);
     }
 
@@ -40,6 +40,9 @@ public class TalkButton : MonoBehaviour
     private void Update()
     {
         if (button.activeSelf && Input.GetKeyDown(KeyCode.E))
+        {
             talkUI.gameObject.SetActive(true);
+            button.gameObject.SetActive(false);
+        }
     }
 }

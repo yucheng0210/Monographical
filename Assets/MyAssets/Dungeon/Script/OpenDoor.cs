@@ -27,6 +27,7 @@ public class OpenDoor : MonoBehaviour
         Main.Manager.GameManager.Instance.PlayerTrans.position = lookTrans.position;
         Main.Manager.GameManager.Instance.PlayerTrans.rotation = lookTrans.rotation;
         Main.Manager.GameManager.Instance.PlayerTrans.LookAt(lookTrans);
+        Camera.main.transform.LookAt(transform.forward);
         yield return null;
         Main.Manager.GameManager.Instance.PlayerAni.SetTrigger("isOpenDoor");
         leftDoorTrans.DOLocalRotate(new Vector3(0, openAngle, 0), openTime);
