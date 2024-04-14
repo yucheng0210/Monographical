@@ -186,7 +186,13 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private MeleeWeaponTrail meleeWeaponTrail;
         [SerializeField]
-        private GameObject weaponTrail;
+        private List<GameObject> weaponTrailList;
+        [SerializeField]
+        private List<GameObject> swordList = new List<GameObject>();
+        [SerializeField]
+        private List<string> attributesList = new List<string>();
+        [SerializeField]
+        private int currentSwordID;
 
         [SerializeField]
         private Slider enduranceSlider;
@@ -359,6 +365,23 @@ namespace DiasGames.ThirdPersonSystem
             animatorStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
             animatorTransitionInfo = m_Animator.GetAnimatorTransitionInfo(0);
             //Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                if (currentSwordID <= 0)
+                    currentSwordID = swordList.Count - 1;
+                else
+                    currentSwordID--;
+                SwitchSword();
+            }
+            if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                if (currentSwordID >= swordList.Count - 1)
+                    currentSwordID = 0;
+                else
+                    currentSwordID++;
+                SwitchSword();
+            }
+
             if (free && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
                 && !m_Animator.GetBool("isHeavyAttack")
@@ -371,9 +394,10 @@ namespace DiasGames.ThirdPersonSystem
                     {
                         if (Main.Manager.GameManager.Instance.PlayerData.Momentum >= momentumConsume)
                         {
-                            m_Animator.SetTrigger("isHeavyAttack");
+                            // m_Animator.SetTrigger("isHeavyAttack");
                             ReduceMomentum(momentumConsume);
                             ReduceEndurance(attackConsume);
+                            EventManager.Instance.DispatchEvent(EventDefinition.eventAttributeAttack);
                         }
                     }
                     else
@@ -388,7 +412,15 @@ namespace DiasGames.ThirdPersonSystem
                 m_Animator.SetTrigger("isBlock");
                 ReduceEndurance(blockConsume);
             }
-
+        }
+        private void SwitchSword()
+        {
+            for (int i = 0; i < swordList.Count; i++)
+            {
+                swordList[i].SetActive(false);
+            }
+            swordList[currentSwordID].SetActive(true);
+            collision.tag = attributesList[currentSwordID];
         }
         public void HeavyAttackJump()
         {
@@ -430,8 +462,8 @@ namespace DiasGames.ThirdPersonSystem
             if (switchCount > 0)
             {
                 collision.SetActive(true);
-                weaponTrail.SetActive(true);
-               // meleeWeaponTrail.Emit = true;
+                weaponTrailList[currentSwordID].SetActive(true);
+                // meleeWeaponTrail.Emit = true;
                 /*Instantiate(
                     slashEffectList[switchCount - 1],
                     collision.transform.position,
@@ -440,10 +472,10 @@ namespace DiasGames.ThirdPersonSystem
             }
             else
             {
-               // meleeWeaponTrail.Emit = false;
+                // meleeWeaponTrail.Emit = false;
                 collision.SetActive(false);
                 blockCollision.SetActive(false);
-                weaponTrail.SetActive(false);
+                weaponTrailList[currentSwordID].SetActive(false);
             }
         }
         public void BlockColliderSwitch(int switchCount)

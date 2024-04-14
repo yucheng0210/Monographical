@@ -7,6 +7,7 @@ using UnityEngine.Playables;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using DG.Tweening;
+using System.Diagnostics;
 public abstract class PatrolEnemy : MonoBehaviour, IObserver
 {
     public Animator Ani { get; set; }
@@ -151,6 +152,13 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     private AnimationCurve blockSpeedCurve;
     [SerializeField]
     private float blockTimer = 0;
+    [Header("負面狀態")]
+    [SerializeField]
+    private List<GameObject> negativeEffectList = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> attributeAttackList = new List<GameObject>();
+    [SerializeField]
+    private bool isNegative;
     private PlayableDirector playableDirector;
     private Vector3 movement,
         startPos;
@@ -259,6 +267,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         Player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         shutDown = false;
         EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerBlock, EventPlayerBlock);
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAttributeAttack, EventAttributeAttack);
         //myNavMeshAgent.SetDestination(navPointList[1].position);
     }
     protected virtual IEnumerator InitialState()
@@ -732,8 +741,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                 other.ClosestPointOnBounds(transform.position).y,
                 transform.position.z
             );
-            HitEffect(hitPoint);
-            if (shutDown || canExecution || IsAttacking)
+            HitEffect(hitPoint, other);
+            if (canExecution || IsAttacking)
                 return;
             /*if (EnemyData.CurrentPoise <= 0)
             {
@@ -768,8 +777,8 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     public void ExecutionAttack()
     {
-        HitEffect(transform.position + new Vector3(0, 0.75f, 0));
-        EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);
+        /* HitEffect(transform.position + new Vector3(0, 0.75f, 0));
+         EnemyCharacterState.TakeDamage(AttackerCharacterState, EnemyCharacterState);*/
     }
     public void ChangeAnimationSpeed(int count)
     {
@@ -796,10 +805,30 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             : AnimatorUpdateMode.AnimatePhysics;
     }
 
-    private void HitEffect(Vector3 hitPoint)
+    private void HitEffect(Vector3 hitPoint, Collider other)
     {
         //beakBackDirection = (transform.position - Player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
+        CheckNegativeActive();
+        if (!isNegative)
+        {
+            switch (other.tag)
+            {
+                case "Fire":
+                    negativeEffectList[0].SetActive(true);
+                    StartCoroutine(Main.Manager.GameManager.Instance.OnFire(negativeEffectList[0], EnemyData));
+                    break;
+                case "Thunder":
+                    negativeEffectList[1].SetActive(true);
+                    break;
+                case "Ice":
+                    negativeEffectList[2].SetActive(true);
+                    Ani.speed = 0;
+                    shutDown = true;
+                    StartCoroutine(Thaw());
+                    break;
+            }
+        }
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
         //VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
@@ -809,7 +838,35 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         myImpulse.GenerateImpulse();
         GetComponent<BloodEffect>().SpurtingBlood(hitPoint);
     }
-
+    private IEnumerator Thaw()
+    {
+        yield return new WaitForSeconds(5.7f);
+        negativeEffectList[2].SetActive(false);
+        Ani.speed = 1;
+        shutDown = false;
+    }
+    private void CheckNegativeActive()
+    {
+        for (int i = 0; i < negativeEffectList.Count; i++)
+        {
+            if (negativeEffectList[i].activeSelf)
+            {
+                isNegative = true;
+                break;
+            }
+            isNegative = false;
+        }
+    }
+    private int GetNegativeActive()
+    {
+        int id = 0;
+        for (int i = 0; i < negativeEffectList.Count; i++)
+        {
+            if (negativeEffectList[i].activeSelf)
+                id = i;
+        }
+        return id;
+    }
     public void EndNotify()
     {
         direction = 0;
@@ -830,5 +887,12 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         }
         else
             shutDown = false;
+    }
+    private void EventAttributeAttack(params object[] args)
+    {
+        int id = GetNegativeActive();
+        UnityEngine.Debug.Log(id);
+        if (negativeEffectList[id].activeSelf && isNegative)
+            attributeAttackList[id].SetActive(true);
     }
 }
