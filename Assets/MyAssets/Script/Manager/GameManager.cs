@@ -96,6 +96,14 @@ namespace Main.Manager
             defender.CurrentHealth -= (int)damage;
             Debug.Log(damage);
         }
+        public IEnumerator OnFire(GameObject onFireEffect, Character character)
+        {
+            while (onFireEffect.activeSelf && character.CurrentHealth > 0)
+            {
+                TakeDamage(DataManager.Instance.CharacterList[3006], character);
+                yield return new WaitForSeconds(1);
+            }
+        }
         public void AddObservers(IObserver observer)
         {
             observerList.Add(observer);

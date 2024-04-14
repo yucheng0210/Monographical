@@ -161,16 +161,7 @@ namespace DiasGames.ThirdPersonSystem
             if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
                 Die();
         }
-        private IEnumerator OnFire()
-        {
-            while (onfireEffect.activeSelf && Main.Manager.GameManager.Instance.PlayerData.CurrentHealth > 0)
-            {
-                Main.Manager.GameManager.Instance.TakeDamage(DataManager.Instance.CharacterList[3006]
-                , Main.Manager.GameManager.Instance.PlayerData);
-                //Debug.Log("OnFire");
-                yield return new WaitForSeconds(1);
-            }
-        }
+
         public void Extinguishing()
         {
             int randomIndex = UnityEngine.Random.Range(0, 4);
@@ -252,7 +243,7 @@ namespace DiasGames.ThirdPersonSystem
             else if (other.CompareTag("Fire") && !onfireEffect.activeSelf)
             {
                 onfireEffect.SetActive(true);
-                StartCoroutine(OnFire());
+                StartCoroutine(Main.Manager.GameManager.Instance.OnFire(onfireEffect, Main.Manager.GameManager.Instance.PlayerData));
             }
             else
                 Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
