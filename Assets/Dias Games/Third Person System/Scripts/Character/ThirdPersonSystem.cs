@@ -227,6 +227,10 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private List<GameObject> slashEffectList = new List<GameObject>();
+        [SerializeField]
+        private GameObject iceEffect;
+        [SerializeField]
+        private GameObject selfDestructEffect;
         private CinemachineImpulseSource myImpulse;
 
         /*[SerializeField]
@@ -299,6 +303,7 @@ namespace DiasGames.ThirdPersonSystem
         {
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerCantMove, EventPlayerCantMove);
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerBlock, EventPlayerBlock);
+            EventManager.Instance.AddEventRegister(EventDefinition.eventAttributeAttack, EventAttributeAttack);
         }
         private void FixedUpdate()
         {
@@ -397,7 +402,7 @@ namespace DiasGames.ThirdPersonSystem
                             // m_Animator.SetTrigger("isHeavyAttack");
                             ReduceMomentum(momentumConsume);
                             ReduceEndurance(attackConsume);
-                            EventManager.Instance.DispatchEvent(EventDefinition.eventAttributeAttack);
+                            EventManager.Instance.DispatchEvent(EventDefinition.eventAttributeAttack, currentSwordID);
                         }
                     }
                     else
@@ -412,6 +417,16 @@ namespace DiasGames.ThirdPersonSystem
                 m_Animator.SetTrigger("isBlock");
                 ReduceEndurance(blockConsume);
             }
+        }
+        private void EventAttributeAttack(params object[] args)
+        {
+            if ((int)args[0] == 3)
+            {
+                m_Animator.SetTrigger("isIceAttack");
+                Destroy(Instantiate(iceEffect, transform.position, Quaternion.identity), 3);
+            }
+            if ((int)args[0] == 1)
+                Destroy(Instantiate(selfDestructEffect, transform.position, Quaternion.identity), 1.5f);
         }
         private void SwitchSword()
         {

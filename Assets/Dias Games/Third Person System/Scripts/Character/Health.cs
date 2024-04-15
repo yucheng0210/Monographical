@@ -121,6 +121,7 @@ namespace DiasGames.ThirdPersonSystem
             //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerInvincible, EventInvincible);
+           //Main.Manager.GameManager.Instance.PlayerData.Momentum=100;
         }
 
         private void Update()

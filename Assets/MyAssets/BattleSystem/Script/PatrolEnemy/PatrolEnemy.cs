@@ -733,31 +733,33 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (!(other.gameObject.layer == playerAttackLayer || other.gameObject.layer == LayerMask.NameToLayer("Attack")))
+            return;
         if (other.gameObject.layer == playerAttackLayer)
-        {
             Main.Manager.GameManager.Instance.TakeDamage(Main.Manager.GameManager.Instance.PlayerData, EnemyData);
-            Vector3 hitPoint = new Vector3(
-                transform.position.x,
-                other.ClosestPointOnBounds(transform.position).y,
-                transform.position.z
-            );
-            HitEffect(hitPoint, other);
-            if (canExecution || IsAttacking)
-                return;
-            /*if (EnemyData.CurrentPoise <= 0)
-            {
-                //Ani.SetFloat("BeakBackMode", 2);
-                EnemyData.CurrentPoise = EnemyData.MaxPoise;
-                StartCoroutine(LosePoise());
-                //MyBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
-            }
-            else
-            {*/
-            //Ani.SetFloat("BeakBackMode", 1);
-            Ani.SetTrigger(isHited);
-            currentState = EnemyState.BeakBack;
-            // }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Attack"))
+            Main.Manager.GameManager.Instance.TakeDamage(other.GetComponent<AttackID>().AttackData, EnemyData);
+        Vector3 hitPoint = new Vector3(
+               transform.position.x,
+               other.ClosestPointOnBounds(transform.position).y,
+               transform.position.z
+           );
+        HitEffect(hitPoint, other.tag);
+        if (canExecution || IsAttacking || shutDown)
+            return;
+        /*if (EnemyData.CurrentPoise <= 0)
+        {
+            //Ani.SetFloat("BeakBackMode", 2);
+            EnemyData.CurrentPoise = EnemyData.MaxPoise;
+            StartCoroutine(LosePoise());
+            //MyBody.AddForce(direction * fallDownForce, ForceMode.Impulse);
         }
+        else
+        {*/
+        //Ani.SetFloat("BeakBackMode", 1);
+        Ani.SetTrigger(isHited);
+        currentState = EnemyState.BeakBack;
+        // }
     }
 
     private void Execution()
@@ -805,14 +807,14 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
             : AnimatorUpdateMode.AnimatePhysics;
     }
 
-    private void HitEffect(Vector3 hitPoint, Collider other)
+    private void HitEffect(Vector3 hitPoint, string otherTag)
     {
         //beakBackDirection = (transform.position - Player.transform.position).normalized;
         //Instantiate(hitEffect, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
         CheckNegativeActive();
         if (!isNegative)
         {
-            switch (other.tag)
+            switch (otherTag)
             {
                 case "Fire":
                     negativeEffectList[0].SetActive(true);
@@ -840,7 +842,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     private IEnumerator Thaw()
     {
-        yield return new WaitForSeconds(5.7f);
+        yield return new WaitForSeconds(6f);
         negativeEffectList[2].SetActive(false);
         Ani.speed = 1;
         shutDown = false;
@@ -892,7 +894,19 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     {
         int id = GetNegativeActive();
         UnityEngine.Debug.Log(id);
-        if (negativeEffectList[id].activeSelf && isNegative)
-            attributeAttackList[id].SetActive(true);
+        if (isNegative && negativeEffectList[id].activeSelf)
+        {
+            if ((int)args[0] == 2)
+            {
+                StartCoroutine(Lighting());
+                attributeAttackList[id].SetActive(true);
+            }
+        }
+    }
+    private IEnumerator Lighting()
+    {
+        yield return new WaitForSeconds(2.95f);
+        Main.Manager.GameManager.Instance.TakeDamage(DataManager.Instance.CharacterList[1002], EnemyData);
+        HitEffect(transform.position, "");
     }
 }
