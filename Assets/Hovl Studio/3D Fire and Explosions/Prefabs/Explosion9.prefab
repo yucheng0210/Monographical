@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 199727665988498252}
   - component: {fileID: -1591282881441054128}
   - component: {fileID: 6050703789199174152}
+  - component: {fileID: 1661083768501092630}
   m_Layer: 6
   m_Name: Explosion9
   m_TagString: Fire
@@ -4889,7 +4890,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6050703789199174152
 MonoBehaviour:
@@ -4904,6 +4905,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 1003
+--- !u!114 &1661083768501092630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338017871918850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7b674979697435438379bf47a8ecd2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 20
+  power: 1000
 --- !u!1 &1481492401758046
 GameObject:
   m_ObjectHideFlags: 0

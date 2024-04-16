@@ -66,38 +66,50 @@ public class SceneController : Singleton<SceneController>, ISavable
 
     private IEnumerator PortalTransition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
-        Main.Manager.GameManager.Instance.LoadingNotify(true);
+        //Main.Manager.GameManager.Instance.LoadingNotify(true);
         player = Main.Manager.GameManager.Instance.PlayerTrans.gameObject;
         progressSlider.value = 0.0f;
         if (SceneManager.GetActiveScene().name != sceneName)
         {
             DontDestroyOnLoad(player);
+            progressSlider.value = 0.0f;
+            UIManager.Instance.UIDict.Clear();
+            EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading, true);
             yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));
             progressCanvas.SetActive(true);
+            progressText.text = (int)(progressSlider.value * 100) + "%";
+            yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
             AsyncOperation async = SceneManager.LoadSceneAsync(sceneName);
             async.allowSceneActivation = false;
-            while (progressSlider.value < 0.99f)
+            async.completed += operation => { StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f)); };
+            async.completed += operation => { EventManager.Instance.DispatchEvent(EventDefinition.eventSceneLoading, false); };
+            while (!async.isDone)
             {
-                progressSlider.value = Mathf.Lerp(
-                    progressSlider.value,
-                    async.progress / 9 * 10,
-                    Time.deltaTime
-                );
-                progressText.text = (int)(progressSlider.value * 100) + "%";
+                if (progressSlider.value < 0.99f)
+                {
+                    progressSlider.value = Mathf.Lerp(
+                        progressSlider.value,
+                        async.progress / 9 * 10,
+                        Time.unscaledDeltaTime
+                    );
+                    progressText.text = (int)(progressSlider.value * 100) + "%";
+                }
+                else if (!async.allowSceneActivation)
+                {
+                    progressSlider.value = 1.0f;
+                    progressText.text = (int)(progressSlider.value * 100) + "%";
+                    AudioManager.Instance.ClearAllAudioClip();
+                    yield return StartCoroutine(UIManager.Instance.FadeOut(fadeMenu, 0.5f));//等待淡出(這時畫面淡出是黑屏，避免提早出現下個場景畫面)
+                    progressCanvas.SetActive(false);//隱藏加載畫面
+                    async.allowSceneActivation = true;//允許場景轉換
+                }
                 yield return null;
             }
-            progressSlider.value = 1.0f;
-            progressText.text = (int)(progressSlider.value * 100) + "%";
-            yield return new WaitForSeconds(0.5f);
-            progressCanvas.SetActive(false);
-            async.allowSceneActivation = true;
-            yield return async.isDone;
             player.transform.SetPositionAndRotation(
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
-            Main.Manager.GameManager.Instance.LoadingNotify(false);
-            yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
+            // Main.Manager.GameManager.Instance.LoadingNotify(false);
         }
         else
         {
@@ -106,7 +118,7 @@ public class SceneController : Singleton<SceneController>, ISavable
                 GetDestination(destinationTag).transform.position,
                 GetDestination(destinationTag).transform.rotation
             );
-            Main.Manager.GameManager.Instance.LoadingNotify(false);
+            // Main.Manager.GameManager.Instance.LoadingNotify(false);
             yield return StartCoroutine(UIManager.Instance.FadeIn(fadeMenu, 0.5f));
             yield return null;
         }

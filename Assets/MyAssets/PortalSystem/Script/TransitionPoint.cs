@@ -22,6 +22,8 @@ public class TransitionPoint : MonoBehaviour
 
     [SerializeField]
     private TransitionDestination.DestinationTag destinationTag;
+    [SerializeField]
+    private GameObject clueMenu;
     public TransitionType Type
     {
         get { return transitionType; }
@@ -44,12 +46,18 @@ public class TransitionPoint : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             canTrans = true;
+            clueMenu.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             canTrans = false;
+            clueMenu.SetActive(false);
+        }
     }
 }

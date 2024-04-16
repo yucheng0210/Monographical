@@ -1749,6 +1749,7 @@ GameObject:
   - component: {fileID: -2643000980082086313}
   - component: {fileID: -1367925289985191036}
   - component: {fileID: -2886008011774165994}
+  - component: {fileID: 3922360501081777968}
   m_Layer: 0
   m_Name: Archer(new)
   m_TagString: Untagged
@@ -1837,11 +1838,13 @@ MonoBehaviour:
   walkSpeed: 50
   runSpeed: 200
   strafeSpeed: 0
-  dashSpeed: 0
-  meleeSpeed: 80
   turnSpeed: 3
   beakBackForce: 0
+  navWalkSpeed: 50
+  navRunSpeed: 200
+  visionAngle: 15
   wanderRadius: 15
+  navPointList: []
   chaseRadius: 40
   strafeRadius: 25
   attackRadius: 25
@@ -1851,19 +1854,24 @@ MonoBehaviour:
   maxCoolDown: 5
   minCoolDown: 3
   isOnGrounded: 0
-  shutDown: 0
+  shutDown: 1
   lockMove: 0
   isMeleeAttack: 0
   isBack: 0
   distance: 0
   wanderDistance: 0
+  currentNavPoint: 0
+  isBlock: 0
   rockBreak: {fileID: 2430002874503032944, guid: eadfc2ea1d52f8247ba463bbfed6b824,
     type: 3}
   hitSpark: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
   hitDistortion: {fileID: 4311849393234507680, guid: f1214296d26b483439e70c97a848776e,
     type: 3}
-  currentAI: 0
-  currentState: 0
+  currentAI: 2
+  currentState: 2
+  cantStrafe: 0
+  minAniSpeed: 0.8
+  maxAniSpeed: 1.5
   enemyID: 2002
   collision: {fileID: 5593703716842024691, guid: dce229fb85820a1499d115d0cec3268d,
     type: 3}
@@ -1873,6 +1881,49 @@ MonoBehaviour:
   - {fileID: 5186399199287112279, guid: 950bfe21aa1bd814294b681c3f2ee8a0, type: 3}
   capsuleOffset: 0.3
   canExecution: 0
+  blockSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -14.666666
+      outSlope: -14.666666
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: -1.2
+      inSlope: -0.035975937
+      outSlope: -0.035975937
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.22125056
+    - serializedVersion: 3
+      time: 0.8
+      value: 0
+      inSlope: 1.846154
+      outSlope: 1.846154
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  blockTimer: 0
+  negativeEffectList:
+  - {fileID: 4678669528578050162, guid: 2ecbae7126f7115418c319dfadf9c0ed, type: 3}
+  - {fileID: 46602381725748128, guid: 2ecbae7126f7115418c319dfadf9c0ed, type: 3}
+  - {fileID: 4119113122887924458, guid: 2ecbae7126f7115418c319dfadf9c0ed, type: 3}
+  attributeAttackList:
+  - {fileID: 8777871986295450775, guid: 2ecbae7126f7115418c319dfadf9c0ed, type: 3}
+  - {fileID: 8777871986295450775, guid: 2ecbae7126f7115418c319dfadf9c0ed, type: 3}
+  - {fileID: 8777871986295450775, guid: 2ecbae7126f7115418c319dfadf9c0ed, type: 3}
+  isNegative: 0
   speed: 20
   min_distance: 1
   arrowPrefab: {fileID: 8360026549553698552, guid: dbee67f719a506b4d8e111a336d71fe2,
@@ -1993,6 +2044,28 @@ MonoBehaviour:
   characterData: {fileID: 11400000, guid: 4a26ad310cca6b245bd37883f0f32a27, type: 2}
   attackData: {fileID: 11400000, guid: d55ddef967506244f97096814522d31e, type: 2}
   characterName: 
+--- !u!195 &3922360501081777968
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5866510238316917685}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5957821091839971566
 GameObject:
   m_ObjectHideFlags: 0

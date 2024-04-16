@@ -166,7 +166,6 @@ public class DialogSystem : MonoBehaviour
             case "EVENT":
                 EventManager.Instance.DispatchEvent(EventDefinition.eventDialogEvent
                 , DataManager.Instance.DialogList[DialogName][index].Order);
-                Debug.Log("event");
                 gameObject.SetActive(false);
                 index++;
                 break;
@@ -181,7 +180,8 @@ public class DialogSystem : MonoBehaviour
         for (int i = 0; i < DataManager.Instance.DialogList[DialogName][index].Content.Length; i++)
         {
             textLabel.text += DataManager.Instance.DialogList[DialogName][index].Content[i];
-            yield return new WaitForSeconds(currentTextWaitTime);
+            if (currentTextWaitTime > 0)
+                yield return new WaitForSeconds(currentTextWaitTime);
         }
         textFinished = true;
         index++;
@@ -262,5 +262,5 @@ public class DialogSystem : MonoBehaviour
         currentBranchID = "COMPLETED";
         DataManager.Instance.DialogList[DialogName][0].CurrentBranch = "COMPLETED";
     }
-    
+
 }

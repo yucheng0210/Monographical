@@ -121,7 +121,7 @@ namespace DiasGames.ThirdPersonSystem
             //DataManager.Instance.AddCharacterRegister(characterState);
             EventManager.Instance.AddEventRegister(EventDefinition.eventIsHited, IsHited);
             EventManager.Instance.AddEventRegister(EventDefinition.eventPlayerInvincible, EventInvincible);
-           //Main.Manager.GameManager.Instance.PlayerData.Momentum=100;
+            Main.Manager.GameManager.Instance.PlayerData.Momentum = 100;
         }
 
         private void Update()
@@ -159,7 +159,7 @@ namespace DiasGames.ThirdPersonSystem
                 shield.SetActive(true);
                 potion.SetActive(false);
             }
-            if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
+            if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0 && m_System.enabled)
                 Die();
         }
 
@@ -222,7 +222,7 @@ namespace DiasGames.ThirdPersonSystem
             else
                 ani.SetFloat("BeakBackMode", 1);
             ani.SetTrigger("isHited");
-            if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0)
+            if (Main.Manager.GameManager.Instance.PlayerData.CurrentHealth <= 0 && m_System.enabled)
                 Die();
             else
             {
@@ -274,12 +274,14 @@ namespace DiasGames.ThirdPersonSystem
             EnableRagdoll();
             OnDie.Invoke();
             OnCharacterDie?.Invoke();
-            Main.Manager.GameManager.Instance.EndNotifyObservers();
+            // Main.Manager.GameManager.Instance.EndNotifyObservers();
             m_System.collision.SetActive(false);
             // Play sound
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PlayerDied();
             EventManager.Instance.DispatchEvent(EventDefinition.eventGameOver);
+            Time.timeScale = 1;
+            m_System.m_Animator.speed = 1;
             if (m_RestartSceneAfterDie)
                 StartCoroutine(RestartCharacter());
         }
@@ -332,7 +334,6 @@ namespace DiasGames.ThirdPersonSystem
 
             Vector3 vel = ragdollRigidbodies[0].velocity;
             ragdollRigidbodies[0].isKinematic = true;
-
             for (int i = 1; i < ragdollRigidbodies.Length; i++)
             {
                 ragdollRigidbodies[i].isKinematic = false;
