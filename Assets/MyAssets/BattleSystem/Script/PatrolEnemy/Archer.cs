@@ -85,7 +85,7 @@ public class Archer : PatrolEnemy
     {
         IsAttacking = true;
         Instantiate(meleeAttackEffect, transform);
-        EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider);
+        EventManager.Instance.DispatchEvent(EventDefinition.eventIsHited, MyCollider, EnemyData);
     }
     public void CreateArrow()
     {

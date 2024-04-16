@@ -14,7 +14,19 @@ public class OpenDoor : MonoBehaviour
     private float openAngle;
     [SerializeField]
     private Transform lookTrans;
+    [SerializeField]
+    private GameObject clueMenu;
     private bool isOpen;
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+            clueMenu.SetActive(true);
+    }
+    private void OnTriggerExit(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+            clueMenu.SetActive(false);
+    }
     private void OnTriggerStay(Collider collider)
     {
         if (collider.CompareTag("Player") && Input.GetKeyDown(KeyCode.E) && !isOpen)

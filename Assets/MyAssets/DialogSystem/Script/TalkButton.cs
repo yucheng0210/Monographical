@@ -13,6 +13,8 @@ public class TalkButton : MonoBehaviour
     private bool isQuest;
     [SerializeField]
     private int questID;
+    [SerializeField]
+    private bool isEnter;
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.CompareTag("Player"))
@@ -25,7 +27,10 @@ public class TalkButton : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && !talkUI.gameObject.activeSelf)
+        {
             button.SetActive(true);
+            isEnter = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -34,12 +39,13 @@ public class TalkButton : MonoBehaviour
         {
             button.SetActive(false);
             talkUI.gameObject.SetActive(false);
+            isEnter = false;
         }
     }
 
     private void Update()
     {
-        if (button.activeSelf && Input.GetKeyDown(KeyCode.E))
+        if (isEnter && Input.GetKeyDown(KeyCode.E))
         {
             talkUI.gameObject.SetActive(true);
             button.gameObject.SetActive(false);

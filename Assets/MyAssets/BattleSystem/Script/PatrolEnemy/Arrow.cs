@@ -6,6 +6,10 @@ public class Arrow : MonoBehaviour
 {
     public bool IsHit { get; private set; }
     public Character EnemyData { get; set; }
+    private void Start()
+    {
+        Destroy(transform.parent.gameObject, 5f);
+    }
     private void OnTriggerStay(Collider other)
     {
         IsHit = true;

@@ -621,6 +621,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     protected virtual IEnumerator Death()
     {
         //BeakBack();
+        myNavMeshAgent.enabled = false;
         Warning = false;
         Ani.SetBool("isDead", true);
         MyBody.velocity = Vector3.zero;

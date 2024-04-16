@@ -43,14 +43,13 @@ public class DogMeat : PatrolEnemy
         float randomAngle = Random.Range(-teleportMaxAngle, teleportMaxAngle);
         transform.DORotate
         (new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + randomAngle, transform.eulerAngles.z), 0);
-        transform.DOMove(transform.position + transform.forward * 12.5f, 0.2f);
+        transform.DOMove(transform.position + transform.forward * 5f, 0.2f);
         IsAttacking = false;
         Ani.ResetTrigger("isHited");
         Ani.SetInteger("MeleeAttackType", 0);
         Ani.SetInteger("LongDistanceAttackType", 0);
-        //CurrentCoolDown = 0f;
+        CurrentCoolDown = 0f;
         StartCoroutine(RecoverTeleportCoolDown());
-        Debug.Log("teleport");
     }
     private IEnumerator RecoverTeleportCoolDown()
     {
@@ -60,6 +59,9 @@ public class DogMeat : PatrolEnemy
     private void EventDialogEvent(params object[] args)
     {
         if ((string)args[0] == "BOSS")
+        {
             ShutDown = false;
+            EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
+        }
     }
 }
