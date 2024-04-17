@@ -9,9 +9,6 @@ public class SceneController : Singleton<SceneController>, ISavable
     private GameObject player;
 
     [SerializeField]
-    private GameObject playerPrefab;
-
-    [SerializeField]
     private Slider progressSlider;
 
     [SerializeField]

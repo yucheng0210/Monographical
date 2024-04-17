@@ -386,7 +386,6 @@ namespace DiasGames.ThirdPersonSystem
                     currentSwordID++;
                 SwitchSword();
             }
-
             if (free && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
                 && !m_Animator.GetBool("isHeavyAttack")
@@ -1098,7 +1097,15 @@ namespace DiasGames.ThirdPersonSystem
         }
         public void PlayerCantMove(int cantMove)
         {
-            if (cantMove == 1)
+            if (cantMove == 2)
+            {
+                Main.Manager.GameManager.Instance.PlayerCantMove = true;
+                m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionX;
+                m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionY;
+                m_Rigidbody.constraints |= RigidbodyConstraints.FreezePositionZ;
+                m_InputManager.enabled = false;
+            }
+            else if (cantMove == 1)
             {
                 Main.Manager.GameManager.Instance.PlayerCantMove = true;
                 Camera.main.GetComponent<CinemachineBrain>().enabled = false;

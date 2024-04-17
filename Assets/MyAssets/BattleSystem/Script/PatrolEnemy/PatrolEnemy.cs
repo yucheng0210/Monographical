@@ -832,6 +832,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
                     break;
             }
         }
+        CheckNegativeActive();
         Destroy(Instantiate(hitSpark, hitPoint, Quaternion.identity), 2);
         Destroy(Instantiate(hitDistortion, hitPoint, Quaternion.identity), 2);
         //VolumeManager.Instance.DoRadialBlur(0, 0.5f, 0.12f, 0);
@@ -897,6 +898,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         UnityEngine.Debug.Log(id);
         if (isNegative && negativeEffectList[id].activeSelf)
         {
+            UnityEngine.Debug.Log((int)args[0]);
             if ((int)args[0] == 2)
             {
                 StartCoroutine(Lighting());

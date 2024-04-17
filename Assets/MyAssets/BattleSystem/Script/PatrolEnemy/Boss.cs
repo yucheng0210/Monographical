@@ -175,13 +175,13 @@ public class Boss : PatrolEnemy
             theFirstStageTimeLine.time = theFirstStageTimeLine.duration;
             theSecondStageTimeLine.time = theSecondStageTimeLine.duration;
         }
-        /*if (theFirstStageTimeLine.state == PlayState.Playing || theSecondStageTimeLine.state == PlayState.Playing)
+        if (theFirstStageTimeLine.state == PlayState.Playing || theSecondStageTimeLine.state == PlayState.Playing)
         {
             if (!Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
-                EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 1);
+                EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 2);
         }
         else if (Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
-            EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);*/
+            EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
         if (!isStartAttack)
         {
             CurrentCoolDown = 0;

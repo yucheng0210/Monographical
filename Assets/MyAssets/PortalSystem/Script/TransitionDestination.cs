@@ -9,7 +9,8 @@ public class TransitionDestination : MonoBehaviour
         Enter,
         A,
         B,
-        C
+        C,
+        Empire
     }
 
     [SerializeField]
