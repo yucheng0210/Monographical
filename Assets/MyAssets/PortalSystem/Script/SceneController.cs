@@ -46,6 +46,8 @@ public class SceneController : Singleton<SceneController>, ISavable
         sceneNameDic.Add(1, "序章：下雨中的市集");
         sceneNameDic.Add(2, "序章：宋江廟");
         sceneNameDic.Add(3, "第一章：宋江陣根據地");
+        sceneNameDic.Add(4, "第一章：地牢");
+        sceneNameDic.Add(5, "第二章：BOSS房");
     }
 
     public void TransitionToDestination(TransitionPoint transitionPoint)

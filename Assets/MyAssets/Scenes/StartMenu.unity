@@ -305,7 +305,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19de36c1b9e23ec418057067a5c2670d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 0}
   progressSlider: {fileID: 1890667778}
   progressText: {fileID: 2101871479}
   progressCanvas: {fileID: 1272299740}
@@ -1104,6 +1103,21 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u7CFB\u7D71\u9078\u9805"
       objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70ae040a275803143b08cb5f90ebfbfd, type: 3}
 --- !u!1 &316535636
@@ -1870,6 +1884,21 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u9000\u51FA\u904A\u6232"
       objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70ae040a275803143b08cb5f90ebfbfd, type: 3}
 --- !u!1 &453062954
@@ -2409,6 +2438,7 @@ GameObject:
   - component: {fileID: 661862582}
   - component: {fileID: 661862579}
   - component: {fileID: 661862584}
+  - component: {fileID: 661862583}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -2477,12 +2507,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661862577}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b90126193516474386ed065ffe24c18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuClip: {fileID: 32900000, guid: 8bdfefd3957232a4f909f0a370a5f9a9, type: 3}
+  menuClip: {fileID: 32900000, guid: cf415e360f1cc004ea35b3707cbe1aef, type: 3}
 --- !u!328 &661862582
 VideoPlayer:
   m_ObjectHideFlags: 0
@@ -2490,7 +2520,7 @@ VideoPlayer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661862577}
-  m_Enabled: 0
+  m_Enabled: 1
   m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
@@ -2514,10 +2544,23 @@ VideoPlayer:
   m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
-  m_Looping: 0
+  m_Looping: 1
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
+--- !u!114 &661862583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661862577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b31f5c8d4a4cf48b8cd059bb717053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeTime: 0.5
 --- !u!225 &661862584
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4432,6 +4475,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: "\u52A0\u8F09\u904A\u6232"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70ae040a275803143b08cb5f90ebfbfd, type: 3}
@@ -8911,5 +8969,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 2899e8f6985acf54f9843ece880bcae5,
         type: 3}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425071327195954418, guid: 70ae040a275803143b08cb5f90ebfbfd,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70ae040a275803143b08cb5f90ebfbfd, type: 3}

@@ -190,6 +190,8 @@ namespace DiasGames.ThirdPersonSystem
         [SerializeField]
         private List<GameObject> swordList = new List<GameObject>();
         [SerializeField]
+        private List<GameObject> maskList = new List<GameObject>();
+        [SerializeField]
         private List<string> attributesList = new List<string>();
         [SerializeField]
         private int currentSwordID;
@@ -429,11 +431,16 @@ namespace DiasGames.ThirdPersonSystem
         }
         private void SwitchSword()
         {
+            for (int i = 0; i < maskList.Count; i++)
+            {
+                maskList[i].SetActive(false);
+            }
             for (int i = 0; i < swordList.Count; i++)
             {
                 swordList[i].SetActive(false);
             }
             swordList[currentSwordID].SetActive(true);
+            maskList[currentSwordID].SetActive(true);
             collision.tag = attributesList[currentSwordID];
         }
         public void HeavyAttackJump()

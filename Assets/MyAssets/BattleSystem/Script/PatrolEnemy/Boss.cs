@@ -178,10 +178,16 @@ public class Boss : PatrolEnemy
         if (theFirstStageTimeLine.state == PlayState.Playing || theSecondStageTimeLine.state == PlayState.Playing)
         {
             if (!Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
+            {
                 EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 2);
+                Ani.speed = 0;
+            }
         }
         else if (Main.Manager.GameManager.Instance.PlayerAni.GetBool("Standby"))
+        {
             EventManager.Instance.DispatchEvent(EventDefinition.eventPlayerCantMove, 0);
+            Ani.speed = 1;
+        }
         if (!isStartAttack)
         {
             CurrentCoolDown = 0;
