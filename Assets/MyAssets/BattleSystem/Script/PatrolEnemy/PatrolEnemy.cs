@@ -418,6 +418,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     protected virtual void RecoverAttackCoolDown()
     {
+        UnityEngine.Debug.Log("recover");
         CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
     private void OnGrounded()
@@ -911,5 +912,7 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
         yield return new WaitForSeconds(2.95f);
         Main.Manager.GameManager.Instance.TakeDamage(DataManager.Instance.CharacterList[1002], EnemyData);
         HitEffect(transform.position, "");
+        int id = GetNegativeActive();
+        attributeAttackList[id].SetActive(false);
     }
 }

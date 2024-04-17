@@ -36,7 +36,7 @@ public class StartMenuVideo : MonoBehaviour
     private void VideoFade()
     {
         videoPlayer.Play();
-        SceneFader sceneFader = gameObject.GetComponent<SceneFader>();
+        SceneFader sceneFader = GetComponent<SceneFader>();
         StartCoroutine(sceneFader.FadeOut());
     }
 }
