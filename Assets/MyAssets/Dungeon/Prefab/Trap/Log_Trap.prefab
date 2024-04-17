@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 838258361736739082}
   - component: {fileID: 1489766008}
-  m_Layer: 0
+  - component: {fileID: 1253759470569169183}
+  - component: {fileID: 3331967927054390590}
+  m_Layer: 3
   m_Name: Log_Trap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,6 +53,32 @@ MonoBehaviour:
   trapID: 3002
   rotateRange: {x: 0, y: 0, z: 60}
   rotateOnceDuration: 2
+--- !u!65 &1253759470569169183
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3948686776119765446}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.27583313, y: 0.09973399, z: 1.5730133}
+  m_Center: {x: 0.0068893433, y: 2.0770402, z: -0.018218994}
+--- !u!65 &3331967927054390590
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3948686776119765446}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.52, y: -0.15, z: 1.61}
+  m_Center: {x: 0.0068893433, y: 2.0770402, z: -0.018218994}
 --- !u!1001 &1956968662253141920
 PrefabInstance:
   m_ObjectHideFlags: 0
