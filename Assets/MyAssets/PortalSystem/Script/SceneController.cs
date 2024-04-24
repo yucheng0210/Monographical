@@ -31,7 +31,6 @@ public class SceneController : Singleton<SceneController>, ISavable
     {
         ISavable savable = this;
         savable.AddSavableRegister();
-        EventManager.Instance.AddEventRegister(EventDefinition.eventDialogEvent, EventDialogEvent);
         AddSceneName();
     }
     /*private void Update()
@@ -197,12 +196,5 @@ public class SceneController : Singleton<SceneController>, ISavable
     public void RestoreGameData(GameSaveData gameSaveData)
     {
         StartCoroutine(Transition(gameSaveData.currentScene));
-    }
-    private void EventDialogEvent(params object[] args)
-    {
-        if ((string)args[0] == "CHANGESCENE")
-        {
-            StartCoroutine(Transition("ChapterOne"));
-        }
     }
 }

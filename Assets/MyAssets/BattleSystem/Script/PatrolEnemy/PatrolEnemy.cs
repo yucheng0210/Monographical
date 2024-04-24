@@ -418,7 +418,6 @@ public abstract class PatrolEnemy : MonoBehaviour, IObserver
     }
     protected virtual void RecoverAttackCoolDown()
     {
-        UnityEngine.Debug.Log("recover");
         CurrentCoolDown = UnityEngine.Random.Range(minCoolDown, maxCoolDown);
     }
     private void OnGrounded()

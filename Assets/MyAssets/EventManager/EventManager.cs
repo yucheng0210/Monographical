@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EventManager : Singleton<EventManager>
 {
@@ -54,6 +55,11 @@ public class EventManager : Singleton<EventManager>
     {
         eventListenters.Clear();
         AddEventRegister(EventDefinition.eventSceneLoading, EventSceneLoading);
-        Debug.Log(eventListenters.Count);
+        AddEventRegister(EventDefinition.eventDialogEvent, EventDialogEvent);
+    }
+    private void EventDialogEvent(params object[] args)
+    {
+        if ((string)args[0] == "CHANGESCENE" && SceneManager.GetActiveScene().name == "Prologue_2")
+            StartCoroutine(SceneController.Instance.Transition("ChapterOne"));
     }
 }
