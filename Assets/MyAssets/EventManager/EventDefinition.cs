@@ -28,6 +28,7 @@ public class EventDefinition
     public const string eventPlayerCantMove = "EVENT_PLAYER_CANT_MOVE";
     public const string eventPlayerBlock = "EVENT_PLAYER_BLOCK";
     public const string eventAttributeAttack = "EVENT_ATTRIBUTE_ATTACK";
+    public const string eventAfterImageEffects = "EVENT_AFTER_IMAGE_EFFECTS";
     //對話
     public const string eventDialogEvent = "EVENT_DIALOG_EVENT";
 

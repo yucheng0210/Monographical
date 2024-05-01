@@ -13,6 +13,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 using DG.Tweening;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace DiasGames.ThirdPersonSystem
 {
@@ -252,6 +253,10 @@ namespace DiasGames.ThirdPersonSystem
 
         [SerializeField]
         private bool isRunning;
+        [SerializeField]
+        private bool isBerserker;
+        [SerializeField]
+        private UnityEngine.Rendering.Volume volume;
         private Quaternion currentRotation;
 
         public void SetControllerAsAI()
@@ -388,6 +393,13 @@ namespace DiasGames.ThirdPersonSystem
                     currentSwordID++;
                 SwitchSword();
             }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                isBerserker = !isBerserker;
+                EventManager.Instance.DispatchEvent(EventDefinition.eventAfterImageEffects);
+                StartCoroutine(BerserkerPostProcessing());
+                StartCoroutine(BerserkerState());
+            }
             if (free && currentEndurance >= attackConsume
                 && !m_Animator.GetBool("isAttack")
                 && !m_Animator.GetBool("isHeavyAttack")
@@ -418,6 +430,32 @@ namespace DiasGames.ThirdPersonSystem
                 m_Animator.SetTrigger("isBlock");
                 ReduceEndurance(blockConsume);
             }
+        }
+        private IEnumerator BerserkerPostProcessing()
+        {
+            while (isBerserker)
+            {
+                if (volume.profile.TryGet(out ColorAdjustments color) && color.saturation.value >= -100)
+                    color.saturation.value--;
+                yield return null;
+            }
+            while (!isBerserker)
+            {
+                if (volume.profile.TryGet(out ColorAdjustments color) && color.saturation.value <= 0)
+                    color.saturation.value++;
+                yield return null;
+            }
+        }
+        private IEnumerator BerserkerState()
+        {
+            while (isBerserker)
+            {
+                m_Animator.speed = 1.25f;
+                Main.Manager.GameManager.Instance.TakeDamage(Main.Manager.GameManager.Instance.PlayerData.MaxHealth / 100
+                , Main.Manager.GameManager.Instance.PlayerData);
+                yield return new WaitForSeconds(1);
+            }
+            m_Animator.speed = 1;
         }
         private void EventAttributeAttack(params object[] args)
         {

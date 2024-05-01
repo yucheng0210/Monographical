@@ -35,6 +35,11 @@ public class AfterImageEffects : MonoBehaviour
         _AfterImageList = new List<AfterImage>();
         _SkinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
     }
+    private void Start()
+    {
+        EventManager.Instance.AddEventRegister(EventDefinition.eventAfterImageEffects, EventAfterImageEffects);
+        _OpenAfterImage = false;
+    }
     void Update()
     {
         if (_OpenAfterImage && _AfterImageList != null)
@@ -58,7 +63,7 @@ public class AfterImageEffects : MonoBehaviour
     void CreateAfterImage()
     {
         //生成残影
-        if (_Time >= _IntervalTime)
+        if (_Time >= _IntervalTime / 2)
         {
             _Time = 0;
             Mesh mesh = new Mesh();
@@ -72,7 +77,7 @@ public class AfterImageEffects : MonoBehaviour
                 transform.localToWorldMatrix,
                 _InitialAlpha,
                 Time.realtimeSinceStartup,
-                _SurvivalTime));
+                _SurvivalTime / 2));
         }
     }
     /// <summary>
@@ -146,6 +151,10 @@ public class AfterImageEffects : MonoBehaviour
                 material.renderQueue = 3000;
                 break;
         }
+    }
+    private void EventAfterImageEffects(params object[] args)
+    {
+        _OpenAfterImage = !_OpenAfterImage;
     }
 }
 public enum RenderingMode
